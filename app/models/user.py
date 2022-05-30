@@ -14,10 +14,12 @@ class User(db.Model, UserMixin, ModelMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(60), unique=True, nullable=False)
-    email = db.Column(db.String(255), unique=True, nullable=False)
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(64), unique=True, nullable=False)
+    phone_number = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
     activated = db.Column(db.Boolean, default=False)
+    deleted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
     @hybrid_property
@@ -29,9 +31,13 @@ class User(db.Model, UserMixin, ModelMixin):
         self.password_hash = generate_password_hash(password)
 
     @classmethod
-    def authenticate(cls, user_id, password):
+    def authenticate(cls, email, password):
         user = cls.query.filter(
-            db.or_(func.lower(cls.username) == func.lower(user_id), func.lower(cls.email) == func.lower(user_id))
+            db.or_(
+                cls.activated == True,  # noqa E712
+                cls.deleted == False,  # noqa E712
+                func.lower(cls.email) == func.lower(email),
+            )
         ).first()
         if user is not None and check_password_hash(user.password, password):
             return user
