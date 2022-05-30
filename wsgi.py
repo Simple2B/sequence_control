@@ -1,9 +1,22 @@
 #!/user/bin/env python
+import os
 import click
 
 from app import create_app, db, models, forms
+from app.models import User
 
 app = create_app()
+
+
+def add_admin():
+    ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+    ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin")
+    ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@admin.com")
+    User(
+        username=ADMIN_USERNAME,
+        password=ADMIN_PASSWORD,
+        email=ADMIN_EMAIL,
+    ).save()
 
 
 # flask cli context setup
@@ -17,6 +30,7 @@ def get_context():
 def create_db():
     """Create the configured database."""
     db.create_all()
+    add_admin()
 
 
 @app.cli.command()
