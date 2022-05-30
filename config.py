@@ -6,13 +6,14 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 class BaseConfig(object):
     """Base configuration."""
 
-    APP_NAME = "Simple Flask App"
+    APP_NAME = os.environ.get("APP_NAME", "Sequence Control")
     DEBUG_TB_ENABLED = False
     SECRET_KEY = os.environ.get(
         "SECRET_KEY", "Ensure you set a secret key, this is important!"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
+    LOGO_URL = os.environ.get("LOGO_URL", "app/static/images/logo.jpg")
 
     @staticmethod
     def configure(app):
