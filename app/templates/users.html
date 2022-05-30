@@ -3,5 +3,15 @@
   <h1>Welcome!</h1>
   <hr />
   <p>Add some users here!</p>
+  <a class="btn btn-primary" href="{{ url_for('auth.register') }}" role="button"
+    >Add</a
+  >
+  <p>Go to main page!</p>
+  <a
+    class="btn btn-primary"
+    href="{{ url_for('main.main_page') }}"
+    role="button"
+    >Main</a
+  >
 </div>
 {% endblock %}
