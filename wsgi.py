@@ -12,10 +12,15 @@ def add_admin():
     ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
     ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin")
     ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@admin.com")
+    ADMIN_COMPANY = os.environ.get("ADMIN_COMPANY", "umbrella")
+    ADMIN_WP_RES = os.environ.get("ADMIN_COMPANY", "test_wp_res")
     User(
         username=ADMIN_USERNAME,
         password=ADMIN_PASSWORD,
         email=ADMIN_EMAIL,
+        company=ADMIN_COMPANY,
+        wp_responsible=ADMIN_WP_RES,
+        sc_role=User.RoleType.admin,
     ).save()
 
 

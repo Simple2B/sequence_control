@@ -1,7 +1,8 @@
 from datetime import datetime
+import enum
 
 from flask_login import UserMixin, AnonymousUserMixin
-from sqlalchemy import func
+from sqlalchemy import Enum, func
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -13,12 +14,21 @@ class User(db.Model, UserMixin, ModelMixin):
 
     __tablename__ = "users"
 
+    class RoleType(enum.Enum):
+        admin = 1
+        project_manager = 2
+        wp_manager = 3
+        viewer = 4
+
+    # TODO: make different models?..
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
-    email = db.Column(db.String(64), unique=True, nullable=False)
-    phone_number = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
-    activated = db.Column(db.Boolean, default=False)
+    email = db.Column(db.String(64), unique=True, nullable=False)
+    company = db.Column(db.String(64), nullable=False)
+    position = db.Column(db.String(64), nullable=True)
+    wp_responsible = db.Column(db.String(64), nullable=True)
+    sc_role = db.Column(Enum(RoleType), nullable=False)
     deleted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
