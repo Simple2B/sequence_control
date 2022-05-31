@@ -29,8 +29,8 @@ class User(db.Model, UserMixin, ModelMixin):
     position = db.Column(db.String(64), nullable=True)
     wp_responsible = db.Column(db.String(64), nullable=True)
     sc_role = db.Column(Enum(RoleType), nullable=False)
-    deleted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
+    deleted = db.Column(db.Boolean, default=False)
 
     @hybrid_property
     def password(self):
