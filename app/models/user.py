@@ -44,7 +44,6 @@ class User(db.Model, UserMixin, ModelMixin):
     def authenticate(cls, email, password):
         user = cls.query.filter(
             db.or_(
-                cls.activated == True,  # noqa E712
                 cls.deleted == False,  # noqa E712
                 func.lower(cls.email) == func.lower(email),
             )

@@ -2,7 +2,15 @@ from app.models import User
 
 
 def register(username, email="username@test.com", password="password"):
-    user = User(username=username, email=email, password=password)
+    user = User(
+        username=username,
+        email=email,
+        password=password,
+        company="ADMIN_COMPANY",
+        wp_responsible="ADMIN_WP_RES",
+        sc_role=User.RoleType.admin,
+    )
+
     user.save()
     return user.id
 
