@@ -13,5 +13,5 @@
   "python.testing.pytestArgs": ["tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
-  "cSpell.words": ["sqlalchemy"]
+  "cSpell.words": ["sqlalchemy", "TDRG", "TENQ"]
 }
