@@ -1,0 +1,10 @@
+  <footer class="footer fixed-bottom" style="margin: top 50px">
+      <div class="container-fluid sm-light py-5">
+        <!-- Copyrights -->
+        <div class="text-center">
+          <p class="text-muted mb-0 py-2">
+            &copy;2022 {{ config.APP_NAME }} | All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
