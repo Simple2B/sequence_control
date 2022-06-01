@@ -4,9 +4,8 @@ from wtforms import (
     PasswordField,
     SubmitField,
     ValidationError,
-    SelectField,
 )
-from wtforms.validators import DataRequired, Email, Length, EqualTo, InputRequired
+from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 from app.models import User
 

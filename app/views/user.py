@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect, Blueprint, request, flash
 from flask_login import login_required
-from app.forms.auth import PmRegistrationForm, WPMRegistrationForm
+from app.forms.auth import PmRegistrationForm
 from app.logger import log
 from app.models import User
 
