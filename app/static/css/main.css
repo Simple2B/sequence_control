@@ -2,3 +2,20 @@
 * {
     border-radius: 0 !important;
 }
+.list {
+    position: relative;
+    left: auto;
+    width: 15%;
+    height: 120px;
+    margin-right: 200px;
+  }
+.listElement{
+    background-color: darkgray;
+    color: black;
+} 
+.subContainer{
+    margin-right: 100px;
+}
+.tableHeadTh{
+    color: aliceblue;
+}
