@@ -15,4 +15,4 @@ class Building(db.Model, ModelMixin):
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
 
     def __repr__(self):
-        return f"<Building: {self.name}>"
+        return f"<{self.id}: {self.name}>"

@@ -27,11 +27,11 @@ class User(db.Model, UserMixin, ModelMixin):
     wp_responsible = db.Column(db.String(64), nullable=True)
     position = db.Column(db.String(64), nullable=True)
     company = db.Column(db.String(64), nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
-
-    subordinate_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    # role = db.Column(Enum(Role), default=Role.admin)
+    subordinate_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
 
     @hybrid_property
     def password(self):
