@@ -20,17 +20,18 @@ class User(db.Model, UserMixin, ModelMixin):
         wp_manager = 3
         viewer = 4
 
-    # TODO: make different models?..
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=False)
-    company = db.Column(db.String(64), nullable=False)
-    position = db.Column(db.String(64), nullable=True)
-    wp_responsible = db.Column(db.String(64), nullable=True)
     sc_role = db.Column(Enum(RoleType), nullable=False)
+    wp_responsible = db.Column(db.String(64), nullable=True)
+    position = db.Column(db.String(64), nullable=True)
+    company = db.Column(db.String(64), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+
+    subordinate_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     @hybrid_property
     def password(self):
