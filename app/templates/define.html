@@ -66,9 +66,12 @@
 </div>
 <div class="container">
   {% if current_user.sc_role.name == "admin" %}
-  <a class="btn btn-primary"  href="{{ url_for('user.project_manager_add') }}" role="button"
-    >Add</a
+  <a class="btn btn-primary"  href="{{ url_for('project_manager.project_manager_add') }}" role="button"
+    >Add Manager</a
   >
+  <a class="btn btn-primary"  href="{{ url_for('viewer.viewer_add') }}" role="button"
+  >Add Viewer</a
+>
   <div class="table-responsive">          
     <table class="table">
       <thead style="background-color: black;">
