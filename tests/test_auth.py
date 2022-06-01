@@ -37,6 +37,7 @@ def test_register(client):
             email="sam@test.com",
             password="password",
             password_confirmation="password",
+            company_name="test_name",
         ),
         follow_redirects=True,
     )

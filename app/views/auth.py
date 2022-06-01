@@ -15,7 +15,7 @@ def register():
             username=form.username.data,
             email=form.email.data,
             password=form.password.data,
-            company="ADMIN_COMPANY",
+            company=form.company_name.data,
             wp_responsible="ADMIN_WP_RES",
             sc_role=User.RoleType.admin,
         )
