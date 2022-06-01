@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block content %}
+<div class="subContainer">
+  <h1>Welcome to DEFINE PAGE</h1>
+  <div class="list">
+    <div class="list-group">
+      <!-- Admin Section -->
+      {% if current_user.sc_role.name == "admin" %}
+      <button
+        type="button"
+        class="list-group-item list-group-item-action listElement"
+      >
+        User
+      </button>
+      <button
+        type="button"
+        class="list-group-item list-group-item-action listElement"
+      >
+        Project
+      </button>
+      <button
+        type="button"
+        class="list-group-item list-group-item-action listElement"
+      >
+        Reason of NON-COMPLETION
+      </button>
+      {% endif %}
+      <!-- PM section -->
+      {% if current_user.sc_role.name == "project_manager" %}
+      <button
+      type="button"
+      class="list-group-item list-group-item-action listElement"
+      >
+        User
+      </button>
+      <button
+        type="button"
+        class="list-group-item list-group-item-action listElement"
+      >
+        Work Package
+      </button>
+      <button
+        type="button"
+        class="list-group-item list-group-item-action listElement"
+      >
+        Location
+      </button>
+      <button
+        type="button"
+        class="list-group-item list-group-item-action listElement"
+      >
+        Milestone
+      </button>
+      {% endif %}
+      <!-- WP Manager section  -->
+      {% if current_user.sc_role.name == "wp_manager" %}
+      <button
+        type="button"
+        class="list-group-item list-group-item-action listElement"
+      >
+        WP Milestone
+      </button>
+      {% endif %}
+      
+    </div>
+  </div>
+</div>
+<div class="container">
+  {% if current_user.sc_role.name == "admin" %}
+  <a class="btn btn-primary"  href="{{ url_for('user.project_manager_add') }}" role="button"
+    >Add</a
+  >
+  <div class="table-responsive">          
+    <table class="table">
+      <thead style="background-color: black;">
+        <tr class="tableHeadTh">
+          <th>id</th>
+          <th>Name</th>
+          <th>Project</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Anna</td>
+          <td>Test project</td>
+        </tr>
+      </tbody>
+    </table>  
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

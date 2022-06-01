@@ -20,7 +20,7 @@ def index():
     if isinstance(current_user, AnonymousUser):
         return redirect(url_for("auth.login"))
     # TODO: if current role admin render user to create else render main page
-    return redirect(url_for("user.index"))
+    return redirect(url_for("main.main_page"))
     # return redirect(url_for("main.main_page"))
 
 
