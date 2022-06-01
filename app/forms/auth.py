@@ -53,7 +53,7 @@ class PmRegistrationForm(RegistrationForm):
     # )
 
 
-class WPMRegistrationForm(RegistrationForm):
+class WPMRegistrationForm(PmRegistrationForm):
     wp_responsible = StringField(
         "WP Responsible for", validators=[DataRequired(), Length(2, 30)]
     )
