@@ -12,15 +12,7 @@
     {% include 'users.html' %}
   {% elif context == "projects" %}
     {% include 'projects.html' %}
-    {#
-    {% elif context == "work_packages" %}
-    {% include 'work_packages.html' %}
-    {% elif context == "projects" %}
-    {% include 'users.html' %}
-    {% elif context == "projects" %}
-    {% include 'users.html' %}
-    {% elif context == "projects" %}
-    {% include 'users.html' %}
-    #}
+  {% elif context == "wp_milestones" %}
+    {% include "wp_milestones.html" %}
   {% endif %}
 {% endblock %}
