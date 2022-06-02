@@ -2,8 +2,6 @@ from datetime import datetime
 from app import db
 from app.models.utils import ModelMixin
 
-# dummy comment for dummy commit to refresh git
-
 
 class Building(db.Model, ModelMixin):
 
