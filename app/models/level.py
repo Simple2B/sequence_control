@@ -3,17 +3,16 @@ from app import db
 from app.models.utils import ModelMixin
 
 
-class Location(db.Model, ModelMixin):
+class Level(db.Model, ModelMixin):
 
-    __tablename__ = "locations"
+    __tablename__ = "levels"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    description = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
 
-    level_id = db.Column(db.Integer, db.ForeignKey("levels.id"))
+    building_id = db.Column(db.Integer, db.ForeignKey("buildings.id"))
 
     def __repr__(self):
-        return f"<{self.id}: {self.name}>"
+        return f"<Building: {self.name}>"
