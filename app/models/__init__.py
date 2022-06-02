@@ -6,7 +6,6 @@ from .location import Location
 from .plan_date import PlanDate
 from .project_milestone import ProjectMilestone
 from .project import Project
-from .user import User
 from .work_package import WorkPackage
 from .work import Work
 from .wp_milestone import WPMilestone
