@@ -65,7 +65,7 @@
   </div>
 </div>
 <div class="container">
-  {% if current_user.sc_role.name == "admin" %}
+  {% if current_user.role.name == "admin" %}
   <a class="btn btn-primary"  href="{{ url_for('project_manager.project_manager_add') }}" role="button"
     >Add Manager</a
   >

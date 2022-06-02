@@ -19,7 +19,7 @@ def index():
 
 # @user_blueprint.route("/project_manager_add", methods=["GET", "POST"])
 # @login_required
-# # @role_required(roles=[User.RoleType.admin])
+# # @role_required(roles=[User.Role.admin])
 # def project_manager_add():
 #     log(
 #         log.INFO,
@@ -33,7 +33,7 @@ def index():
 #             password=form.password.data,
 #             company=form.company_name.data,
 #             position=form.position.data,
-#             sc_role=User.RoleType.project_manager,
+#             role=User.Role.project_manager,
 #         )
 #         user.save()
 #         flash("Registration successful.", "success")

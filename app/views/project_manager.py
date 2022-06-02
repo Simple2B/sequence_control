@@ -9,7 +9,7 @@ project_manager_blueprint = Blueprint("project_manager", __name__)
 
 @project_manager_blueprint.route("/users")
 @login_required
-# @role_required(roles=[User.RoleType.admin])
+# @role_required(roles=[User.Role.admin])
 def index():
     log(
         log.INFO,
@@ -21,7 +21,7 @@ def index():
 
 @project_manager_blueprint.route("/project_manager_add", methods=["GET", "POST"])
 @login_required
-# @role_required(roles=[User.RoleType.admin])
+# @role_required(roles=[User.Role.admin])
 def project_manager_add():
     log(
         log.INFO,
@@ -35,7 +35,7 @@ def project_manager_add():
             password=form.password.data,
             company=form.company_name.data,
             position=form.position.data,
-            sc_role=User.RoleType.project_manager,
+            role=User.Role.project_manager,
             subordinate_id=current_user.id,
         )
         user.save()

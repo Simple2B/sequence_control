@@ -26,9 +26,7 @@ def test_add_project_manager(client):
 
     response = login(client, "admin")
     USER_NAME = "sam"
-    project_managers = User.query.filter(
-        User.sc_role == User.RoleType.project_manager
-    ).all()
+    project_managers = User.query.filter(User.role == User.Role.project_manager).all()
     assert not project_managers
     response = client.post(
         "/project_manager_add",
@@ -43,8 +41,6 @@ def test_add_project_manager(client):
         follow_redirects=True,
     )
     assert b"Registration successful." in response.data
-    project_managers = User.query.filter(
-        User.sc_role == User.RoleType.project_manager
-    ).all()
+    project_managers = User.query.filter(User.role == User.Role.project_manager).all()
     assert len(project_managers) == 1
     assert project_managers[0].username == USER_NAME

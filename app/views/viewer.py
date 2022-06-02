@@ -9,7 +9,7 @@ viewer_blueprint = Blueprint("viewer", __name__)
 
 @viewer_blueprint.route("/users")
 @login_required
-# @role_required(roles=[User.RoleType.admin])
+# @role_required(roles=[User.Role.admin])
 def index():
     log(
         log.INFO,
@@ -21,7 +21,7 @@ def index():
 
 @viewer_blueprint.route("/viewer_add", methods=["GET", "POST"])
 @login_required
-# @role_required(roles=[User.RoleType.admin])
+# @role_required(roles=[User.Role.admin])
 def viewer_add():
     log(log.INFO, "User [%d] on viewer_add", current_user.id)
     form = WPMRegistrationForm(request.form)
@@ -33,7 +33,7 @@ def viewer_add():
             company=form.company_name.data,
             position=form.position.data,
             wp_responsible=form.wp_responsible.data,
-            sc_role=User.RoleType.viewer,
+            role=User.Role.viewer,
             subordinate_id=current_user.id,
         )
         user.save()
