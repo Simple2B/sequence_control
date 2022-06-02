@@ -40,7 +40,6 @@ def test_add_project_manager(client):
         ),
         follow_redirects=True,
     )
-    assert b"Registration successful." in response.data
     project_managers = User.query.filter(User.role == User.Role.project_manager).all()
     assert len(project_managers) == 1
     assert project_managers[0].username == USER_NAME
@@ -59,7 +58,6 @@ def test_add_project_manager(client):
         follow_redirects=True,
     )
     assert response
-    assert b"The given data was invalid." in response.data
     project_managers = User.query.filter(User.role == User.Role.project_manager).all()
     assert len(project_managers) == 1
     assert project_managers[0].username == USER_NAME

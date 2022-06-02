@@ -39,7 +39,7 @@ def define_users():
     query = query.strip()
     if query:
         search_result = search_result.filter(User.username.like(f"%{query}%"))
-    users = search_result.paginate(page=page, per_page=15)
+    users = search_result.paginate(page=page, per_page=25)
     return render_template(
         "define.html",
         context="users",
