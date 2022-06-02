@@ -44,3 +44,22 @@ def test_add_project_manager(client):
     project_managers = User.query.filter(User.role == User.Role.project_manager).all()
     assert len(project_managers) == 1
     assert project_managers[0].username == USER_NAME
+
+    # test adding user with existing name
+    response = client.post(
+        "/project_manager_add",
+        data=dict(
+            username=USER_NAME,
+            email="sam@test.com",
+            password="password",
+            password_confirmation="password",
+            company_name="test_name",
+            position="test_pm",
+        ),
+        follow_redirects=True,
+    )
+    assert response
+    assert b"The given data was invalid." in response.data
+    project_managers = User.query.filter(User.role == User.Role.project_manager).all()
+    assert len(project_managers) == 1
+    assert project_managers[0].username == USER_NAME
