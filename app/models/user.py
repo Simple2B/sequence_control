@@ -14,7 +14,7 @@ class User(db.Model, UserMixin, ModelMixin):
 
     __tablename__ = "users"
 
-    class RoleType(enum.Enum):
+    class Role(enum.Enum):
         admin = 1
         project_manager = 2
         wp_manager = 3
@@ -23,14 +23,13 @@ class User(db.Model, UserMixin, ModelMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=False)
-    sc_role = db.Column(Enum(RoleType), nullable=False)
     wp_responsible = db.Column(db.String(64), nullable=True)
     position = db.Column(db.String(64), nullable=True)
     company = db.Column(db.String(64), nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
-    # role = db.Column(Enum(Role), default=Role.admin)
+    role = db.Column(Enum(Role), default=Role.admin)
     subordinate_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
 
     @hybrid_property

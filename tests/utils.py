@@ -8,7 +8,7 @@ def register(username, email="username@test.com", password="password"):
         password=password,
         company="ADMIN_COMPANY",
         wp_responsible="ADMIN_WP_RES",
-        sc_role=User.RoleType.admin,
+        role=User.Role.admin,
     )
 
     user.save()
