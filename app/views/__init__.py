@@ -5,3 +5,5 @@ from .user.user import user_blueprint
 from .define import define_blueprint
 from .user.project_manager import project_manager_blueprint
 from .user.viewer import viewer_blueprint
+from .user.wp_manager import wp_manager_blueprint
+from .user.admin import admin_blueprint
