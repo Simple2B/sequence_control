@@ -20,7 +20,7 @@ def add_admin():
         email=ADMIN_EMAIL,
         company=ADMIN_COMPANY,
         wp_responsible=ADMIN_WP_RES,
-        sc_role=User.RoleType.admin,
+        role=User.Role.admin,
     ).save()
 
 

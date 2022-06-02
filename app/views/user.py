@@ -7,7 +7,7 @@ user_blueprint = Blueprint("user", __name__)
 
 @user_blueprint.route("/users")
 @login_required
-# @role_required(roles=[User.RoleType.admin])
+# @role_required(roles=[User.Role.admin])
 def index():
     log(
         log.INFO,

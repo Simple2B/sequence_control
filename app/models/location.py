@@ -16,4 +16,4 @@ class Location(db.Model, ModelMixin):
     level_id = db.Column(db.Integer, db.ForeignKey("levels.id"))
 
     def __repr__(self):
-        return f"<Location: {self.name} {self.description}>"
+        return f"<{self.id}: {self.name}>"
