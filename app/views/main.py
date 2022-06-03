@@ -1,9 +1,10 @@
 from flask import Blueprint, redirect, render_template, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
+from app.controllers import role_required
 
 # from app.logger import log
-from app.models import User
+from app.models import User, Project
 
 
 main_blueprint = Blueprint("main", __name__)
@@ -29,6 +30,7 @@ def define():
 
 @main_blueprint.route("/define/users")
 @login_required
+@role_required(roles=[User.Role.admin, User.Role.project_manager])
 def define_users():
     user: User = current_user
     page = request.args.get("page", 1, type=int)
@@ -48,6 +50,7 @@ def define_users():
 
 
 @main_blueprint.route("/define/define_wp_milestones")
+@role_required(roles=[User.Role.wp_manager])
 @login_required
 def define_wp_milestones():
     page = request.args.get("page", 1, type=int)
@@ -66,6 +69,7 @@ def define_wp_milestones():
 
 
 @main_blueprint.route("/define/viewer")
+@role_required(roles=[User.Role.admin, User.Role.project_manager])
 @login_required
 def define_for_viewer():
     nothing = []
@@ -73,4 +77,22 @@ def define_for_viewer():
         "define.html",
         context="viewer",
         nothing=nothing,
+    )
+
+
+@main_blueprint.route("/define/projects")
+@role_required(roles=[User.Role.admin])
+@login_required
+def define_projects():
+    page = request.args.get("page", 1, type=int)
+    query = request.args.get("query", "", type=str)
+    search_result = Project.query.filter_by(deleted=False)
+    query = query.strip()
+    if query:
+        search_result = search_result.filter(Project.name.like(f"%{query}%"))
+    projects = search_result.paginate(page=page, per_page=25)
+    return render_template(
+        "define.html",
+        context="projects",
+        projects=projects,
     )
