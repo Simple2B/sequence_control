@@ -5,20 +5,7 @@ from app.logger import log
 from app.models import User
 from app.controllers import role_required
 
-
 viewer_blueprint = Blueprint("viewer", __name__)
-
-
-@viewer_blueprint.route("/users")
-@login_required
-# @role_required(roles=[User.Role.admin])
-def index():
-    log(
-        log.INFO,
-        "User [] on index page",
-    )
-
-    return render_template("users.html")
 
 
 @viewer_blueprint.route("/viewer_add", methods=["GET", "POST"])
