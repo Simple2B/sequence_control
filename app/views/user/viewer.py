@@ -3,6 +3,8 @@ from flask_login import current_user, login_required
 from app.forms.auth import WPMRegistrationForm
 from app.logger import log
 from app.models import User
+from app.controllers import role_required
+
 
 viewer_blueprint = Blueprint("viewer", __name__)
 
@@ -21,7 +23,7 @@ def index():
 
 @viewer_blueprint.route("/viewer_add", methods=["GET", "POST"])
 @login_required
-# @role_required(roles=[User.Role.admin])
+@role_required(roles=[User.Role.admin, User.Role.project_manager])
 def viewer_add():
     log(log.INFO, "User [%d] on viewer_add", current_user.id)
     form = WPMRegistrationForm(request.form)

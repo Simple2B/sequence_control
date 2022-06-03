@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from app.forms.auth import PmRegistrationForm
 from app.logger import log
 from app.models import User
+from app.controllers import role_required
 
 project_manager_blueprint = Blueprint("project_manager", __name__)
 
@@ -21,7 +22,7 @@ def index():
 
 @project_manager_blueprint.route("/project_manager_add", methods=["GET", "POST"])
 @login_required
-# @role_required(roles=[User.Role.admin])
+@role_required(roles=[User.Role.admin])
 def project_manager_add():
     log(
         log.INFO,

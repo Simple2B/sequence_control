@@ -3,13 +3,14 @@ from flask_login import current_user, login_required
 from app.forms.auth import WPMRegistrationForm
 from app.logger import log
 from app.models import User
+from app.controllers import role_required
 
 wp_manager_blueprint = Blueprint("wp_manager", __name__)
 
 
 @wp_manager_blueprint.route("/wp_manager_add", methods=["GET", "POST"])
 @login_required
-# @role_required(roles=[User.Role.admin])
+@role_required(roles=[User.Role.project_manager, User.Role.admin])
 def wp_manager_add():
     log(log.INFO, "User [%d] on wp_manager_add", current_user.id)
     form = WPMRegistrationForm(request.form)
