@@ -1,7 +1,7 @@
 import pytest
 
 from app import db, create_app
-from tests.utils import register, login, logout
+from tests.utils import create_admin_register, login, logout
 
 
 @pytest.fixture
@@ -21,34 +21,17 @@ def client():
 
 
 def test_auth_pages(client):
-    response = client.get("/register")
-    assert response.status_code == 200
     response = client.get("/login")
     assert response.status_code == 200
     response = client.get("/logout")
     assert response.status_code == 302
 
 
-def test_register(client):
-    response = client.post(
-        "/register",
-        data=dict(
-            username="sam",
-            email="sam@test.com",
-            password="password",
-            password_confirmation="password",
-            company_name="test_name",
-        ),
-        follow_redirects=True,
-    )
-    assert b"Registration successful. You are logged in." in response.data
-
-
 def test_login_and_logout(client):
     # Access to logout view before login should fail.
     response = logout(client)
     assert b"Please log in to access this page." in response.data
-    register("sam")
+    create_admin_register("sam")
     response = login(client, "sam")
     assert b"Login successful." in response.data
     # Should successfully logout the currently logged in user.
