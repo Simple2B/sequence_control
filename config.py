@@ -14,6 +14,7 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
     LOGO_URL = os.environ.get("LOGO_URL", "app/static/images/logo.jpg")
+    REASONS = os.environ.get("REASONS", "")
 
     @staticmethod
     def configure(app):
