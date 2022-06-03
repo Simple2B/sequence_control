@@ -23,7 +23,7 @@ def define():
         return redirect(url_for("main.define_users"))
     if user.role == User.Role.viewer:
         # replace this with router for viewer
-        return redirect(url_for("main.define_wp_milestones"))
+        return redirect(url_for("main.define_for_viewer"))
     return redirect(url_for("main.define_wp_milestones"))
 
 
@@ -62,4 +62,15 @@ def define_wp_milestones():
         "define.html",
         context="wp_milestones",
         wp_milestones=wp_milestones,
+    )
+
+
+@main_blueprint.route("/define/viewer")
+@login_required
+def define_for_viewer():
+    nothing = []
+    return render_template(
+        "define.html",
+        context="viewer",
+        nothing=nothing,
     )
