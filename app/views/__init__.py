@@ -8,3 +8,4 @@ from .user.viewer import viewer_blueprint
 from .user.wp_manager import wp_manager_blueprint
 from .user.admin import admin_blueprint
 from .project import project_blueprint
+from .reason import reason_blueprint

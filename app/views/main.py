@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from app.controllers import role_required
 
 # from app.logger import log
-from app.models import User, Project
+from app.models import User, Project, Reason
 
 
 main_blueprint = Blueprint("main", __name__)
@@ -95,4 +95,22 @@ def define_projects():
         "define.html",
         context="projects",
         projects=projects,
+    )
+
+
+@main_blueprint.route("/define/reasons")
+@role_required(roles=[User.Role.admin])
+@login_required
+def define_reasons():
+    page = request.args.get("page", 1, type=int)
+    query = request.args.get("query", "", type=str)
+    search_result = Reason.query.filter_by(deleted=False)
+    query = query.strip()
+    if query:
+        search_result = search_result.filter(Reason.name.like(f"%{query}%"))
+    reasons = search_result.paginate(page=page, per_page=25)
+    return render_template(
+        "define.html",
+        context="reasons",
+        reasons=reasons,
     )
