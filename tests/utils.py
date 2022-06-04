@@ -1,7 +1,7 @@
 from app.models import User
 
 
-def register(username, email="username@test.com", password="password"):
+def create_admin_register(username, email="username@test.com", password="password"):
     user = User(
         username=username,
         email=email,

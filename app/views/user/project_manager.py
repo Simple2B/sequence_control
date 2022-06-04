@@ -1,13 +1,14 @@
 from flask import render_template, url_for, redirect, Blueprint, request, flash
-from flask_login import login_required
+from flask_login import current_user, login_required
 from app.forms.auth import PmRegistrationForm
 from app.logger import log
 from app.models import User
+from app.controllers import role_required
 
-user_blueprint = Blueprint("user", __name__)
+project_manager_blueprint = Blueprint("project_manager", __name__)
 
 
-@user_blueprint.route("/users")
+@project_manager_blueprint.route("/users")
 @login_required
 # @role_required(roles=[User.Role.admin])
 def index():
@@ -19,9 +20,9 @@ def index():
     return render_template("users.html")
 
 
-@user_blueprint.route("/project_manager_add", methods=["GET", "POST"])
+@project_manager_blueprint.route("/project_manager_add", methods=["GET", "POST"])
 @login_required
-# @role_required(roles=[User.Role.admin])
+@role_required(roles=[User.Role.admin])
 def project_manager_add():
     log(
         log.INFO,
@@ -36,6 +37,7 @@ def project_manager_add():
             company=form.company_name.data,
             position=form.position.data,
             role=User.Role.project_manager,
+            subordinate_id=current_user.id,
         )
         user.save()
         flash("Registration successful.", "success")

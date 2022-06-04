@@ -48,12 +48,9 @@ class PmRegistrationForm(RegistrationForm):
     ]
 
     position = StringField("Position", validators=[DataRequired(), Length(2, 30)])
-    # role = SelectField(
-    #     "Role", coerce=int, validators=[InputRequired()], choices=ROLES
-    # )
 
 
-class WPMRegistrationForm(RegistrationForm):
+class WPMRegistrationForm(PmRegistrationForm):
     wp_responsible = StringField(
         "WP Responsible for", validators=[DataRequired(), Length(2, 30)]
     )

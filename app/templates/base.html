@@ -2,19 +2,44 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Portal" />
+    <meta name="author" content="Simple2B" />
     <title>{{ config.APP_NAME }}</title>
-    <!-- meta -->
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
     {% block meta %}{% endblock %}
-    <!-- styles -->
+
+    <!-- Bootstrap core CSS -->
     <link
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
       rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
+
+    <!-- Favicons -->
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo.ico') }}"
+    />
+    <meta name="theme-color" content="#7952b3" />
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    <!-- Main CSS -->
     <link
       href="{{ url_for('static', filename='css/main.css') }}"
       rel="stylesheet"
@@ -25,101 +50,31 @@
 
   <body>
     <!-- Header -->
-    <header>
-      <!-- Navigation -->
-      <nav class="navbar navbar-expand-lg" style="background-color: #4287f5">
-        <div class="container">
-          <!-- Navbar Brand -->
-          <span class="navbar-brand" style="color: white"
-            >{{ config.APP_NAME }}</span
-          >
-          {% if current_user.is_authenticated %}
-          <a
-            class="nav-link"
-            href="{{ url_for('define.define') }}"
-            style="color: white; margin-left: 50px"
-            >Define</a
-          >
-          <a class="nav-link" href="#" style="color: white; margin-left: 50px"
-            >Plan</a
-          >
-          <a class="nav-link" href="#" style="color: white; margin-left: 50px"
-            >Control</a
-          >
-          {% endif %}
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- Main Navigation -->
-            <!-- Login/Logout -->
-            <ul class="navbar-nav ml-auto">
-              {% if current_user.is_authenticated %}
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="userActions"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  style="color: white"
-                  >{{current_user.username | capitalize}}</a
-                >
-                <div class="dropdown-menu" aria-labelledby="userActions">
-                  <a class="dropdown-item" href="{{ url_for('auth.logout') }}"
-                    >Logout</a
-                  >
-                </div>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %}
-    <div class="alert alert-{{ category }} alert-dismisible">
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-        <span class="sr-only">Close</span>
-      </button>
-      {{ message }}
+    <!-- prettier-ignore -->
+    {% if current_user.is_authenticated %} {% include 'header.html' %} {%endif%}
+    <div class="container-fluid">
+      <div class="row">
+        {% block application %}{% endblock %}
+
+        <!-- Main Content -->
+        {% block content %}{% endblock %}
+      </div>
     </div>
-    {% endfor %} {% endif %} {% endwith %}
-    <!-- Main Content -->
-    {% block content %}{% endblock %}
-    <!-- Footer-->
 
     <!-- scripts -->
     <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      src="{{ url_for('static', filename='js/feather.min.js') }}"
+      integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
       crossorigin="anonymous"
     ></script>
     <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+      integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
       crossorigin="anonymous"
     ></script>
     <script
