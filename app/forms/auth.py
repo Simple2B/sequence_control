@@ -48,9 +48,6 @@ class PmRegistrationForm(RegistrationForm):
     ]
 
     position = StringField("Position", validators=[DataRequired(), Length(2, 30)])
-    # role = SelectField(
-    #     "Role", coerce=int, validators=[InputRequired()], choices=ROLES
-    # )
 
 
 class WPMRegistrationForm(PmRegistrationForm):

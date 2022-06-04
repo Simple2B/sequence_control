@@ -11,7 +11,6 @@ viewer_blueprint = Blueprint("viewer", __name__)
 
 @viewer_blueprint.route("/users")
 @login_required
-# @role_required(roles=[User.Role.admin])
 def index():
     log(
         log.INFO,
