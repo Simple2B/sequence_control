@@ -12,7 +12,7 @@ admin_blueprint = Blueprint("admin", __name__)
 @login_required
 @role_required(roles=[User.Role.admin])
 def admin_add():
-    log(log.INFO, "User [%s] on admin_blueprint", current_user.id)
+    log(log.INFO, "User [%d] on admin_blueprint", current_user.id)
     form = RegistrationForm(request.form)
     if form.validate_on_submit():
         user = User(
