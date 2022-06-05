@@ -1,9 +1,9 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-  {% if current_user.role.name == wp_manager %}
+  {% if current_user.role.name == "wp_manager" %}
 
   <a
     class="btn btn-primary mt-1 add_button"
-    href="{{ url_for('viewer.viewer_add') }}"
+    href="{{ url_for('wp_milestone.wp_milestone_add') }}"
     role="button"
     >Add WP Milestones</a
   >
@@ -15,7 +15,8 @@
         <tr class="tableHeadTh">
           <th>id</th>
           <th>Name</th>
-          <th>Project</th>
+          <th>Description</th>
+          <th>Baseline</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +24,8 @@
         <tr>
           <td>{{milestone.id}}</td>
           <td>{{milestone.name}}</td>
+          <td>{{milestone.description}}</td>
+          <td>{{milestone.baseline_date}}</td>
         </tr>
         {% endfor %}
       </tbody>
