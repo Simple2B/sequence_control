@@ -1,5 +1,3 @@
-import pytest
-from app import db, create_app
 from tests.utils import create_admin_register, login
 from app.models import Project
 from datetime import datetime, timedelta
