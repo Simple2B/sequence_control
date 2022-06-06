@@ -15,14 +15,19 @@ def create_admin_register(username, email="username@test.com", password="passwor
     return user.id
 
 
-def create_wp_manager(username, email="username@test.com", password="password"):
+def create_manager(
+    username,
+    email="username@test.com",
+    password="password",
+    role=User.Role.project_manager,
+):
     user = User(
         username=username,
         email=email,
         password=password,
         company="ADMIN_COMPANY",
         wp_responsible="ADMIN_WP_RES",
-        role=User.Role.wp_manager,
+        role=role,
     )
 
     user.save()
