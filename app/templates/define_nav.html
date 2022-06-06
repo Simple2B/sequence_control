@@ -31,7 +31,7 @@
       </li>
       {% endif %} {% if current_user.role.name == "project_manager" %}
       <li class="nav-item">
-        <a class="nav-link">
+        <a class="nav-link" href="{{url_for('main.define_work_packages')}}">
           <span data-feather="layers"></span>
           Work Package
         </a>
