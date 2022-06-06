@@ -21,6 +21,7 @@ def project_add():
             location=form.location.data,
             start_date=form.start_date.data,
             end_date=form.end_date.data,
+            manager_id=form.manager_id.data,
         )
         project.save()
         flash("Project Registration  is successful.", "success")
