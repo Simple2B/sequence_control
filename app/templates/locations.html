@@ -36,8 +36,8 @@
         {% for location in locations.items %}
         <tr>
           <td>{{location.id}}</td>
-          <td>Test Building</td>
-          <td>{{location.level_id}}</td>
+          <td>{{location.level.building.name}}</td>
+          <td>{{location.level.name}}</td>
           <td>{{location.name}}</td>
           <td>{{location.description}}</td>
         </tr>
