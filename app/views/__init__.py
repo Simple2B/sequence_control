@@ -10,3 +10,4 @@ from .user.admin import admin_blueprint
 from .project import project_blueprint
 from .reason import reason_blueprint
 from .wp_milestone import wp_milestone_blueprint
+from .milestone import milestone_blueprint

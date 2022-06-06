@@ -3,7 +3,7 @@ from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required
 
-from app.models import User, Project, Reason, WPMilestone
+from app.models import User, Project, Reason, WPMilestone, ProjectMilestone
 
 
 main_blueprint = Blueprint("main", __name__)
@@ -53,7 +53,9 @@ def define_users():
 def define_wp_milestones():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
-    search_result = WPMilestone.query.filter_by(deleted=False)
+    search_result = WPMilestone.query.filter_by(
+        deleted=False, wp_manager_id=current_user.id
+    )
     query = query.strip()
     if query:
         search_result = search_result.filter(WPMilestone.name.like(f"%{query}%"))
@@ -110,4 +112,22 @@ def define_reasons():
         "define.html",
         context="reasons",
         reasons=reasons,
+    )
+
+
+@main_blueprint.route("/define/milestones")
+@role_required(roles=[User.Role.project_manager])
+@login_required
+def define_milestones():
+    page = request.args.get("page", 1, type=int)
+    query = request.args.get("query", "", type=str)
+    search_result = ProjectMilestone.query.filter_by(deleted=False)
+    query = query.strip()
+    if query:
+        search_result = search_result.filter(ProjectMilestone.name.like(f"%{query}%"))
+    milestones = search_result.paginate(page=page, per_page=15)
+    return render_template(
+        "define.html",
+        context="milestones",
+        milestones=milestones,
     )
