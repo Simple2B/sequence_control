@@ -3,7 +3,7 @@ import os
 import click
 
 from app import create_app, db, models, forms
-from app.models import User
+from app.models import User, Reason
 
 app = create_app()
 
@@ -22,6 +22,15 @@ def add_admin():
         wp_responsible=ADMIN_WP_RES,
         role=User.Role.admin,
     ).save()
+
+
+def add_reasons():
+    print("Started!")
+    REASONS = os.environ.get("REASONS", "admin").split(", ")
+    for reason in REASONS:
+        print(reason)
+        Reason(name=reason).save()
+    print("Done!")
 
 
 # flask cli context setup
@@ -43,6 +52,12 @@ def create_db():
 def drop_db():
     """Drop the current database."""
     db.drop_all()
+
+
+@app.cli.command()
+def reasons_add():
+    """adding reasons from .env"""
+    add_reasons()
 
 
 if __name__ == "__main__":
