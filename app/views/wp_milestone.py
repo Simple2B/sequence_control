@@ -19,6 +19,7 @@ def wp_milestone_add():
             name=form.name.data,
             description=form.description.data,
             baseline_date=form.baseline_date.data,
+            wp_manager_id=current_user.id,
             project_milestone_id=form.project_milestone_id.data,
         )
         wp_milestone.save()
