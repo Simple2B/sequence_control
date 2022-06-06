@@ -14,6 +14,7 @@ class WPMilestone(db.Model, ModelMixin):
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
 
+    wp_manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     project_milestone_id = db.Column(db.Integer, db.ForeignKey("project_milestones.id"))
 
     def __repr__(self):
