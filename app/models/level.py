@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
 
@@ -13,6 +14,7 @@ class Level(db.Model, ModelMixin):
     deleted = db.Column(db.Boolean, default=False)
 
     building_id = db.Column(db.Integer, db.ForeignKey("buildings.id"))
+    building = relationship("Building")
 
     def __repr__(self):
-        return f"<Building: {self.name}>"
+        return f"<Level: {self.name}>"

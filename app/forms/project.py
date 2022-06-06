@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, DateField
+from wtforms import StringField, SubmitField, ValidationError, DateField, IntegerField
 from wtforms.validators import DataRequired, Length
 
-from app.models import Project
+from app.models import Project, User
 
 
 class ProjectForm(FlaskForm):
@@ -13,7 +13,7 @@ class ProjectForm(FlaskForm):
     location = StringField("Location", validators=[DataRequired(), Length(2, 30)])
     start_date = DateField("Start Date", validators=[DataRequired()])
     end_date = DateField("End Date", validators=[DataRequired()])
-
+    manager_id = IntegerField("Manager", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
     def validate_number(form, field):
@@ -23,3 +23,7 @@ class ProjectForm(FlaskForm):
     def validate_end_date(form, field):
         if field.data < form.start_date.data:
             raise ValidationError("End Date sooner than Start date")
+
+    def validate_manager_id(form, field):
+        if User.query.filter_by(id=field.data).first() is None:
+            raise ValidationError("No such User id registered.")

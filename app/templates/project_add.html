@@ -41,6 +41,12 @@
           <small class="text-danger">{{error}}</small>
           {% endfor %}
         </div>
+        <div class="form-group">
+          {{form.manager_id.label }} {{form.manager_id(class='form-control')}}
+          {% for error in form.errors.manager_id %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
         {{form.submit(class='btn btn-secondary')}}
       </form>
     </div>

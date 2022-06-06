@@ -12,3 +12,4 @@ from .reason import reason_blueprint
 from .wp_milestone import wp_milestone_blueprint
 from .milestone import milestone_blueprint
 from .work_package import work_package_blueprint
+from .location import location_blueprint

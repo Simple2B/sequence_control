@@ -29,6 +29,7 @@ def create_app(environment="development"):
         wp_milestone_blueprint,
         milestone_blueprint,
         work_package_blueprint,
+        location_blueprint,
     )
     from app.models import (
         User,
@@ -62,6 +63,7 @@ def create_app(environment="development"):
     app.register_blueprint(wp_milestone_blueprint)
     app.register_blueprint(milestone_blueprint)
     app.register_blueprint(work_package_blueprint)
+    app.register_blueprint(location_blueprint)
 
     # Set up flask login.
     @login_manager.user_loader

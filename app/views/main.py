@@ -3,7 +3,15 @@ from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required
 
-from app.models import User, Project, Reason, WPMilestone, ProjectMilestone, WorkPackage
+from app.models import (
+    User,
+    Project,
+    Reason,
+    WPMilestone,
+    ProjectMilestone,
+    WorkPackage,
+    Location,
+)
 
 
 main_blueprint = Blueprint("main", __name__)
@@ -150,4 +158,22 @@ def define_work_packages():
         "define.html",
         context="work_packages",
         work_packages=work_packages,
+    )
+
+
+@main_blueprint.route("/define/locations")
+@role_required(roles=[User.Role.project_manager])
+@login_required
+def define_locations():
+    page = request.args.get("page", 1, type=int)
+    query = request.args.get("query", "", type=str)
+    search_result = Location.query.filter_by(deleted=False)
+    query = query.strip()
+    if query:
+        search_result = search_result.filter(Location.name.like(f"%{query}%"))
+    locations = search_result.paginate(page=page, per_page=15)
+    return render_template(
+        "define.html",
+        context="locations",
+        locations=locations,
     )

@@ -1,4 +1,4 @@
-from tests.utils import create_manager, login, logout
+from tests.utils import create_manager, login, logout, create_project
 from app.models import WPMilestone, User, ProjectMilestone
 from datetime import datetime, timedelta
 
@@ -8,7 +8,7 @@ from .conftest import client
 
 
 def test_add_wp_milestone(client):
-
+    create_project(client)
     create_manager(
         "manager", role=User.Role.project_manager, email="manager@manager.com"
     )
@@ -42,7 +42,9 @@ def test_add_wp_milestone(client):
 
     logout(client)
 
-    create_manager("wp_manager", role=User.Role.wp_manager)
+    create_manager(
+        "wp_manager", role=User.Role.wp_manager, email="manager2@manager.com"
+    )
 
     login(client, "wp_manager")
     WP_MILESTONE_NAME = "Test_Project"

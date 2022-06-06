@@ -1,6 +1,6 @@
+from datetime import datetime, timedelta
 from tests.utils import create_admin_register, login
 from app.models import Project
-from datetime import datetime, timedelta
 
 
 # flake8: noqa F401
@@ -29,6 +29,7 @@ def test_add_project(client):
             location=PROJECT_LOCATION,
             start_date=START_DATE,
             end_date=END_DATE,
+            manager_id=1,
         ),
         follow_redirects=True,
     )
@@ -50,6 +51,7 @@ def test_add_project(client):
             location=PROJECT_LOCATION,
             start_date=START_DATE,
             end_date=END_DATE,
+            manager_id=1,
         ),
         follow_redirects=True,
     )
