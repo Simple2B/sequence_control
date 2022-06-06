@@ -68,7 +68,7 @@ def define_wp_milestones():
 
 
 @main_blueprint.route("/define/viewer")
-@role_required(roles=[User.Role.admin, User.Role.project_manager])
+@role_required(roles=[User.Role.viewer])
 @login_required
 def define_for_viewer():
     nothing = []
