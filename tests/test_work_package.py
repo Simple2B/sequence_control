@@ -1,6 +1,5 @@
 from tests.utils import create_manager, login, logout
 from app.models import WorkPackage, User
-from datetime import datetime, timedelta
 
 
 # flake8: noqa F401
