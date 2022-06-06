@@ -43,14 +43,14 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link">
+        <a class="nav-link" href="{{url_for('main.define_milestones')}}">
           <span data-feather="layers"></span>
           Milestone
         </a>
       </li>
       {% endif %} {% if current_user.role.name == "wp_manager" %}
       <li class="nav-item">
-        <a class="nav-link">
+        <a class="nav-link" href="{{url_for('main.define_wp_milestones')}}">
           <span data-feather="layers"></span>
           WP Milestone
         </a>
