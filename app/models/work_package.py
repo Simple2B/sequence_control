@@ -12,6 +12,7 @@ class WorkPackage(db.Model, ModelMixin):
     number = db.Column(db.String(64), unique=True, nullable=False)
     contractor_name = db.Column(db.String(64), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
+    deleted = db.Column(db.Boolean, default=False)
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))

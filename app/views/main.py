@@ -3,7 +3,7 @@ from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required
 
-from app.models import User, Project, Reason, WPMilestone, ProjectMilestone
+from app.models import User, Project, Reason, WPMilestone, ProjectMilestone, WorkPackage
 
 
 main_blueprint = Blueprint("main", __name__)
@@ -130,4 +130,24 @@ def define_milestones():
         "define.html",
         context="milestones",
         milestones=milestones,
+    )
+
+
+@main_blueprint.route("/define/work_packages")
+@role_required(roles=[User.Role.project_manager])
+@login_required
+def define_work_packages():
+    page = request.args.get("page", 1, type=int)
+    query = request.args.get("query", "", type=str)
+    search_result = WorkPackage.query.filter_by(
+        deleted=False, manager_id=current_user.id
+    )
+    query = query.strip()
+    if query:
+        search_result = search_result.filter(WorkPackage.name.like(f"%{query}%"))
+    work_packages = search_result.paginate(page=page, per_page=15)
+    return render_template(
+        "define.html",
+        context="work_packages",
+        work_packages=work_packages,
     )

@@ -3,3 +3,4 @@ from .auth import LoginForm, RegistrationForm, PmRegistrationForm, WPMRegistrati
 from .project import ProjectForm
 from .reason import ReasonForm
 from .wp_milestone import WPMilestoneFrom, MilestoneFrom
+from .work_package import WorkPackageForm
