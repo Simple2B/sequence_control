@@ -1,0 +1,48 @@
+<nav
+  id="sidebarMenu"
+  class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+>
+  <div class="position-sticky pt-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <p class="nav-link fw-bold">
+          <a class="nav-link">PPC Type</a>
+        </p>
+      </li>
+      {% if current_user.role.name in ["wp_manager","project_manager","viewer"]
+      %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('plan.info', ppc_type='info')}}">
+          <span data-feather="users"></span>
+          Info
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('plan.info', ppc_type='docs')}}">
+          <span data-feather="layers"></span>
+          Docs
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('plan.info', ppc_type='quality')}}">
+          <span data-feather="layers"></span>
+          Quality
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('plan.info', ppc_type='atp')}}">
+          <span data-feather="layers"></span>
+          ATP
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('plan.info', ppc_type='hod')}}">
+          <span data-feather="layers"></span>
+          HOD
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

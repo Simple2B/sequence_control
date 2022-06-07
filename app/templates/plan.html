@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+<!-- prettier-ignore -->
+{% block application %}
+  {% include 'plan_nav.html'%}
+  {% include 'flash.html' %} 
+{% endblock %}
+
+<!-- prettier-ignore -->
+{% block content %}
+  {% if context == "info" %}
+    {% include 'info.html' %}
+  {% endif %}
+{% endblock %}
