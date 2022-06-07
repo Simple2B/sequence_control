@@ -41,6 +41,7 @@ class TestingConfig(BaseConfig):
         "TEST_DATABASE_URL",
         "sqlite:///" + os.path.join(base_dir, "database-test.sqlite3"),
     )
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(BaseConfig):
