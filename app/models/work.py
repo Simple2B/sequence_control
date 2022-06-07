@@ -33,8 +33,16 @@ class Work(db.Model, ModelMixin):
         ATP3 = "ATP3"
         HOD = "HOD"
 
+    class PpcType(enum.Enum):
+        info = "info"
+        docs = "docs"
+        quality = "quality"
+        atp = "atp"
+        hod = "hod"
+
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(Enum(Type), nullable=False)
+    ppc_type = db.Column(Enum(PpcType), nullable=False)
     deliverable = db.Column(db.String(255))
     reference = db.Column(db.String(64), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)

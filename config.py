@@ -12,7 +12,7 @@ class BaseConfig(object):
         "SECRET_KEY", "Ensure you set a secret key, this is important!"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    WTF_CSRF_ENABLED = False
+    WTF_CSRF_ENABLED = True
     LOGO_URL = os.environ.get("LOGO_URL", "app/static/images/logo.jpg")
     REASONS = os.environ.get("REASONS", "")
 
@@ -41,6 +41,7 @@ class TestingConfig(BaseConfig):
         "TEST_DATABASE_URL",
         "sqlite:///" + os.path.join(base_dir, "database-test.sqlite3"),
     )
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(BaseConfig):
