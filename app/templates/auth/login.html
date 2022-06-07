@@ -12,6 +12,7 @@
         action="{{ url_for('auth.login') }}"
         method="post"
       >
+        {{form.hidden_tag()}}
         <div class="form-group">
           {{form.user_id.label}} {{form.user_id(class='form-control')}}
         </div>

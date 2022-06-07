@@ -11,6 +11,7 @@
         action="{{ url_for('project_manager.project_manager_add') }}"
         method="post"
       >
+        {{form.hidden_tag()}}
         <div class="form-group">
           {{form.username.label}} {{form.username(class='form-control')}} {% for
           error in form.errors.username %}

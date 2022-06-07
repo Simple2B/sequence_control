@@ -11,6 +11,7 @@
         action="{{ url_for('reason.reason_add') }}"
         method="post"
       >
+        {{form.hidden_tag()}}
         <div class="form-group">
           {{form.name.label}} {{form.name(class='form-control')}} {% for error
           in form.errors.name %}
