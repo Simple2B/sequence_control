@@ -3,6 +3,7 @@ services:
   app:
     build: .
     # command: poetry run flask run -h 0.0.0.0
+    # image: simple2b/sc_project
     command: ./start_server.sh
     restart: always
     environment:
