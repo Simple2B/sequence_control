@@ -12,7 +12,7 @@ class BaseConfig(object):
         "SECRET_KEY", "Ensure you set a secret key, this is important!"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    WTF_CSRF_ENABLED = False
+    WTF_CSRF_ENABLED = True
     LOGO_URL = os.environ.get("LOGO_URL", "app/static/images/logo.jpg")
     REASONS = os.environ.get("REASONS", "")
 
