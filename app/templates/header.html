@@ -46,7 +46,9 @@
   </form> -->
   <div class="mobile_nav_row navbar-nav d-flex flex-row">
     <div class="mobile_balance_wrapper d-flex flex-row">
-      <p style="color: white">{{current_user.username}}</p>
+      <p style="color: white">
+        {{current_user.username}} - {{session['project_name']}}
+      </p>
     </div>
     {% if current_user.is_authenticated %}
     <div id="sign_out" class="mobile_sign_out nav-item text-nowrap">

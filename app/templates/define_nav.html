@@ -4,11 +4,6 @@
 >
   <div class="position-sticky pt-3">
     <ul class="nav flex-column">
-      <li class="nav-item">
-        <p class="nav-link fw-bold">
-          <a class="user_navbar">{{current_user.username}} - Project Name</a>
-        </p>
-      </li>
       {% if current_user.role.name in ["admin","project_manager"] %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_users')}}">

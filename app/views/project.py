@@ -85,6 +85,8 @@ def project_choose():
             form.number.data,
         )
         session["project_id"] = form.number.data
+        project: Project = Project.query.get(form.number.data)
+        session["project_name"] = project.name
         log(
             log.INFO,
             "[project_choose.validate_on_submit] User [%s] choose project [%s]",
