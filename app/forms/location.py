@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, ValidationError
+from wtforms import StringField, SubmitField, ValidationError, SelectField
 from wtforms.validators import DataRequired, Length
-from app.models import Level, Building, Project
+from app.models import Level, Building
 
 
 class LocationForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired(), Length(2, 30)])
     description = StringField("Description", validators=[DataRequired(), Length(2, 30)])
-    level_id = IntegerField("Level", validators=[DataRequired()])
+    level_id = SelectField("Level", validators=[DataRequired()], coerce=int, choices=[])
 
     submit = SubmitField("Submit")
 
@@ -18,8 +18,7 @@ class LocationForm(FlaskForm):
 
 class LevelForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired(), Length(2, 30)])
-    building_id = IntegerField("Building", validators=[DataRequired()])
-
+    building_id = SelectField("Building", coerce=int, choices=[])
     submit = SubmitField("Submit")
 
     def validate_building_id(form, field):
@@ -29,10 +28,5 @@ class LevelForm(FlaskForm):
 
 class BuildingForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired(), Length(2, 30)])
-    project_id = IntegerField("Project", validators=[DataRequired()])
 
     submit = SubmitField("Submit")
-
-    def validate_project_id(form, field):
-        if Project.query.filter_by(id=field.data).first() is None:
-            raise ValidationError("No such project id registered.")
