@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, redirect, render_template, request, session
 from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required
@@ -29,6 +29,12 @@ def define():
     user: User = current_user
     if user.role == User.Role.admin:
         return redirect(url_for("main.define_users"))
+    if session["project_id"]:
+        if user.role == User.Role.viewer:
+            return redirect(url_for("main.define_for_viewer"))
+        if user.role == User.Role.project_manager:
+            return redirect(url_for("main.define_users"))
+        return redirect(url_for("main.define_wp_milestones"))
     return redirect(url_for("project.project_choose"))
 
 
