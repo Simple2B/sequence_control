@@ -27,11 +27,9 @@ def index():
 @login_required
 def define():
     user: User = current_user
-    if user.role in (User.Role.admin, User.Role.project_manager):
+    if user.role == User.Role.admin:
         return redirect(url_for("main.define_users"))
-    if user.role == User.Role.viewer:
-        return redirect(url_for("main.define_for_viewer"))
-    return redirect(url_for("main.define_wp_milestones"))
+    return redirect(url_for("project.project_choose"))
 
 
 @main_blueprint.route("/define/users")
