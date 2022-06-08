@@ -1,8 +1,8 @@
-from flask import render_template, url_for, redirect, Blueprint, request, flash
+from flask import render_template, url_for, redirect, Blueprint, request, flash, session
 from flask_login import current_user, login_required
 from app.forms import WPMRegistrationForm
 from app.logger import log
-from app.models import User
+from app.models import User, WorkPackage
 from app.controllers import role_required
 
 viewer_blueprint = Blueprint("viewer", __name__)
@@ -14,6 +14,20 @@ viewer_blueprint = Blueprint("viewer", __name__)
 def viewer_add():
     log(log.INFO, "User [%d] on viewer_add", current_user.id)
     form = WPMRegistrationForm(request.form)
+    if current_user.role == User.Role.admin:
+        form.wp_responsible.choices = [
+            (wp.id, wp.number)
+            for wp in WorkPackage.query.filter_by(deleted=False).all()
+        ]
+    else:
+        form.wp_responsible.choices = [
+            (wp.id, wp.number)
+            for wp in WorkPackage.query.filter_by(
+                deleted=False,
+                manager_id=current_user.id,
+                project_id=session["project_id"],
+            ).all()
+        ]
     if form.validate_on_submit():
         user = User(
             username=form.username.data,
