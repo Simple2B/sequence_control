@@ -20,6 +20,8 @@
     "TENQ",
     "viewonly",
     "werkzeug",
+    "wpmanager",
+    "wpmanagers",
     "wtforms"
   ]
 }

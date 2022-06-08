@@ -10,3 +10,5 @@ from .work_package import WorkPackage
 from .work import Work
 from .wp_milestone import WPMilestone
 from .reasons import Reason
+from .project_viewer import ProjectViewer
+from .project_wpmanager import ProjectWPManager
