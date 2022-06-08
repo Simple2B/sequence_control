@@ -56,8 +56,8 @@ def define_users():
 
 
 @main_blueprint.route("/define/wp_milestones")
-@role_required(roles=[User.Role.wp_manager])
 @login_required
+@role_required(roles=[User.Role.wp_manager])
 def define_wp_milestones():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
@@ -76,8 +76,8 @@ def define_wp_milestones():
 
 
 @main_blueprint.route("/define/viewer")
-@role_required(roles=[User.Role.viewer])
 @login_required
+@role_required(roles=[User.Role.viewer])
 def define_for_viewer():
     nothing = []
     return render_template(
@@ -88,8 +88,8 @@ def define_for_viewer():
 
 
 @main_blueprint.route("/define/projects")
-@role_required(roles=[User.Role.admin])
 @login_required
+@role_required(roles=[User.Role.admin])
 def define_projects():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
@@ -106,8 +106,8 @@ def define_projects():
 
 
 @main_blueprint.route("/define/reasons")
-@role_required(roles=[User.Role.admin])
 @login_required
+@role_required(roles=[User.Role.admin])
 def define_reasons():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
@@ -124,8 +124,8 @@ def define_reasons():
 
 
 @main_blueprint.route("/define/milestones")
-@role_required(roles=[User.Role.project_manager])
 @login_required
+@role_required(roles=[User.Role.project_manager])
 def define_milestones():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
@@ -142,8 +142,8 @@ def define_milestones():
 
 
 @main_blueprint.route("/define/work_packages")
-@role_required(roles=[User.Role.project_manager])
 @login_required
+@role_required(roles=[User.Role.project_manager])
 def define_work_packages():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
@@ -162,8 +162,8 @@ def define_work_packages():
 
 
 @main_blueprint.route("/define/locations")
-@role_required(roles=[User.Role.project_manager])
 @login_required
+@role_required(roles=[User.Role.project_manager])
 def define_locations():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)

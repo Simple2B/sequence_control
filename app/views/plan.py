@@ -19,10 +19,10 @@ def plan():
 
 
 @plan_blueprint.route("/info/<ppc_type>")
+@login_required
 @role_required(
     roles=[User.Role.wp_manager, User.Role.project_manager, User.Role.viewer]
 )
-@login_required
 def info(ppc_type):
     ppc_type
     page = request.args.get("page", 1, type=int)
