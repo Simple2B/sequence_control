@@ -11,7 +11,6 @@ class WorkPackageForm(FlaskForm):
     contractor_name = StringField(
         "Contractor Name", validators=[DataRequired(), Length(2, 30)]
     )
-    project_id = IntegerField("Project", validators=[DataRequired()])
 
     submit = SubmitField("Submit")
 
