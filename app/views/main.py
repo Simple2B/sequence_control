@@ -11,6 +11,8 @@ from app.models import (
     ProjectMilestone,
     WorkPackage,
     Location,
+    Building,
+    Level,
 )
 
 
@@ -29,13 +31,17 @@ def define():
     user: User = current_user
     if user.role == User.Role.admin:
         return redirect(url_for("main.define_users"))
-    if session["project_id"]:
+    if user.role == User.Role.project_manager:
+        if "project_id" in session and session["project_id"]:
+            return redirect(url_for("main.define_users"))
+        else:
+            return redirect(url_for("project.project_choose"))
+    if "wp_id" in session and session["wp_id"]:
+        if user.role == User.Role.wp_manager:
+            return redirect(url_for("main.define_wp_milestones"))
         if user.role == User.Role.viewer:
             return redirect(url_for("main.define_for_viewer"))
-        if user.role == User.Role.project_manager:
-            return redirect(url_for("main.define_users"))
-        return redirect(url_for("main.define_wp_milestones"))
-    return redirect(url_for("project.project_choose"))
+    return redirect(url_for("work_package.work_package_choose"))
 
 
 @main_blueprint.route("/define/users")
@@ -133,7 +139,9 @@ def define_reasons():
 def define_milestones():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
-    search_result = ProjectMilestone.query.filter_by(deleted=False)
+    search_result = ProjectMilestone.query.filter_by(
+        deleted=False, project_id=session["project_id"]
+    )
     query = query.strip()
     if query:
         search_result = search_result.filter(ProjectMilestone.name.like(f"%{query}%"))
@@ -152,7 +160,7 @@ def define_work_packages():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
     search_result = WorkPackage.query.filter_by(
-        deleted=False, manager_id=current_user.id
+        deleted=False, project_id=session["project_id"]
     )
     query = query.strip()
     if query:
@@ -171,13 +179,19 @@ def define_work_packages():
 def define_locations():
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
-    search_result = Location.query.filter_by(deleted=False)
+    project_id = session["project_id"]
+    buildings = Building.query.filter(Building.project_id == project_id).all()
+    building_ids = [building.id for building in buildings]
+    levels = Level.query.filter(Level.building_id.in_(building_ids)).all()
+    level_ids = [level.id for level in levels]
+    loc_query = Location.query.filter(Location.level_id.in_(level_ids))
+    search_result = loc_query.filter_by(deleted=False)
     query = query.strip()
     if query:
         search_result = search_result.filter(Location.name.like(f"%{query}%"))
-    locations = search_result.paginate(page=page, per_page=15)
+    loc_query = search_result.paginate(page=page, per_page=15)
     return render_template(
         "define.html",
         context="locations",
-        locations=locations,
+        locations=loc_query,
     )
