@@ -2,7 +2,7 @@
 <div class="container py-4">
   <div class="card w-50 mx-auto">
     <div class="card-header">
-      <h4 class="card-title">Register</h4>
+      <h4 class="card-title">Register Viewer</h4>
     </div>
     <div class="card-body">
       <form
@@ -47,13 +47,6 @@
         <div class="form-group">
           {{form.position.label }} {{form.position(class='form-control')}} {%
           for error in form.errors.position %}
-          <small class="text-danger">{{error}}</small>
-          {% endfor %}
-        </div>
-        <div class="form-group">
-          {{form.wp_responsible.label }}
-          {{form.wp_responsible(class='form-control')}} {% for error in
-          form.errors.wp_responsible %}
           <small class="text-danger">{{error}}</small>
           {% endfor %}
         </div>
