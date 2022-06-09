@@ -13,7 +13,7 @@ wp_milestone_blueprint = Blueprint("wp_milestone", __name__)
 @role_required(roles=[User.Role.wp_manager])
 def wp_milestone_add():
     log(log.INFO, "User [%s] on wp_milestone_add", current_user.id)
-    form = WPMilestoneFrom(request.form)
+    form = WPMilestoneFrom()
     if form.validate_on_submit():
         wp_milestone = WPMilestone(
             name=form.name.data,
