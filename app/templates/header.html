@@ -15,17 +15,7 @@
   >
     <span class="navbar-toggler-icon"></span>
   </button>
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a class="nav-link" href="/define">Define</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/plan">Plan</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Control</a>
-    </li>
-  </ul>
+
   <!-- <form class="search_area w-100 d-flex">
     <input
       id="search_field"
@@ -45,6 +35,28 @@
     </div>
   </form> -->
   <div class="mobile_nav_row navbar-nav d-flex flex-row">
+    <div
+      class="mobile_nav_row navbar-nav d-flex flex-row justify-content-center"
+    >
+      <div
+        class="mobile_balance_wrapper d-flex flex-row"
+        style="margin-right: 50px"
+      >
+        <a class="nav-link" href="/define">Define</a>
+      </div>
+      <div
+        class="mobile_balance_wrapper d-flex flex-row"
+        style="margin-right: 50px"
+      >
+        <a class="nav-link" href="/plan">Plan</a>
+      </div>
+      <div
+        class="mobile_balance_wrapper d-flex flex-row"
+        style="margin-right: 50px"
+      >
+        <a class="nav-link" href="#">Control</a>
+      </div>
+    </div>
     <div class="mobile_balance_wrapper d-flex flex-row">
       <p style="color: white">
         {{current_user.username}} - {{session['project_name']}}
