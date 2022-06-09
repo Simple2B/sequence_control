@@ -18,4 +18,4 @@ class WPMilestone(db.Model, ModelMixin):
     project_milestone_id = db.Column(db.Integer, db.ForeignKey("project_milestones.id"))
 
     def __repr__(self):
-        return f"<WP Milestone: {self.name} {self.description} {self.baseline_date} >"
+        return f"<{self.id} {self.name} wp_manager_id{self.wp_manager_id} proj_milest_id{self.project_milestone_id}>"
