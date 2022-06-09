@@ -12,7 +12,7 @@ work_package_blueprint = Blueprint("work_package", __name__)
 @login_required
 @role_required(roles=[User.Role.project_manager])
 def work_package_add():
-    form = WorkPackageForm(request.form)
+    form = WorkPackageForm()
     if form.validate_on_submit():
         log(
             log.INFO,
@@ -26,7 +26,7 @@ def work_package_add():
             number=form.number.data,
             contractor_name=form.contractor_name.data,
             project_id=session["project_id"],
-            manager_id=current_user.id,
+            manager_id=form.wp_manager.data,
         )
         work_package.save()
         flash("Work Package Registration  is successful.", "success")
