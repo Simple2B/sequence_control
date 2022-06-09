@@ -11,6 +11,9 @@ plan_blueprint = Blueprint("plan", __name__)
 
 
 @plan_blueprint.route("/plan")
+@role_required(
+    roles=[User.Role.wp_manager, User.Role.project_manager, User.Role.viewer]
+)
 @login_required
 def plan():
     log(log.INFO, "User [%d] define", current_user.id)
