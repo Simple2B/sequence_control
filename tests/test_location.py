@@ -1,19 +1,8 @@
-from tests.utils import create_manager, login, create_project
-from app.models import User, Building, Level, Location
+from flask.testing import FlaskClient
+from app.models import Building, Level, Location
 
 
-# flake8: noqa F401
-from .conftest import client
-
-
-def test_add_location(client):
-
-    create_project(client)
-    create_manager(
-        "manager", role=User.Role.project_manager, email="manager@manager.com"
-    )
-
-    login(client, "manager")
+def test_add_location(manager: FlaskClient):
 
     BUILDING_NAME = "Test_Building"
     PROJECT_ID = 1
@@ -21,7 +10,7 @@ def test_add_location(client):
 
     assert not buildings
 
-    response = client.post(
+    response = manager.post(
         "/building_add",
         data=dict(
             name=BUILDING_NAME,
@@ -40,7 +29,7 @@ def test_add_location(client):
     # adding level
     LEVEL_NAME = "Test Level"
     BUILDING_ID = building.id
-    response = client.post(
+    response = manager.post(
         "/level_add",
         data=dict(
             name=LEVEL_NAME,
@@ -59,7 +48,7 @@ def test_add_location(client):
     LOCATION_NAME = "Test Location"
     LOCATION_DESCRIPTION = "Test Description"
     LEVEL_ID = level.id
-    response = client.post(
+    response = manager.post(
         "/location_add",
         data=dict(
             name=LOCATION_NAME, description=LOCATION_DESCRIPTION, level_id=LEVEL_ID
@@ -75,7 +64,7 @@ def test_add_location(client):
     assert location.level_id == LEVEL_ID
     assert location.description == LOCATION_DESCRIPTION
 
-    response = client.get(
+    response = manager.get(
         "/define/locations",
         follow_redirects=True,
     )

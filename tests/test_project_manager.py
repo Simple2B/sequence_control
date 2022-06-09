@@ -2,10 +2,6 @@ from tests.utils import create_admin_register, login, logout
 from app.models import User
 
 
-# flake8: noqa F401
-from .conftest import client
-
-
 def test_add_users(client):
 
     create_admin_register("admin")

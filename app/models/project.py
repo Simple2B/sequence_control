@@ -19,4 +19,4 @@ class Project(db.Model, ModelMixin):
     manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     def __repr__(self):
-        return f"<Project: {self.name} >"
+        return f"<{self.id} {self.name} {self.number} {self.manager_id}>"

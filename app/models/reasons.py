@@ -11,4 +11,4 @@ class Reason(db.Model, ModelMixin):
     deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"<Reason: {self.name}>"
+        return f"<{self.id} : {self.name}>"

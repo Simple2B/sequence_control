@@ -1,8 +1,5 @@
 from tests.utils import create_admin_register, login, logout
 
-# flake8: noqa F401
-from .conftest import client
-
 
 def test_auth_pages(client):
     response = client.get("/login")

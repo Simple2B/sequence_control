@@ -19,4 +19,4 @@ class Location(db.Model, ModelMixin):
     level = relationship("Level", viewonly=True)
 
     def __repr__(self):
-        return f"<{self.id}: {self.name}>"
+        return f"<{self.id}: {self.name} level_id {self.level_id}>"

@@ -25,7 +25,7 @@
           <td>{{milestone.id}}</td>
           <td>{{milestone.name}}</td>
           <td>{{milestone.description}}</td>
-          <td>{{milestone.baseline_date}}</td>
+          <td>{{milestone.baseline_date.strftime('%Y-%m-%d')}}</td>
         </tr>
         {% endfor %}
       </tbody>

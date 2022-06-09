@@ -2,19 +2,19 @@
 <div class="container py-4">
   <div class="card w-50 mx-auto">
     <div class="card-header">
-      <h4 class="card-title">Building</h4>
+      <h4 class="card-title">Choose Work Package</h4>
     </div>
     <div class="card-body">
       <form
         class="form"
         role="form"
-        action="{{ url_for('location.building_add') }}"
+        action="{{ url_for('work_package.work_package_choose') }}"
         method="post"
       >
         {{form.hidden_tag()}}
         <div class="form-group">
-          {{form.name.label}} {{form.name(class='form-control')}} {% for error
-          in form.errors.name %}
+          {{form.number.label}} {{form.number(class='form-control')}} {% for
+          error in form.errors.number %}
           <small class="text-danger">{{error}}</small>
           {% endfor %}
         </div>

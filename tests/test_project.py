@@ -1,15 +1,12 @@
 from datetime import datetime, timedelta
-from tests.utils import create_admin_register, login
+from tests.utils import create_admin_register, login, create_manager
 from app.models import Project
-
-
-# flake8: noqa F401
-from .conftest import client
 
 
 def test_add_project(client):
 
     create_admin_register("admin")
+    manager_id = create_manager("manager")
 
     login(client, "admin")
     PROJECT_NAME = "Test_Project"
@@ -29,7 +26,7 @@ def test_add_project(client):
             location=PROJECT_LOCATION,
             start_date=START_DATE,
             end_date=END_DATE,
-            manager_id=1,
+            manager_id=manager_id,
         ),
         follow_redirects=True,
     )
@@ -41,7 +38,7 @@ def test_add_project(client):
     assert project.name == PROJECT_NAME
     assert project.number == PROJECT_NUMBER
 
-    # test adding user with existing name
+    # test adding project with existing name
     PROJECT_NAME2 = "Test_Project_2"
     response = client.post(
         "/project_add",
@@ -51,7 +48,7 @@ def test_add_project(client):
             location=PROJECT_LOCATION,
             start_date=START_DATE,
             end_date=END_DATE,
-            manager_id=1,
+            manager_id=manager_id,
         ),
         follow_redirects=True,
     )

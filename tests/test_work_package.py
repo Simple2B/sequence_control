@@ -1,18 +1,8 @@
-from tests.utils import create_manager, login, create_project
-from app.models import WorkPackage, User
+from flask.testing import FlaskClient
+from app.models import WorkPackage
 
 
-# flake8: noqa F401
-from .conftest import client
-
-
-def test_add_work_package(client):
-    create_project(client)
-    create_manager(
-        "manager", role=User.Role.project_manager, email="manager@manager.com"
-    )
-
-    login(client, "manager")
+def test_add_work_package(manager: FlaskClient):
 
     PACKAGE_NAME = "Test_Milestone"
     PACKAGE_NUMBER = "S-2-B"
@@ -22,7 +12,7 @@ def test_add_work_package(client):
 
     assert not work_packages
 
-    response = client.post(
+    response = manager.post(
         "/work_package_add",
         data=dict(
             name=PACKAGE_NAME,
@@ -43,8 +33,7 @@ def test_add_work_package(client):
     assert work_package.project_id == PROJECT_ID
 
     # test adding work package with existing number
-    PACKAGE_NAME2 = "Test Name 2"
-    response = client.post(
+    response = manager.post(
         "/work_package_add",
         data=dict(
             name=PACKAGE_NAME,

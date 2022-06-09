@@ -4,6 +4,7 @@ from wtforms import (
     PasswordField,
     SubmitField,
     ValidationError,
+    SelectField,
 )
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 
@@ -51,6 +52,6 @@ class PmRegistrationForm(RegistrationForm):
 
 
 class WPMRegistrationForm(PmRegistrationForm):
-    wp_responsible = StringField(
-        "WP Responsible for", validators=[DataRequired(), Length(2, 30)]
-    )
+    wp_responsible = SelectField("WP Responsible for", coerce=int, choices=[])
+
+    submit = SubmitField("Submit")

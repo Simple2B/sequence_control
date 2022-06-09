@@ -18,4 +18,6 @@ class WorkPackage(db.Model, ModelMixin):
     manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     def __repr__(self):
-        return f"<WorkPackage: {self.name} {self.number} {self.contractor_name} >"
+        return (
+            f"<{self.id} #{self.number} pr_id{self.project_id} mng_id{self.manager_id}>"
+        )

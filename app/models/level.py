@@ -17,4 +17,4 @@ class Level(db.Model, ModelMixin):
     building = relationship("Building")
 
     def __repr__(self):
-        return f"<Level: {self.name}>"
+        return f"<{self.id} {self.name} {self.building_id}>"
