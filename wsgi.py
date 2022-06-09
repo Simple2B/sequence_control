@@ -60,5 +60,13 @@ def reasons_add():
     add_reasons()
 
 
+@app.cli.command()
+def db_test_data():
+    """Create database with test data."""
+    from tests.db_test_data import fill_test_data
+
+    fill_test_data(2)
+
+
 if __name__ == "__main__":
     app.run()

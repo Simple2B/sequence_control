@@ -2,10 +2,10 @@ from app.models import User
 from datetime import datetime, timedelta
 
 
-def create_admin_register(username, email="username@test.com", password="password"):
+def create_admin_register(username, email="@test.com", password="password"):
     user = User(
         username=username,
-        email=email,
+        email=username + email,
         password=password,
         company="ADMIN_COMPANY",
         wp_responsible="ADMIN_WP_RES",
@@ -21,14 +21,17 @@ def create_manager(
     email="username@test.com",
     password="password",
     role=User.Role.project_manager,
+    subordinate_id=1,
 ):
     user = User(
         username=username,
-        email=email,
+        email=username + email,
         password=password,
         company="ADMIN_COMPANY",
-        wp_responsible="ADMIN_WP_RES",
+        # wp_responsible="ADMIN_WP_RES",
         role=role,
+        position="TEST_position",
+        subordinate_id=subordinate_id,
     )
 
     user.save()

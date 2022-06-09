@@ -9,7 +9,8 @@ from .conftest import client
 def test_add_work_package(client):
     create_project(client)
     create_manager(
-        "manager", role=User.Role.project_manager, email="manager@manager.com"
+        "manager",
+        role=User.Role.project_manager,
     )
 
     login(client, "manager")
