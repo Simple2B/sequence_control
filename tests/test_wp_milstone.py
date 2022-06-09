@@ -1,19 +1,11 @@
-from tests.utils import create_manager, login, logout, create_project
-from app.models import WPMilestone, User, ProjectMilestone
+# from tests.utils import create_manager, login, logout, create_project
+from flask.testing import FlaskClient
+from app.models import WPMilestone, ProjectMilestone
 from datetime import datetime, timedelta
 
 
-# flake8: noqa F401
-from .conftest import client
+def test_add_milestone(manager: FlaskClient):
 
-
-def test_add_wp_milestone(client):
-    create_project(client)
-    create_manager(
-        "manager", role=User.Role.project_manager, email="manager@manager.com"
-    )
-
-    login(client, "manager")
     MILESTONE_NAME = "Test_Milestone"
     MILESTONE_DESCRIPTION = "S-2-B"
     MILESTONE_BASELINE = (datetime.now() + timedelta(days=30)).date()
@@ -22,7 +14,7 @@ def test_add_wp_milestone(client):
 
     assert not milestones
 
-    response = client.post(
+    response = manager.post(
         "/milestone_add",
         data=dict(
             name=MILESTONE_NAME,
@@ -40,13 +32,9 @@ def test_add_wp_milestone(client):
     assert milestone.name == MILESTONE_NAME
     assert milestone.description == MILESTONE_DESCRIPTION
 
-    logout(client)
 
-    create_manager(
-        "wp_manager", role=User.Role.wp_manager, email="manager2@manager.com"
-    )
+def test_add_wp_milestone(wp_manager: FlaskClient):
 
-    login(client, "wp_manager")
     WP_MILESTONE_NAME = "Test_Project"
     WP_MILESTONE_DESCRIPTION = "S-2-B"
     WP_MILESTONE_BASELINE = (datetime.now() + timedelta(days=30)).date()
@@ -55,13 +43,13 @@ def test_add_wp_milestone(client):
 
     assert not wp_milestones
 
-    response = client.post(
+    response = wp_manager.post(
         "/wp_milestone_add",
         data=dict(
             name=WP_MILESTONE_NAME,
             description=WP_MILESTONE_DESCRIPTION,
             baseline_date=WP_MILESTONE_BASELINE,
-            project_milestone_id=milestone.id,
+            project_milestone_id=1,
         ),
         follow_redirects=True,
     )
@@ -72,11 +60,11 @@ def test_add_wp_milestone(client):
     wp_milestone: WPMilestone = wp_milestones[0]
     assert wp_milestone.name == WP_MILESTONE_NAME
     assert wp_milestone.description == WP_MILESTONE_DESCRIPTION
-    assert wp_milestone.project_milestone_id == milestone.id
+    assert wp_milestone.project_milestone_id == 1
 
     # test adding milestone with existing name
     WP_MILESTONE_DESCRIPTION2 = "S-3-B"
-    response = client.post(
+    response = wp_manager.post(
         "/wp_milestone_add",
         data=dict(
             name=WP_MILESTONE_NAME,

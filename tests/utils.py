@@ -1,4 +1,4 @@
-from app.models import User
+from app.models import User, Project, WorkPackage, ProjectMilestone
 from datetime import datetime, timedelta
 
 
@@ -48,24 +48,51 @@ def logout(client):
     return client.get("/logout", follow_redirects=True)
 
 
-def create_project(client):
-    create_admin_register("admin")
+def create_project(manager_id):
+    # create_admin_register("admin")
 
-    login(client, "admin")
+    # login(client, "admin")
     PROJECT_NAME = "Test_Project"
     PROJECT_NUMBER = "S-2-B"
     PROJECT_LOCATION = "TEST_LOCAL"
     START_DATE = datetime.now().date()
     END_DATE = (datetime.now() + timedelta(days=30)).date()
-    client.post(
-        "/project_add",
-        data=dict(
-            name=PROJECT_NAME,
-            number=PROJECT_NUMBER,
-            location=PROJECT_LOCATION,
-            start_date=START_DATE,
-            end_date=END_DATE,
-            manager_id=1,
-        ),
-        follow_redirects=True,
-    )
+
+    project = Project(
+        name=PROJECT_NAME,
+        number=PROJECT_NUMBER,
+        location=PROJECT_LOCATION,
+        start_date=START_DATE,
+        end_date=END_DATE,
+        manager_id=manager_id,
+    ).save()
+    return project.id
+
+
+def create_work_package(manager_id):
+
+    PACKAGE_NAME = "Test_PACKAGE"
+    PACKAGE_NUMBER = "S-2-B"
+    CONTRACTOR_NAME = "TEST_CONTRACTOR"
+
+    work_package = WorkPackage(
+        name=PACKAGE_NAME,
+        number=PACKAGE_NUMBER,
+        contractor_name=CONTRACTOR_NAME,
+        project_id=1,
+        manager_id=manager_id,
+    ).save()
+    return work_package.id
+
+
+def create_milestone():
+    NAME = "Test_MILE_STONE"
+    DESCRIPTION = "S-2-B"
+    BASE_LINE_DATE = (datetime.now() + timedelta(days=30)).date()
+    milestone = ProjectMilestone(
+        name=NAME,
+        description=DESCRIPTION,
+        baseline_date=BASE_LINE_DATE,
+        project_id=1,
+    ).save()
+    return milestone.id

@@ -3,10 +3,6 @@ from tests.utils import create_admin_register, login
 from app.models import Reason
 
 
-# flake8: noqa F401
-from .conftest import client
-
-
 def test_add_reasons_cli(client):
     add_reasons()
 
