@@ -18,7 +18,7 @@ def test_add_work_package(manager: FlaskClient):
             name=PACKAGE_NAME,
             number=PACKAGE_NUMBER,
             contractor_name=CONTRACTOR_NAME,
-            project_id=PROJECT_ID,
+            wp_manager=3,
         ),
         follow_redirects=True,
     )

@@ -38,6 +38,7 @@ def admin(client: FlaskClient) -> Iterator[FlaskClient]:
 def manager(admin: FlaskClient) -> Iterator[FlaskClient]:
     manager_id = create_manager("manager")
     project_id = create_project(manager_id)
+    create_manager("wp_manager", role=User.Role.wp_manager)
     admin.post(
         "/login",
         data=dict(user_id="manager", password="password"),
@@ -53,8 +54,7 @@ def manager(admin: FlaskClient) -> Iterator[FlaskClient]:
 
 @pytest.fixture
 def wp_manager(manager: FlaskClient) -> Iterator[FlaskClient]:
-    manager_id = create_manager("wp_manager", role=User.Role.wp_manager)
-    package_id = create_work_package(manager_id)
+    package_id = create_work_package(3)
     create_milestone()
     manager.post(
         "/login",
