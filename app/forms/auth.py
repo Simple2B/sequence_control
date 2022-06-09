@@ -42,11 +42,6 @@ class RegistrationForm(FlaskForm):
 
 
 class PmRegistrationForm(RegistrationForm):
-    ROLES = [
-        (User.Role.project_manager.value, User.Role.project_manager.name),
-        (User.Role.wp_manager.value, User.Role.wp_manager.name),
-        (User.Role.viewer.value, User.Role.viewer),
-    ]
 
     position = StringField("Position", validators=[DataRequired(), Length(2, 30)])
 
