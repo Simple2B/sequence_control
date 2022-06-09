@@ -28,7 +28,7 @@ def project_manager_add():
         log.INFO,
         "User [] on project_manager_add",
     )
-    form = PmRegistrationForm(request.form)
+    form = PmRegistrationForm()
     if form.validate_on_submit():
         user = User(
             username=form.username.data,

@@ -13,7 +13,7 @@ project_blueprint = Blueprint("project", __name__)
 @role_required(roles=[User.Role.admin])
 def project_add():
     log(log.INFO, "User [%s] on project_add", current_user)
-    form = ProjectForm(request.form)
+    form = ProjectForm()
     form.manager_id.choices = [
         (user.id, user.username)
         for user in User.query.filter_by(
@@ -66,7 +66,7 @@ def project_add():
 )
 def project_choose():
     log(log.INFO, "[project_choose] User [%s] in", current_user)
-    form = ProjectChooseForm(request.form)
+    form = ProjectChooseForm()
     user: User = User.query.filter_by(id=current_user.id).first()
     if user.role == User.Role.project_manager:
         form.number.choices = [

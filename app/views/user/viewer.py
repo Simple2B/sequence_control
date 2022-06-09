@@ -13,7 +13,7 @@ viewer_blueprint = Blueprint("viewer", __name__)
 @role_required(roles=[User.Role.admin, User.Role.project_manager])
 def viewer_add():
     log(log.INFO, "User [%d] on viewer_add", current_user.id)
-    form = WPMRegistrationForm(request.form)
+    form = WPMRegistrationForm()
     if current_user.role == User.Role.admin:
         form.wp_responsible.choices = [
             (wp.id, wp.number)

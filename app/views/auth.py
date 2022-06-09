@@ -11,7 +11,7 @@ auth_blueprint = Blueprint("auth", __name__)
 @auth_blueprint.route("/login", methods=["GET", "POST"])
 def login():
     log(log.INFO, "[login] User [%s] try to login", current_user)
-    form = LoginForm(request.form)
+    form = LoginForm()
     if form.validate_on_submit():
         log(
             log.INFO,

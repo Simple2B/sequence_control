@@ -46,7 +46,7 @@ def work_package_add():
 )
 def work_package_choose():
     log(log.INFO, "[work_package_choose] User [%s] in", current_user)
-    form = ProjectChooseForm(request.form)
+    form = ProjectChooseForm()
     user: User = User.query.filter_by(id=current_user.id).first()
     form.number.choices = [
         (wp.id, wp.number)

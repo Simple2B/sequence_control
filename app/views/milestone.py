@@ -13,7 +13,7 @@ milestone_blueprint = Blueprint("milestone", __name__)
 @role_required(roles=[User.Role.project_manager])
 def milestone_add():
     log(log.INFO, "[milestone_add] User [%s] ", current_user.id)
-    form = MilestoneFrom(request.form)
+    form = MilestoneFrom()
     if form.validate_on_submit():
         log(
             log.INFO,
