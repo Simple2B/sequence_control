@@ -5,7 +5,7 @@ import numpy as np
 from app.models import Work, PlanDate
 
 
-def read_file(file_path: str) -> bool:
+def import_data_file(file_path: str, wp_id: int) -> bool:
     data = pd.read_excel(file_path, sheet_name=None)
     if not data:
         return False
@@ -25,6 +25,7 @@ def read_file(file_path: str) -> bool:
                 if row[0] is np.NAN:
                     continue
                 work = Work(
+                    wp_id=wp_id,
                     type=work_type,
                     ppc_type=Work.ppc_type_by_type(work_type),
                     deliverable=row[0],

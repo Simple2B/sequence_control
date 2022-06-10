@@ -9,8 +9,8 @@
           <a class="nav-link">PPC Type</a>
         </p>
       </li>
-      {% if current_user.role.name in ["wp_manager","project_manager","viewer"]
-      %}
+      <!-- prettier-ignore-->
+      {% if current_user.role.name in ["wp_manager","project_manager","viewer"] %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('plan.info', ppc_type='info')}}">
           <span data-feather="users"></span>
@@ -40,6 +40,18 @@
         <a class="nav-link" href="{{url_for('plan.info', ppc_type='hod')}}">
           <span data-feather="layers"></span>
           HOD
+        </a>
+      </li>
+      {% endif %}
+      <!-- prettier-ignore-->
+      {% if current_user.role.name == "wp_manager" %}
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          href="{{url_for('plan.import_file', ppc_type='hod')}}"
+        >
+          <span data-feather="layers"></span>
+          Import file
         </a>
       </li>
       {% endif %}

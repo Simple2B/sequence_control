@@ -1,6 +1,6 @@
 import os
 
-from app.controllers.read_file import read_file
+from app.controllers.read_file import import_data_file
 from app.models.work import Work
 
 
@@ -10,7 +10,7 @@ def test_read_file(client):
     # file_path = os.path.join(BASE_DIR, "CLIENT_DATA/test_data.xlsx")
     file_path = os.path.join(BASE_DIR, "DATA/PPC.xlsx")
 
-    res = read_file(file_path)
+    res = import_data_file(file_path, 1)
     assert res
     works: list[Work] = Work.query.all()
     assert works
