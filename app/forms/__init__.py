@@ -1,5 +1,12 @@
 # flake8: noqa F401
-from .auth import LoginForm, RegistrationForm, PmRegistrationForm, WPMRegistrationForm
+from .auth import (
+    LoginForm,
+    RegistrationForm,
+    PmRegistrationForm,
+    WPMRegistrationForm,
+    SelectViewerForm,
+    AdminSelectViewerForm,
+)
 from .project import ProjectForm, ProjectChooseForm
 from .reason import ReasonForm
 from .wp_milestone import WPMilestoneFrom, MilestoneFrom

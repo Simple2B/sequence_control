@@ -8,7 +8,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 
-from app.models import User
+from app.models import User, Project
 
 
 class LoginForm(FlaskForm):
@@ -42,11 +42,6 @@ class RegistrationForm(FlaskForm):
 
 
 class PmRegistrationForm(RegistrationForm):
-    ROLES = [
-        (User.Role.project_manager.value, User.Role.project_manager.name),
-        (User.Role.wp_manager.value, User.Role.wp_manager.name),
-        (User.Role.viewer.value, User.Role.viewer),
-    ]
 
     position = StringField("Position", validators=[DataRequired(), Length(2, 30)])
 
@@ -55,3 +50,28 @@ class WPMRegistrationForm(PmRegistrationForm):
     wp_responsible = SelectField("WP Responsible for", coerce=int, choices=[])
 
     submit = SubmitField("Submit")
+
+
+class SelectViewerForm(FlaskForm):
+    viewer = SelectField("Viewer", coerce=int, choices=[])
+    submit = SubmitField("Submit")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.viewer.choices = [
+            (user.id, user.username)
+            for user in User.query.filter_by(deleted=False, role=User.Role.viewer).all()
+        ]
+
+
+class AdminSelectViewerForm(SelectViewerForm):
+    project = SelectField("Project", coerce=int, choices=[])
+
+    submit = SubmitField("Submit")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.project.choices = [
+            (project.id, project.name)
+            for project in Project.query.filter_by(deleted=False).all()
+        ]

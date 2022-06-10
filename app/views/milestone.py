@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, Blueprint, request, flash, session
+from flask import render_template, url_for, redirect, Blueprint, flash, session
 from flask_login import current_user, login_required
 from app.forms import MilestoneFrom
 from app.logger import log
@@ -13,7 +13,7 @@ milestone_blueprint = Blueprint("milestone", __name__)
 @role_required(roles=[User.Role.project_manager])
 def milestone_add():
     log(log.INFO, "[milestone_add] User [%s] ", current_user.id)
-    form = MilestoneFrom(request.form)
+    form = MilestoneFrom()
     if form.validate_on_submit():
         log(
             log.INFO,

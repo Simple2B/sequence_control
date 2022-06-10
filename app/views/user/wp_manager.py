@@ -1,8 +1,8 @@
-from flask import render_template, session, url_for, redirect, Blueprint, request, flash
+from flask import render_template, url_for, redirect, Blueprint, flash
 from flask_login import current_user, login_required
-from app.forms import WPMRegistrationForm
+from app.forms import PmRegistrationForm
 from app.logger import log
-from app.models import User, WorkPackage
+from app.models import User
 from app.controllers import role_required
 
 wp_manager_blueprint = Blueprint("wp_manager", __name__)
@@ -13,21 +13,7 @@ wp_manager_blueprint = Blueprint("wp_manager", __name__)
 @role_required(roles=[User.Role.project_manager, User.Role.admin])
 def wp_manager_add():
     log(log.INFO, "User [%d] on wp_manager_add", current_user.id)
-    form = WPMRegistrationForm(request.form)
-    if current_user.role == User.Role.admin:
-        form.wp_responsible.choices = [
-            (wp.id, wp.number)
-            for wp in WorkPackage.query.filter_by(deleted=False).all()
-        ]
-    else:
-        form.wp_responsible.choices = [
-            (wp.id, wp.number)
-            for wp in WorkPackage.query.filter_by(
-                deleted=False,
-                manager_id=current_user.id,
-                project_id=session["project_id"],
-            ).all()
-        ]
+    form = PmRegistrationForm()
     if form.validate_on_submit():
         user = User(
             username=form.username.data,
@@ -35,7 +21,6 @@ def wp_manager_add():
             password=form.password.data,
             company=form.company_name.data,
             position=form.position.data,
-            wp_responsible=form.wp_responsible.data,
             role=User.Role.wp_manager,
             subordinate_id=current_user.id,
         )

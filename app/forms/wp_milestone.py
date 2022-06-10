@@ -18,8 +18,9 @@ class WPMilestoneFrom(FlaskForm):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        wp_id = int(session.get("wp_id"))
+        wp_id = session.get("wp_id")
         if wp_id:
+            wp_id = int(wp_id)
             wp: WorkPackage = WorkPackage.query.get(wp_id)
         self.project_milestone_id.choices = [
             (milestone.id, milestone.name)
