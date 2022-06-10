@@ -24,10 +24,7 @@ def index():
 @login_required
 @role_required(roles=[User.Role.admin])
 def project_manager_add():
-    log(
-        log.INFO,
-        "User [] on project_manager_add",
-    )
+    log(log.INFO, "User [%d] on project_manager_add", current_user.id)
     form = PmRegistrationForm()
     if form.validate_on_submit():
         user = User(
@@ -40,6 +37,7 @@ def project_manager_add():
             subordinate_id=current_user.id,
         )
         user.save()
+        log(log.INFO, "User [%d] added project manager [%d]", current_user.id, user.id)
         flash("Registration successful.", "success")
         return redirect(url_for("define.define"))
     elif form.is_submitted():
