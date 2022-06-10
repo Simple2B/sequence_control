@@ -65,7 +65,7 @@ class SelectViewerForm(FlaskForm):
 
 
 class AdminSelectViewerForm(SelectViewerForm):
-    project = SelectField("Viewer", coerce=int, choices=[])
+    project = SelectField("Project", coerce=int, choices=[])
 
     submit = SubmitField("Submit")
 
