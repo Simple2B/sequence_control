@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session, redirect
+from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required
 from app.logger import log
@@ -11,14 +12,22 @@ plan_blueprint = Blueprint("plan", __name__)
 
 
 @plan_blueprint.route("/plan")
+@login_required
 @role_required(
     roles=[User.Role.wp_manager, User.Role.project_manager, User.Role.viewer]
 )
-@login_required
 def plan():
-    log(log.INFO, "User [%d] define", current_user.id)
-
-    return render_template("plan.html")
+    user: User = current_user
+    log(log.INFO, "User [%d] plan", user.id)
+    project_id = session.get("project_id")
+    wp_id = session.get("wp_id")
+    if user.role in [User.Role.project_manager, user.role == User.Role.viewer]:
+        if not project_id:
+            return redirect(url_for("project.project_choose"))
+    if user.role == User.Role.wp_manager:
+        if not wp_id:
+            return redirect(url_for("work_package.work_package_choose"))
+    return redirect(url_for("plan.plan"))
 
 
 @plan_blueprint.route("/info/<ppc_type>")
