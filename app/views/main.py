@@ -13,6 +13,7 @@ from app.models import (
     Location,
     Building,
     Level,
+    ProjectViewer,
 )
 
 
@@ -56,7 +57,18 @@ def define_users():
     query = request.args.get("query", "", type=str)
     search_result = User.query.filter_by(deleted=False)
     if user.role != User.Role.admin:
-        search_result = search_result.filter(User.subordinate_id == user.id)
+        # show users on this project
+        project_id = int(session["project_id"])
+        viewers_ids = [
+            viewer.viewer_id
+            for viewer in ProjectViewer.query.filter_by(project_id=project_id).all()
+        ]
+        wp_manager_ids = [
+            wp.manager_id
+            for wp in WorkPackage.query.filter_by(project_id=project_id).all()
+        ]
+        users_ids = viewers_ids + wp_manager_ids
+        search_result = search_result.filter(User.id.in_(users_ids))
     query = query.strip()
     if query:
         search_result = search_result.filter(User.username.like(f"%{query}%"))
