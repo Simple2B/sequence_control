@@ -59,13 +59,13 @@
       works.page == page_num %}
       <a
         class="page_button btn btn-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', query=query, page=page_num) }}"
+        href="{{ url_for('plan.info', ppc_type=ppc_type, query=query, page=page_num) }}"
         >{{ page_num }}</a
       >
       {% else %}
       <a
         class="page_button btn btn-outline-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', query=query, page=page_num) }}"
+        href="{{ url_for('plan.info', ppc_type=ppc_type, query=query, page=page_num) }}"
         >{{ page_num }}</a
       >
       {% endif %} {% else %}
@@ -75,13 +75,13 @@
       right_current=3) %} {% if page_num %} {% if works.page == page_num %}
       <a
         class="page_button btn btn-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', page=page_num) }}"
+        href="{{ url_for('plan.info', ppc_type=ppc_type, page=page_num) }}"
         >{{ page_num }}</a
       >
       {% else %}
       <a
         class="page_button btn btn-outline-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', page=page_num) }}"
+        href="{{ url_for('plan.info', ppc_type=ppc_type, page=page_num) }}"
         >{{ page_num }}</a
       >
       {% endif %} {% else %}

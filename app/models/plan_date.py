@@ -9,7 +9,7 @@ class PlanDate(db.Model, ModelMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False)
-    version = db.Column(db.Integer, nullable=False)
+    version = db.Column(db.Integer, default=1)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
 
