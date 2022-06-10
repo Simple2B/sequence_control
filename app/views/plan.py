@@ -21,13 +21,13 @@ def plan():
     log(log.INFO, "User [%d] plan", user.id)
     project_id = session.get("project_id")
     wp_id = session.get("wp_id")
-    if user.role in [User.Role.project_manager, user.role == User.Role.viewer]:
+    if user.role in [User.Role.project_manager, User.Role.viewer]:
         if not project_id:
             return redirect(url_for("project.project_choose"))
     if user.role == User.Role.wp_manager:
         if not wp_id:
             return redirect(url_for("work_package.work_package_choose"))
-    return redirect(url_for("plan.plan"))
+    return render_template("plan.html")
 
 
 @plan_blueprint.route("/info/<ppc_type>")
