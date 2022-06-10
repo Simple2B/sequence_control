@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect, flash, request, session
+from flask import Blueprint, render_template, url_for, redirect, flash, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models import User
 from app.forms import LoginForm
@@ -11,7 +11,7 @@ auth_blueprint = Blueprint("auth", __name__)
 @auth_blueprint.route("/login", methods=["GET", "POST"])
 def login():
     log(log.INFO, "[login] User [%s] try to login", current_user)
-    form = LoginForm(request.form)
+    form = LoginForm()
     if form.validate_on_submit():
         log(
             log.INFO,

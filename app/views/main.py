@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, session
+from flask import Blueprint, redirect, render_template, session, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required
@@ -13,6 +13,7 @@ from app.models import (
     Location,
     Building,
     Level,
+    ProjectViewer,
 )
 
 
@@ -29,19 +30,22 @@ def index():
 @login_required
 def define():
     user: User = current_user
-    if user.role == User.Role.admin:
-        return redirect(url_for("main.define_users"))
-    if user.role == User.Role.project_manager:
-        if "project_id" in session and session["project_id"]:
-            return redirect(url_for("main.define_users"))
-        else:
-            return redirect(url_for("project.project_choose"))
-    if "wp_id" in session and session["wp_id"]:
-        if user.role == User.Role.wp_manager:
+    project_id = session.get("project_id")
+    wp_id = session.get("wp_id")
+    if user.role == User.Role.wp_manager:
+        if wp_id:
             return redirect(url_for("main.define_wp_milestones"))
+        else:
+            return redirect(url_for("work_package.work_package_choose"))
+    if user.role in [User.Role.admin, User.Role.project_manager, User.Role.viewer]:
+        if not project_id and user.role in [
+            User.Role.project_manager,
+            User.Role.viewer,
+        ]:
+            return redirect(url_for("project.project_choose"))
         if user.role == User.Role.viewer:
-            return redirect(url_for("main.define_for_viewer"))
-    return redirect(url_for("work_package.work_package_choose"))
+            return redirect(url_for("plan.plan"))
+    return redirect(url_for("main.define_users"))
 
 
 @main_blueprint.route("/define/users")
@@ -53,7 +57,18 @@ def define_users():
     query = request.args.get("query", "", type=str)
     search_result = User.query.filter_by(deleted=False)
     if user.role != User.Role.admin:
-        search_result = search_result.filter(User.subordinate_id == user.id)
+        # show users on this project
+        project_id = int(session["project_id"])
+        viewers_ids = [
+            viewer.viewer_id
+            for viewer in ProjectViewer.query.filter_by(project_id=project_id).all()
+        ]
+        wp_manager_ids = [
+            wp.manager_id
+            for wp in WorkPackage.query.filter_by(project_id=project_id).all()
+        ]
+        users_ids = viewers_ids + wp_manager_ids
+        search_result = search_result.filter(User.id.in_(users_ids))
     query = query.strip()
     if query:
         search_result = search_result.filter(User.username.like(f"%{query}%"))

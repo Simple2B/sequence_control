@@ -1,8 +1,8 @@
-from flask import render_template, url_for, redirect, Blueprint, request, flash, session
+from flask import render_template, url_for, redirect, Blueprint, flash, session
 from flask_login import current_user, login_required
 from app.forms import ProjectForm, ProjectChooseForm
 from app.logger import log
-from app.models import User, Project
+from app.models import User, Project, ProjectViewer
 from app.controllers import role_required
 
 project_blueprint = Blueprint("project", __name__)
@@ -13,7 +13,7 @@ project_blueprint = Blueprint("project", __name__)
 @role_required(roles=[User.Role.admin])
 def project_add():
     log(log.INFO, "User [%s] on project_add", current_user)
-    form = ProjectForm(request.form)
+    form = ProjectForm()
     form.manager_id.choices = [
         (user.id, user.username)
         for user in User.query.filter_by(
@@ -59,14 +59,13 @@ def project_add():
 @login_required
 @role_required(
     roles=[
-        User.Role.wp_manager,
         User.Role.project_manager,
         User.Role.viewer,
     ]
 )
 def project_choose():
     log(log.INFO, "[project_choose] User [%s] in", current_user)
-    form = ProjectChooseForm(request.form)
+    form = ProjectChooseForm()
     user: User = User.query.filter_by(id=current_user.id).first()
     if user.role == User.Role.project_manager:
         form.number.choices = [
@@ -76,7 +75,12 @@ def project_choose():
             ).all()
         ]
     else:
-        form.number.choices = []
+        viewers = ProjectViewer.query.filter(ProjectViewer.viewer_id == user.id).all()
+        viewers_ids = [viewer.project_id for viewer in viewers]
+        form.number.choices = [
+            (project.id, project.number)
+            for project in Project.query.filter(Project.id.in_(viewers_ids)).all()
+        ]
     if form.validate_on_submit():
         log(
             log.INFO,
@@ -93,5 +97,7 @@ def project_choose():
             current_user,
             session["project_id"],
         )
-        return redirect(url_for("main.define_milestones"))
+        if user.role == User.Role.project_manager:
+            return redirect(url_for("main.define_users"))
+        return redirect(url_for("plan.plan"))
     return render_template("project_choose.html", form=form)

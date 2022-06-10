@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, Blueprint, request, flash
+from flask import render_template, url_for, redirect, Blueprint, flash
 from flask_login import current_user, login_required
 from app.forms import ReasonForm
 from app.logger import log
@@ -13,7 +13,7 @@ reason_blueprint = Blueprint("reason", __name__)
 @role_required(roles=[User.Role.admin])
 def reason_add():
     log(log.INFO, "User [%s] on reason_add", current_user.id)
-    form = ReasonForm(request.form)
+    form = ReasonForm()
     if form.validate_on_submit():
         reason = Reason(
             name=form.name.data,

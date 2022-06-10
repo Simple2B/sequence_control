@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, Blueprint, request, flash, session
+from flask import render_template, url_for, redirect, Blueprint, flash, session
 from flask_login import current_user, login_required
 from app.forms import BuildingForm, LevelForm, LocationForm
 from app.logger import log
@@ -13,7 +13,7 @@ location_blueprint = Blueprint("location", __name__)
 @role_required(roles=[User.Role.project_manager])
 def building_add():
     log(log.INFO, "[building_add] User [%s] ", current_user.id)
-    form = BuildingForm(request.form)
+    form = BuildingForm()
     if form.validate_on_submit():
         log(
             log.INFO,
@@ -40,7 +40,7 @@ def building_add():
 @role_required(roles=[User.Role.project_manager])
 def level_add():
     log(log.INFO, "[level_add] User [%s]", current_user.id)
-    form = LevelForm(request.form)
+    form = LevelForm()
     form.building_id.choices = [
         (building.id, building.name)
         for building in Building.query.filter_by(
@@ -81,7 +81,7 @@ def level_add():
 @role_required(roles=[User.Role.project_manager])
 def location_add():
     log(log.INFO, "[location_add] User [%s]", current_user.id)
-    form = LocationForm(request.form)
+    form = LocationForm()
     form.level_id.choices = [
         (level.id, level.name + " - " + level.building.name)
         for level in Level.query.filter_by(

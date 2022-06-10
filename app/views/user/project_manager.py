@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, Blueprint, request, flash
+from flask import render_template, url_for, redirect, Blueprint, flash
 from flask_login import current_user, login_required
 from app.forms import PmRegistrationForm
 from app.logger import log
@@ -28,7 +28,7 @@ def project_manager_add():
         log.INFO,
         "User [] on project_manager_add",
     )
-    form = PmRegistrationForm(request.form)
+    form = PmRegistrationForm()
     if form.validate_on_submit():
         user = User(
             username=form.username.data,

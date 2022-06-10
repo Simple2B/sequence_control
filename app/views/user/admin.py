@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, Blueprint, request, flash
+from flask import render_template, url_for, redirect, Blueprint, flash
 from flask_login import current_user, login_required
 from app.forms import RegistrationForm
 from app.logger import log
@@ -13,7 +13,7 @@ admin_blueprint = Blueprint("admin", __name__)
 @role_required(roles=[User.Role.admin])
 def admin_add():
     log(log.INFO, "User [%d] on admin_blueprint", current_user.id)
-    form = RegistrationForm(request.form)
+    form = RegistrationForm()
     if form.validate_on_submit():
         user = User(
             username=form.username.data,
