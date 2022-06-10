@@ -52,3 +52,30 @@ class Work(db.Model, ModelMixin):
 
     def __repr__(self):
         return f"<Work: {self.type} {self.deliverable} >"
+
+    @staticmethod
+    def ppc_type_by_type(type: Type) -> PpcType:
+        return {
+            Work.Type.DWG: Work.PpcType.info,
+            Work.Type.TS: Work.PpcType.info,
+            Work.Type.SCH: Work.PpcType.info,
+            Work.Type.MDL: Work.PpcType.info,
+            Work.Type.CPD: Work.PpcType.info,
+            Work.Type.EDA: Work.PpcType.info,
+            Work.Type.TDRG: Work.PpcType.info,
+            Work.Type.TENQ: Work.PpcType.info,
+            Work.Type.CFO: Work.PpcType.info,
+            Work.Type.DSC: Work.PpcType.info,
+            Work.Type.PSD: Work.PpcType.docs,
+            Work.Type.RAMS: Work.PpcType.docs,
+            Work.Type.TWS: Work.PpcType.docs,
+            Work.Type.CMS: Work.PpcType.docs,
+            Work.Type.QS_QBM_P_MU: Work.PpcType.quality,
+            Work.Type.Fab_QSO: Work.PpcType.quality,
+            Work.Type.Ins_QSO: Work.PpcType.quality,
+            Work.Type.QHP: Work.PpcType.quality,
+            Work.Type.ATP1: Work.PpcType.atp,
+            Work.Type.ATP2: Work.PpcType.atp,
+            Work.Type.ATP3: Work.PpcType.atp,
+            Work.Type.HOD: Work.PpcType.hod,
+        }[type]

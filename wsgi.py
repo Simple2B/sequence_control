@@ -1,6 +1,5 @@
 #!/user/bin/env python
 import os
-import click
 
 from app import create_app, db, models, forms
 from app.models import User, Reason
@@ -43,15 +42,7 @@ def get_context():
 @app.cli.command()
 def create_db():
     """Create the configured database."""
-    db.create_all()
     add_admin()
-
-
-@app.cli.command()
-@click.confirmation_option(prompt="Drop all database tables?")
-def drop_db():
-    """Drop the current database."""
-    db.drop_all()
 
 
 @app.cli.command()
