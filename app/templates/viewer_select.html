@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container py-4">
+  <div class="card w-50 mx-auto">
+    <div class="card-header">
+      <h4 class="card-title">Select Viewer</h4>
+    </div>
+    <div class="card-body">
+      <form
+        class="form"
+        role="form"
+        action="{{ url_for('viewer.viewer_select') }}"
+        method="post"
+      >
+        {{form.hidden_tag()}}
+        <div class="form-group">
+          {{form.viewer.label}} {{form.viewer(class='form-control')}} {% for
+          error in form.errors.viewer %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        {% if current_user.role.name == "admin" %}
+        <div class="form-group">
+          {{form.project.label }} {{form.project(class='form-control')}} {% for
+          error in form.errors.project %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        {% endif %} {{form.submit(class='btn btn-secondary')}}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %} {{form.role(type="role", class='hit-input')}}
