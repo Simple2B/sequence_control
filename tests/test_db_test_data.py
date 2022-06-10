@@ -11,7 +11,7 @@ from app.models import (
 )
 
 
-def test_add_db_test_data():
+def test_add_db_test_data(client):
     fill_test_data(2)
     users = User.query.all()
     assert users
