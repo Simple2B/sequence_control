@@ -1,6 +1,5 @@
 #!/user/bin/env python
 import os
-import click
 
 from app import create_app, db, models, forms
 from app.models import User, Reason
