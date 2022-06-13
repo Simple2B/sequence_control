@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from flask.testing import FlaskClient
 from app.models import Work
 
@@ -66,3 +67,45 @@ def test_add_get_works(wp_manager: FlaskClient):
     assert b"ATP-11" not in response.data
     assert b"ATP-88" in response.data
     assert b"222-HOD-55" not in response.data
+
+
+def test_edit_work_date(wp_manager: FlaskClient):
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    # creating file to post it
+    file_path = os.path.join(BASE_DIR, "DATA/PPC.xlsx")
+    file = open(file_path, "rb")
+    # simulate importing file
+    response = wp_manager.post(
+        "/import_file",
+        data=dict(
+            file=file,
+        ),
+        follow_redirects=True,
+    )
+    assert response
+
+    atp_work: Work = Work.query.filter(Work.ppc_type == Work.PpcType.atp).first()
+    assert atp_work
+
+    old_date = atp_work.latest_date
+    old_version = atp_work.latest_date_version
+    assert old_version == 1
+
+    response = wp_manager.get(
+        f"/edit_work_date/{atp_work.id}",
+        follow_redirects=True,
+    )
+    assert response
+    new_date = (old_date + timedelta(days=10)).date()
+    response = wp_manager.post(
+        f"/edit_work_date/{atp_work.id}",
+        data=dict(
+            new_plan_date=new_date,
+        ),
+        follow_redirects=True,
+    )
+    assert response
+
+    atp_work: Work = Work.query.filter(Work.ppc_type == Work.PpcType.atp).first()
+    assert atp_work.latest_date
+    assert atp_work.latest_date_version == 2

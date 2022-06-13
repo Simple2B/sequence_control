@@ -52,7 +52,11 @@
           <td>{{work.type.name}}</td>
           <td>{{work.deliverable}}</td>
           <td>{{work.reference}}</td>
-          <td>{{work.latest_date}}</td>
+          <td>
+            <a href="{{ url_for('plan.edit_work_date', work_id=work.id) }}"
+              >{{work.latest_date}}</a
+            >
+          </td>
           <td>Milestone</td>
           <td>Level</td>
           <td>Space</td>

@@ -1,11 +1,11 @@
 import tempfile
-from flask import Blueprint, render_template, request, session, redirect
+from flask import Blueprint, render_template, request, session, redirect, flash
 from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required, import_data_file, get_works_for_project
 from app.logger import log
-from app.models import User, Work
-from app.forms import ImportFileForm
+from app.models import User, Work, PlanDate
+from app.forms import ImportFileForm, WorkForm
 
 plan_blueprint = Blueprint("plan", __name__)
 
@@ -105,3 +105,30 @@ def info(ppc_type):
         color=color,
         ppc_type=ppc_type.name,
     )
+
+
+@plan_blueprint.route("/edit_work_date/<work_id>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.wp_manager, User.Role.project_manager])
+def edit_work_date(work_id: int):
+    log(log.INFO, "User [%d] edit_work_date", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
+    if not work or work.work_package.manager_id != user.id:
+        flash("You can't change date for others PPC", "danger")
+        return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+    form = WorkForm()
+    form.reference.data = work.reference
+    form.old_plan_date.data = work.latest_date
+    if form.validate_on_submit():
+        PlanDate(
+            date=form.new_plan_date.data,
+            work_id=work.id,
+            version=(work.latest_date_version + 1),
+        ).save()
+        log(log.INFO, "User [%d] edited date at work [%d]", current_user.id, work.id)
+        # flash("Date changed.", "success")
+        return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+    elif form.is_submitted():
+        flash("The given data was invalid.", "danger")
+    return render_template("edit_work_date.html", form=form, work_id=work_id)
