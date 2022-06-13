@@ -6,6 +6,7 @@ from .auth import (
     WPMRegistrationForm,
     SelectViewerForm,
     AdminSelectViewerForm,
+    EditUserForm,
 )
 from .project import ProjectForm, ProjectChooseForm
 from .reason import ReasonForm

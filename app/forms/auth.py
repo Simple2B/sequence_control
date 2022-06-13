@@ -75,3 +75,16 @@ class AdminSelectViewerForm(SelectViewerForm):
             (project.id, project.name)
             for project in Project.query.filter_by(deleted=False).all()
         ]
+
+
+class EditUserForm(FlaskForm):
+    user_name = StringField("Username", [DataRequired()])
+    password = PasswordField("New Password", validators=[DataRequired(), Length(6, 30)])
+    password_confirmation = PasswordField(
+        "Confirm Password",
+        validators=[
+            DataRequired(),
+            EqualTo("password", message="Password do not match."),
+        ],
+    )
+    submit = SubmitField("Submit")

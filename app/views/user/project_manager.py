@@ -8,18 +8,6 @@ from app.controllers import role_required
 project_manager_blueprint = Blueprint("project_manager", __name__)
 
 
-@project_manager_blueprint.route("/users")
-@login_required
-# @role_required(roles=[User.Role.admin])
-def index():
-    log(
-        log.INFO,
-        "User [] on index page",
-    )
-
-    return render_template("users.html")
-
-
 @project_manager_blueprint.route("/project_manager_add", methods=["GET", "POST"])
 @login_required
 @role_required(roles=[User.Role.admin])
