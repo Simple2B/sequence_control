@@ -51,9 +51,12 @@ class Work(db.Model, ModelMixin):
 
     wp_id = db.Column(db.Integer, db.ForeignKey("work_packages.id"))
     work_package = relationship("WorkPackage", viewonly=True)
+    plan_dates = relationship(
+        "PlanDate", viewonly=True, order_by="asc(PlanDate.version)"
+    )
 
     def __repr__(self):
-        return f"<Work: {self.type} {self.deliverable} >"
+        return f"< {self.id} {self.type} {self.deliverable} >"
 
     @staticmethod
     def ppc_type_by_type(type: Type) -> PpcType:
@@ -81,3 +84,23 @@ class Work(db.Model, ModelMixin):
             Work.Type.ATP3: Work.PpcType.atp,
             Work.Type.HOD: Work.PpcType.hod,
         }[type]
+
+    @property
+    def latest_date(self) -> datetime:
+        from app.models import PlanDate
+
+        try:
+            plan_date: PlanDate = self.plan_dates[-1]
+        except IndexError:
+            return ""
+        return plan_date.date
+
+    @property
+    def latest_date_version(self) -> int:
+        from app.models import PlanDate
+
+        try:
+            plan_date: PlanDate = self.plan_dates[-1]
+        except IndexError:
+            return ""
+        return plan_date.version
