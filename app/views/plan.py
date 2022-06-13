@@ -2,7 +2,7 @@ import tempfile
 from flask import Blueprint, render_template, request, session, redirect
 from flask.helpers import url_for
 from flask_login import current_user, login_required
-from app.controllers import role_required, import_data_file
+from app.controllers import role_required, import_data_file, get_works_for_project
 from app.logger import log
 from app.models import User, Work
 from app.forms import ImportFileForm
@@ -66,33 +66,36 @@ def import_file():
     roles=[User.Role.wp_manager, User.Role.project_manager, User.Role.viewer]
 )
 def info(ppc_type):
+    ppc_type: Work.PpcType = Work.PpcType[ppc_type]
+    type = request.args.get("type", "", type=str)
     page = request.args.get("page", 1, type=int)
     query = request.args.get("query", "", type=str)
-    if ppc_type == "info":
-        links = ["DWG", "TS", "SCH", "MDL", "CPD", "EDA", "TDRG", "TENQ", "CFO", "DSC"]
-        color = "yellow"
-        search_result = Work.query.filter_by(deleted=False, ppc_type=Work.PpcType.info)
-    if ppc_type == "docs":
-        links = ["PSD", "RAMS", "TWS", "CMS"]
-        color = "blue"
-        search_result = Work.query.filter_by(deleted=False, ppc_type=Work.PpcType.docs)
-    if ppc_type == "quality":
-        links = ["QS_QBM_P_MU", "Fab_QSO", "Ins_QSO", "QHP"]
-        color = "green"
-        search_result = Work.query.filter_by(
-            deleted=False, ppc_type=Work.PpcType.quality
-        )
-    if ppc_type == "atp":
-        links = ["ATP1", "ATP2", "ATP3"]
-        color = "red"
-        search_result = Work.query.filter_by(deleted=False, ppc_type=Work.PpcType.atp)
-    if ppc_type == "hod":
-        links = ["HOD"]
-        color = "brown"
-        search_result = Work.query.filter_by(deleted=False, ppc_type=Work.PpcType.atp)
+    links, color = {
+        Work.PpcType.info: (
+            ["DWG", "TS", "SCH", "MDL", "CPD", "EDA", "TDRG", "TENQ", "CFO", "DSC"],
+            "yellow",
+        ),
+        Work.PpcType.docs: (["PSD", "RAMS", "TWS", "CMS"], "blue"),
+        Work.PpcType.quality: (
+            ["QS_QBM_P_MU", "Fab_QSO", "Ins_QSO", "QHP"],
+            "green",
+        ),
+        Work.PpcType.atp: (
+            ["ATP1", "ATP2", "ATP3"],
+            "red",
+        ),
+        Work.PpcType.hod: (
+            ["HOD"],
+            "brown",
+        ),
+    }[ppc_type]
+
+    search_result = get_works_for_project(ppc_type, type)
+
     query = query.strip()
     if query:
         search_result = search_result.filter(Work.reference.like(f"%{query}%"))
+
     works = search_result.paginate(page=page, per_page=15)
     return render_template(
         "plan.html",
@@ -100,5 +103,5 @@ def info(ppc_type):
         works=works,
         links=links,
         color=color,
-        ppc_type=ppc_type,
+        ppc_type=ppc_type.name,
     )

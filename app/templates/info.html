@@ -2,9 +2,17 @@
   <a class="btn btn-secondary mt-1 add_button" role="button">Add</a>
   <a class="btn btn-secondary mt-1 add_button" role="button">Check</a>
   <div class="d-flex flex-row-reverse bd-highlight">
-    <a class="text-bg-right nav-link fs-5" href="#">All</a>
+    <a
+      class="text-bg-right nav-link fs-5"
+      href="{{ url_for('plan.info', ppc_type=ppc_type) }}"
+      >All</a
+    >
     {% for link in links %}
-    <a class="text-bg-right nav-link fs-5" href="#">{{link}} </a>
+    <a
+      class="text-bg-right nav-link fs-5"
+      href="{{ url_for('plan.info', ppc_type=ppc_type, type=link) }}"
+      >{{link}}
+    </a>
     {% endfor %}
   </div>
   <div class="table-responsive">
@@ -41,14 +49,14 @@
         {% for work in works.items %}
         <tr>
           <td>{{work.id}}</td>
-          <td>{{work.type}}</td>
+          <td>{{work.type.name}}</td>
           <td>{{work.deliverable}}</td>
           <td>{{work.reference}}</td>
-          <td>Planned Date</td>
+          <td>{{work.latest_date}}</td>
           <td>Milestone</td>
           <td>Level</td>
           <td>Space</td>
-          <td>Version</td>
+          <td>{{work.latest_date_version}}</td>
         </tr>
         {% endfor %}
       </tbody>
