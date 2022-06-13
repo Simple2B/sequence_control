@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
 
@@ -14,6 +15,7 @@ class PlanDate(db.Model, ModelMixin):
     deleted = db.Column(db.Boolean, default=False)
 
     work_id = db.Column(db.Integer, db.ForeignKey("works.id"))
+    work = relationship("Work", viewonly=True)
 
     def __repr__(self):
         return f"<PlanDate: {self.date} {self.version} >"
