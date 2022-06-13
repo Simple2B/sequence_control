@@ -14,7 +14,7 @@ class Level(db.Model, ModelMixin):
     deleted = db.Column(db.Boolean, default=False)
 
     building_id = db.Column(db.Integer, db.ForeignKey("buildings.id"))
-    building = relationship("Building")
+    building = relationship("Building", viewonly=True)
 
     def __repr__(self):
         return f"<{self.id} {self.name} {self.building_id}>"
