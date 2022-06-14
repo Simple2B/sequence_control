@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 from app.controllers import role_required, import_data_file, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate
-from app.forms import ImportFileForm, WorkEditDateForm, WorkAddForm
+from app.forms import ImportFileForm, WorkEditForm, WorkAddForm, WorkDeleteForm
 
 plan_blueprint = Blueprint("plan", __name__)
 
@@ -107,31 +107,63 @@ def info(ppc_type):
     )
 
 
-@plan_blueprint.route("/edit_work_date/<work_id>", methods=["GET", "POST"])
+@plan_blueprint.route("/edit_work/<work_id>", methods=["GET", "POST"])
 @login_required
 @role_required(roles=[User.Role.wp_manager, User.Role.project_manager])
-def edit_work_date(work_id: int):
-    log(log.INFO, "User [%d] edit_work_date", current_user.id)
+def edit_work(work_id: int):
+    log(log.INFO, "User [%d] edit_work", current_user.id)
     user: User = current_user
     work: Work = Work.query.get(work_id)
-    if not work or work.work_package.manager_id != user.id:
+    if not work:
         flash("You can't change date for others PPC", "danger")
-        return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
-    form = WorkEditDateForm()
-    form.reference.data = work.reference
-    form.old_plan_date.data = work.latest_date
+        return redirect(url_for("plan.plan"))
+    if user.role == User.Role.wp_manager:
+        if work.work_package.manager_id != user.id:
+            log(
+                log.WARNING,
+                "[edit_work] User [%d] try to edit work [%d]",
+                current_user.id,
+                work.id,
+            )
+            flash("You can't edit PPC from other Work Package", "danger")
+            return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+        form = WorkEditForm()
+    else:
+        project_id = session.get("project_id")
+        if not project_id or work.work_package.project_id != project_id:
+            log(
+                log.WARNING,
+                "[edit_work] User [%d] try to edit work [%d]",
+                current_user.id,
+                work.id,
+            )
+            flash("You can't delete PPC from other Project", "danger")
+            return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+        form = WorkDeleteForm()
     if form.validate_on_submit():
-        PlanDate(
-            date=form.new_plan_date.data,
-            work_id=work.id,
-            version=(work.latest_date_version + 1),
-        ).save()
-        log(log.INFO, "User [%d] edited date at work [%d]", current_user.id, work.id)
-        # flash("Date changed.", "success")
+        work_type: Work.Type = Work.Type[form.type.data.upper()]
+        work.deliverable = form.deliverable.data
+        work.ppc_type = Work.ppc_type_by_type(work_type)
+        work.type = work_type
+        work.save()
+        if form.new_plan_date.data != work.latest_date.date():
+            PlanDate(
+                date=form.new_plan_date.data,
+                work_id=work.id,
+                version=(work.latest_date_version + 1),
+            ).save()
+        log(log.INFO, "User [%d] edited work [%d]", current_user.id, work.id)
         return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
     elif form.is_submitted():
         flash("The given data was invalid.", "danger")
-    return render_template("edit_work_date.html", form=form, work_id=work_id)
+    form.reference.data = work.reference
+    form.deliverable.data = work.deliverable
+    form.plan_date.data = work.latest_date
+    form.ppc_type.data = work.ppc_type.name
+    form.type.data = work.type.name
+    if user.role == User.Role.wp_manager:
+        form.new_plan_date.data = work.latest_date
+    return render_template("edit_work.html", form=form, work_id=work_id)
 
 
 @plan_blueprint.route("/work_add/<ppc_type>", methods=["GET", "POST"])
@@ -179,3 +211,24 @@ def work_add(ppc_type: str):
         log(log.INFO, "User [%d] cannot add work ", user.id)
 
     return render_template("work_add.html", form=form, ppc_type=ppc_type)
+
+
+@plan_blueprint.route("/delete_work/<work_id>", methods=["POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def delete_work(work_id: int):
+    log(log.INFO, "User [%d] delete_work", current_user.id)
+    project_id = session.get("project_id")
+    if not project_id:
+        return redirect(url_for("project.project_choose"))
+    project_id = int(project_id)
+    work: Work = Work.query.get(work_id)
+
+    if not work or work.work_package.project_id != project_id:
+        flash("You can't delete PPC of other Project", "danger")
+        return redirect(url_for("plan.plan"))
+    work.deleted = True
+    work.save()
+    log(log.INFO, "[delete_work] User [%d] deleted work [%d]", current_user.id, work.id)
+
+    return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))

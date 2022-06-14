@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container py-4">
+  <div class="card w-50 mx-auto">
+    <div class="card-header">
+      <h4 class="card-title">{{form.reference.data}}</h4>
+    </div>
+    <div class="card-body">
+      <form
+        class="form"
+        role="form"
+        action="{{ url_for('plan.edit_work', work_id=work_id) }}"
+        method="post"
+      >
+        {{form.hidden_tag()}}
+        <div class="form-group">
+          {{form.ppc_type.label}} {{form.ppc_type(class='form-control')}} {% for
+          error in form.errors.ppc_type %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.type.label}} {{form.type(class='form-control')}} {% for error
+          in form.errors.type %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.deliverable.label}} {{form.deliverable(class='form-control')}}
+          {% for error in form.errors.deliverable %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.reference.label}} {{form.reference(class='form-control')}} {%
+          for error in form.errors.reference %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.plan_date.label}} {{form.plan_date(class='form-control')}} {%
+          for error in form.errors.plan_date %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        {% if current_user.role.name == "wp_manager" %}
+        <div class="form-group">
+          {{form.new_plan_date.label}}
+          {{form.new_plan_date(class='form-control')}} {% for error in
+          form.errors.new_plan_date %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        {{form.submit(class='btn btn-secondary')}} {% elif
+        current_user.role.name == "project_manager" %}
+        <a
+          class="btn btn-danger mt-1 add_button"
+          href="{{ url_for('plan.delete_work', work_id=work_id) }}"
+          role="button"
+          >Delete
+        </a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

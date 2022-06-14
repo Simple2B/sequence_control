@@ -36,7 +36,6 @@
               <thead style="background-color: brown">
                 {% endif %}
                 <tr class="tableHeadThText" style="color: rgb(0, 0, 0)">
-                  <th>id</th>
                   <th>Type</th>
                   <th>Deliverable</th>
                   <th>Reference</th>
@@ -55,15 +54,14 @@
       <tbody>
         {% for work in works.items %}
         <tr>
-          <td>{{work.id}}</td>
           <td>{{work.type.name}}</td>
-          <td>{{work.deliverable}}</td>
-          <td>{{work.reference}}</td>
           <td>
-            <a href="{{ url_for('plan.edit_work_date', work_id=work.id) }}"
-              >{{work.latest_date}}</a
+            <a href="{{ url_for('plan.edit_work', work_id=work.id) }}"
+              >{{work.deliverable}}</a
             >
           </td>
+          <td>{{work.reference}}</td>
+          <td>{{work.latest_date}}</td>
           <td>Milestone</td>
           <td>Level</td>
           <td>Space</td>
