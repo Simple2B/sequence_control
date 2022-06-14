@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 from app.controllers import role_required, import_data_file, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate
-from app.forms import ImportFileForm, WorkForm
+from app.forms import ImportFileForm, WorkEditDateForm, WorkAddForm
 
 plan_blueprint = Blueprint("plan", __name__)
 
@@ -117,7 +117,7 @@ def edit_work_date(work_id: int):
     if not work or work.work_package.manager_id != user.id:
         flash("You can't change date for others PPC", "danger")
         return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
-    form = WorkForm()
+    form = WorkEditDateForm()
     form.reference.data = work.reference
     form.old_plan_date.data = work.latest_date
     if form.validate_on_submit():
@@ -132,3 +132,51 @@ def edit_work_date(work_id: int):
     elif form.is_submitted():
         flash("The given data was invalid.", "danger")
     return render_template("edit_work_date.html", form=form, work_id=work_id)
+
+
+@plan_blueprint.route("/work_add/<ppc_type>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.wp_manager])
+def work_add(ppc_type: str):
+    log(log.INFO, "User [%d] work_add", current_user.id)
+    user: User = current_user
+    wp_id = session.get("wp_id")
+    if not wp_id:
+        log(log.ERROR, "[work_add] No WP_ID for user [%d]", user.id)
+        return redirect(url_for("work_package.work_package_choose"))
+    wp_id = int(wp_id)
+
+    ppc_type = ppc_type
+    type = request.args.get("type", "", type=str)
+
+    form = WorkAddForm()
+
+    form.ppc_type.data = form.ppc_type.data.lower() if form.ppc_type.data else ppc_type
+    form.type.data = form.type.data.upper() if form.type.data else type
+    if form.validate_on_submit():
+        try:
+            work_type: Work.Type = Work.Type[form.type.data]
+        except KeyError:
+            flash("The given data was invalid.", "danger")
+            return render_template("work_add.html", form=form, ppc_type=ppc_type)
+        work = Work(
+            wp_id=wp_id,
+            type=work_type,
+            ppc_type=Work.ppc_type_by_type(work_type),
+            deliverable=form.deliverable.data,
+            reference=form.reference.data,
+        ).save()
+        PlanDate(
+            date=form.plan_date.data,
+            work_id=work.id,
+        ).save()
+
+        log(log.INFO, "User [%d] added work [%d]", user.id, work.id)
+        # flash("Date changed.", "success")
+        return redirect(url_for("plan.info", form=form, ppc_type=ppc_type))
+
+    elif form.is_submitted():
+        log(log.INFO, "User [%d] cannot add work ", user.id)
+        flash("The given data was invalid.", "danger")
+
+    return render_template("work_add.html", form=form, ppc_type=ppc_type)
