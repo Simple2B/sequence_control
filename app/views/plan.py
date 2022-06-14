@@ -232,3 +232,12 @@ def delete_work(work_id: int):
     log(log.INFO, "[delete_work] User [%d] deleted work [%d]", current_user.id, work.id)
 
     return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+
+
+@plan_blueprint.route("/work_version/<work_id>")
+@login_required
+@role_required(roles=[User.Role.wp_manager, User.Role.project_manager])
+def work_version(work_id: int):
+    log(log.INFO, "User [%d] work_version", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
