@@ -25,3 +25,14 @@ class WorkAddForm(FlaskForm):
     def validate_reference(form, field):
         if Work.query.filter_by(reference=field.data).first() is not None:
             raise ValidationError("This reference is already registered.")
+
+    def validate_ppc_type(form, field):
+
+        if field.data.lower() not in Work.PpcType._value2member_map_:
+            raise ValidationError("No such PPC Type registered.")
+
+    def validate_type(form, field):
+        try:
+            Work.Type[field.data.upper()]
+        except KeyError:
+            raise ValidationError("No such PPC Sub-type registered.")

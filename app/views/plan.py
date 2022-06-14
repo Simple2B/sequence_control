@@ -177,6 +177,5 @@ def work_add(ppc_type: str):
 
     elif form.is_submitted():
         log(log.INFO, "User [%d] cannot add work ", user.id)
-        flash("The given data was invalid.", "danger")
 
     return render_template("work_add.html", form=form, ppc_type=ppc_type)
