@@ -116,7 +116,7 @@ def edit_work(work_id: int):
     work: Work = Work.query.get(work_id)
     if not work:
         flash("You can't change date for others PPC", "danger")
-        return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+        return redirect(url_for("plan.plan"))
     if user.role == User.Role.wp_manager:
         if work.work_package.manager_id != user.id:
             log(
@@ -226,7 +226,7 @@ def delete_work(work_id: int):
 
     if not work or work.work_package.project_id != project_id:
         flash("You can't delete PPC of other Project", "danger")
-        return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+        return redirect(url_for("plan.plan"))
     work.deleted = True
     work.save()
     log(log.INFO, "[delete_work] User [%d] deleted work [%d]", current_user.id, work.id)
