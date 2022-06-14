@@ -14,4 +14,4 @@ from .wp_milestone import WPMilestoneFrom, MilestoneFrom
 from .work_package import WorkPackageForm
 from .location import BuildingForm, LevelForm, LocationForm
 from .import_file import ImportFileForm
-from .work import WorkEditDateForm, WorkAddForm
+from .work import WorkEditForm, WorkAddForm, WorkDeleteForm
