@@ -2,6 +2,7 @@ import os
 from datetime import timedelta, datetime
 from flask.testing import FlaskClient
 from app.models import Work, PlanDate
+from .utils import create_work_package
 
 
 def test_add_get_works(wp_manager: FlaskClient):
@@ -69,7 +70,7 @@ def test_add_get_works(wp_manager: FlaskClient):
     assert b"222-HOD-55" not in response.data
 
 
-def test_edit_work_date(wp_manager: FlaskClient):
+def test_edit_work(wp_manager: FlaskClient):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     # creating file to post it
     file_path = os.path.join(BASE_DIR, "DATA/PPC.xlsx")
@@ -91,16 +92,23 @@ def test_edit_work_date(wp_manager: FlaskClient):
     old_version = atp_work.latest_date_version
     assert old_version == 1
 
-    response = wp_manager.get(
-        f"/edit_work_date/{atp_work.id}",
-        follow_redirects=True,
-    )
-    assert response
+    reference = atp_work.reference
+    deliverable = atp_work.deliverable
+    plan_date = atp_work.latest_date.date()
+    ppc_type = atp_work.ppc_type.name
+    type = atp_work.type.name
     new_date = (old_date + timedelta(days=10)).date()
+
+    # changing only date
     response = wp_manager.post(
-        f"/edit_work_date/{atp_work.id}",
+        f"/edit_work/{atp_work.id}",
         data=dict(
+            reference=reference,
             new_plan_date=new_date,
+            deliverable=deliverable,
+            plan_date=plan_date,
+            ppc_type=ppc_type,
+            type=type,
         ),
         follow_redirects=True,
     )
@@ -109,6 +117,31 @@ def test_edit_work_date(wp_manager: FlaskClient):
     atp_work: Work = Work.query.filter(Work.ppc_type == Work.PpcType.atp).first()
     assert atp_work.latest_date
     assert atp_work.latest_date_version == 2
+
+    # changing only deliverable and type (and entered type with small letters)
+    deliverable = "test deliverable"
+    type = "atp3"
+
+    response = wp_manager.post(
+        f"/edit_work/{atp_work.id}",
+        data=dict(
+            reference=reference,
+            new_plan_date=new_date,
+            deliverable=deliverable,
+            plan_date=new_date,
+            ppc_type=ppc_type,
+            type=type,
+        ),
+        follow_redirects=True,
+    )
+    assert response
+
+    atp_work: Work = Work.query.filter(Work.ppc_type == Work.PpcType.atp).first()
+    assert atp_work.latest_date
+    assert atp_work.latest_date_version == 2
+
+    assert atp_work.deliverable == deliverable
+    assert atp_work.type.name == "ATP3"
 
 
 def test_add_work(wp_manager: FlaskClient):
@@ -205,3 +238,21 @@ def test_add_work(wp_manager: FlaskClient):
 
     # cant add Deliverable with wrong type and redirected to add new again
     assert b"Add new Deliverable" in response.data
+
+
+def test_delete_work(manager: FlaskClient):
+    wp_id = create_work_package(3)
+    work = Work(
+        wp_id=wp_id,
+        type=Work.Type.ATP1,
+        ppc_type=Work.PpcType.atp,
+        deliverable="test_deliverable",
+        reference="test_ref",
+    ).save()
+    assert work
+    response = manager.post(
+        f"/delete_work/{work.id}",
+        follow_redirects=True,
+    )
+    assert response
+    assert work.deleted is True
