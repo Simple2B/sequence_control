@@ -114,13 +114,31 @@ def edit_work(work_id: int):
     log(log.INFO, "User [%d] edit_work", current_user.id)
     user: User = current_user
     work: Work = Work.query.get(work_id)
-    # if not work or work.work_package.manager_id != user.id:
     if not work:
         flash("You can't change date for others PPC", "danger")
         return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
     if user.role == User.Role.wp_manager:
+        if work.work_package.manager_id != user.id:
+            log(
+                log.WARNING,
+                "[edit_work] User [%d] try to edit work [%d]",
+                current_user.id,
+                work.id,
+            )
+            flash("You can't edit PPC from other Work Package", "danger")
+            return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
         form = WorkEditForm()
     else:
+        project_id = session.get("project_id")
+        if not project_id or work.work_package.project_id != project_id:
+            log(
+                log.WARNING,
+                "[edit_work] User [%d] try to edit work [%d]",
+                current_user.id,
+                work.id,
+            )
+            flash("You can't delete PPC from other Project", "danger")
+            return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
         form = WorkDeleteForm()
     if form.validate_on_submit():
         work_type: Work.Type = Work.Type[form.type.data.upper()]
