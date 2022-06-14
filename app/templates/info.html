@@ -1,5 +1,12 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-  <a class="btn btn-secondary mt-1 add_button" role="button">Add</a>
+  {% if current_user.role.name == "wp_manager" %}
+  <a
+    class="btn btn-secondary mt-1 add_button"
+    href="{{ url_for('plan.work_add', ppc_type=ppc_type , type=request.args['type']) }}"
+    role="button"
+    >Add
+  </a>
+  {% endif %}
   <a class="btn btn-secondary mt-1 add_button" role="button">Check</a>
   <div class="d-flex flex-row-reverse bd-highlight">
     <a

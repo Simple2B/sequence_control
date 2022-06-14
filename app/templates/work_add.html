@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container py-4">
+  <div class="card w-50 mx-auto">
+    <div class="card-header">
+      <h4 class="card-title">Add new Deliverable</h4>
+    </div>
+    <div class="card-body">
+      <form
+        class="form"
+        role="form"
+        action="{{ url_for('plan.work_add', ppc_type=ppc_type) }}"
+        method="post"
+      >
+        {{form.hidden_tag()}}
+        <div class="form-group">
+          {{form.ppc_type.label}} {{form.ppc_type(class='form-control')}} {% for
+          error in form.errors.ppc_type %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.type.label}} {{form.type(class='form-control')}} {% for error
+          in form.errors.type %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.deliverable.label}} {{form.deliverable(class='form-control')}}
+          {% for error in form.errors.deliverable %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.reference.label}} {{form.reference(class='form-control')}} {%
+          for error in form.errors.reference %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.plan_date.label}} {{form.plan_date(class='form-control')}} {%
+          for error in form.errors.plan_date %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        {{form.submit(class='btn btn-secondary')}}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
