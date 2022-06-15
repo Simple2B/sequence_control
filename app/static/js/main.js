@@ -36,3 +36,27 @@ if (ms_selectors) {
     });
   });
 }
+
+const loc_selectors = document.querySelectorAll(".locationSelector");
+
+if (loc_selectors) {
+  loc_selectors.forEach(function (el) {
+    el.addEventListener("change", function (e) {
+      const formData = new FormData();
+      formData.set("loc_id", e.target.value);
+      formData.set("work_id", el.name);
+      fetch("/work_select_location/", {
+        method: "POST",
+        body: formData,
+        redirect: "manual",
+        mode: "no-cors",
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error("ERROR", err.message);
+        });
+    });
+  });
+}

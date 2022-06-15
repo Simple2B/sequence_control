@@ -12,6 +12,7 @@ from app.forms import (
     WorkAddForm,
     WorkDeleteForm,
     WorkChangeMilestoneForm,
+    WorkChangeLocationForm,
 )
 
 plan_blueprint = Blueprint("plan", __name__)
@@ -74,9 +75,12 @@ def import_file():
 )
 def info(ppc_type):
     ppc_type: Work.PpcType = Work.PpcType[ppc_type]
-    type = request.args.get("type", "", type=str)
+    type_query = request.args.get("type", "", type=str)
     page = request.args.get("page", 1, type=int)
-    query = request.args.get("query", "", type=str)
+    type_query = type_query.split("?") if type_query else ["", ""]
+    # query = request.args.get("query", "", type=str)
+    type = type_query[0]
+    query = type_query[1] if len(type_query) == 2 else ""
     links, color = {
         Work.PpcType.info: (
             ["DWG", "TS", "SCH", "MDL", "CPD", "EDA", "TDRG", "TENQ", "CFO", "DSC"],
@@ -277,5 +281,26 @@ def work_select_milestone():
             current_user.id,
             work.id,
             work.milestone_id,
+        )
+    return {}
+
+
+@plan_blueprint.route("/work_select_location/", methods=["POST"])
+@login_required
+@role_required(roles=[User.Role.wp_manager])
+def work_select_location():
+    form = WorkChangeLocationForm()
+    log(log.INFO, "[work_select_location] User[%d]", current_user.id)
+
+    if form.is_submitted():
+        work: Work = Work.query.get(form.work_id.data)
+        work.location_id = form.loc_id.data
+        work.save()
+        log(
+            log.INFO,
+            "[work_select_location] User[%d] work [%d] location to [%d]",
+            current_user.id,
+            work.id,
+            work.location_id,
         )
     return {}
