@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
 from .wp_milestone import WPMilestone
+from .location import Location
 
 
 class Work(db.Model, ModelMixin):
@@ -52,6 +53,7 @@ class Work(db.Model, ModelMixin):
     deleted = db.Column(db.Boolean, default=False)
 
     milestone_id = db.Column(db.Integer, nullable=True)
+    location_id = db.Column(db.Integer, nullable=True)
 
     wp_id = db.Column(db.Integer, db.ForeignKey("work_packages.id"))
     work_package = relationship("WorkPackage", viewonly=True)
@@ -122,7 +124,7 @@ class Work(db.Model, ModelMixin):
 
         return (
             "red"
-            if duplicates > 1 or len(a) > 0 or len(self.latest_date_version) == 0
+            if duplicates > 1 or len(a) > 0 or not self.latest_date_version
             else ""
         )
 
@@ -135,3 +137,23 @@ class Work(db.Model, ModelMixin):
             milestone: ProjectMilestone = milestone
             for wp_ms in milestone.wp_milestones:
                 yield wp_ms
+
+    @property
+    def locations(self) -> Iterator[Location]:
+
+        project_id = self.work_package.project_id
+        locations_ids = [
+            loc.id
+            for loc in Location.query.filter_by(deleted=False)
+            if loc.level.building.project_id == project_id
+        ]
+        for location in Location.query.filter(Location.level_id.in_(locations_ids)):
+            location: Location = location
+            yield location
+
+    @property
+    def level_name(self) -> str:
+
+        location: Location = Location.query.get(self.location_id)
+
+        return location.level.name if location else "----"
