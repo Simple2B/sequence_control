@@ -65,7 +65,11 @@
           <td>Milestone</td>
           <td>Level</td>
           <td>Space</td>
-          <td>{{work.latest_date_version}}</td>
+          <td>
+            <a href="{{ url_for('plan.work_version', work_id=work.id) }}"
+              >{{work.latest_date_version}}</a
+            >
+          </td>
         </tr>
         {% endfor %}
       </tbody>

@@ -2,6 +2,7 @@ import tempfile
 from flask import Blueprint, render_template, request, session, redirect, flash
 from flask.helpers import url_for
 from flask_login import current_user, login_required
+from sqlalchemy import desc
 from app.controllers import role_required, import_data_file, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate
@@ -232,3 +233,22 @@ def delete_work(work_id: int):
     log(log.INFO, "[delete_work] User [%d] deleted work [%d]", current_user.id, work.id)
 
     return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
+
+
+@plan_blueprint.route("/work_version/<work_id>")
+@login_required
+@role_required(
+    roles=[User.Role.wp_manager, User.Role.project_manager, User.Role.viewer]
+)
+def work_version(work_id: int):
+    log(log.INFO, "User [%d] work_version", current_user.id)
+    work: Work = Work.query.get(work_id)
+    page = request.args.get("page", 1, type=int)
+    plan_dates = (
+        PlanDate.query.filter(PlanDate.work_id == work_id)
+        .order_by(desc(PlanDate.version))
+        .paginate(page=page, per_page=25)
+    )
+    return render_template(
+        "plan.html", context="version", plan_dates=plan_dates, work=work
+    )

@@ -256,3 +256,53 @@ def test_delete_work(manager: FlaskClient):
     )
     assert response
     assert work.deleted is True
+
+
+def test_work_version_check(wp_manager: FlaskClient):
+    work = Work(
+        wp_id=1,
+        type=Work.Type.ATP1,
+        ppc_type=Work.PpcType.atp,
+        deliverable="test_deliverable",
+        reference="test_ref",
+    ).save()
+    assert work
+    date = datetime(2003, 9, 25, 0, 0)
+    PlanDate(
+        date=date,
+        work_id=work.id,
+    ).save()
+
+    atp_work: Work = Work.query.first()
+    assert atp_work
+
+    new_date = (atp_work.latest_date + timedelta(days=10)).date()
+
+    response = wp_manager.post(
+        f"/edit_work/{atp_work.id}",
+        data=dict(
+            reference=atp_work.reference,
+            new_plan_date=new_date,
+            deliverable=atp_work.deliverable,
+            plan_date=atp_work.latest_date.date(),
+            ppc_type=work.ppc_type.name,
+            type=work.type.name,
+        ),
+        follow_redirects=True,
+    )
+
+    atp_work: Work = Work.query.first()
+    assert atp_work.latest_date
+    assert atp_work.latest_date_version == 2
+
+    response = wp_manager.get(
+        f"/work_version/{1}",
+        follow_redirects=True,
+    )
+    assert response
+    assert b"Edit Date" in response.data
+    assert b"Planned Date" in response.data
+    assert b"test_ref" in response.data
+    assert b"2003-09-25" in response.data
+    assert b"2022-06-15" in response.data
+    assert b"2003-10-05" in response.data
