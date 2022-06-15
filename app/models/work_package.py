@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
 
@@ -16,6 +17,8 @@ class WorkPackage(db.Model, ModelMixin):
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    project = relationship("Project", viewonly=True)
 
     def __repr__(self):
         return (

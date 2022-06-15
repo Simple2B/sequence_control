@@ -1,5 +1,6 @@
 from datetime import datetime
 from app import db
+from sqlalchemy.orm import relationship
 from app.models.utils import ModelMixin
 
 
@@ -16,6 +17,7 @@ class WPMilestone(db.Model, ModelMixin):
 
     wp_manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     project_milestone_id = db.Column(db.Integer, db.ForeignKey("project_milestones.id"))
+    project_ms = relationship("ProjectMilestone", viewonly=True)
 
     def __repr__(self):
         return f"<{self.id} {self.name} wp_manager_id{self.wp_manager_id} proj_milest_id{self.project_milestone_id}>"

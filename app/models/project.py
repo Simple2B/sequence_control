@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
 
@@ -17,6 +18,7 @@ class Project(db.Model, ModelMixin):
     deleted = db.Column(db.Boolean, default=False)
 
     manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    milestones = relationship("ProjectMilestone", viewonly=True)
 
     def __repr__(self):
         return f"<{self.id} {self.name} {self.number} {self.manager_id}>"
