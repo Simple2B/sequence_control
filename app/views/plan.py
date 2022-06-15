@@ -6,7 +6,13 @@ from sqlalchemy import desc
 from app.controllers import role_required, import_data_file, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate
-from app.forms import ImportFileForm, WorkEditForm, WorkAddForm, WorkDeleteForm
+from app.forms import (
+    ImportFileForm,
+    WorkEditForm,
+    WorkAddForm,
+    WorkDeleteForm,
+    WorkChangeMilestoneForm,
+)
 
 plan_blueprint = Blueprint("plan", __name__)
 
@@ -252,3 +258,24 @@ def work_version(work_id: int):
     return render_template(
         "plan.html", context="version", plan_dates=plan_dates, work=work
     )
+
+
+@plan_blueprint.route("/work_select_milestone/", methods=["POST"])
+@login_required
+@role_required(roles=[User.Role.wp_manager])
+def work_select_milestone():
+    form = WorkChangeMilestoneForm()
+    log(log.INFO, "[work_select_milestone] User[%d]", current_user.id)
+
+    if form.is_submitted():
+        work: Work = Work.query.get(form.work_id.data)
+        work.milestone_id = form.ms_id.data
+        work.save()
+        log(
+            log.INFO,
+            "[work_select_milestone] User[%d] changed work [%d] milestone to [%d]",
+            current_user.id,
+            work.id,
+            work.milestone_id,
+        )
+    return {}
