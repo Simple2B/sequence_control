@@ -244,11 +244,11 @@ def work_version(work_id: int):
     log(log.INFO, "User [%d] work_version", current_user.id)
     work: Work = Work.query.get(work_id)
     page = request.args.get("page", 1, type=int)
-    plan_dates_ids = [plan_date.id for plan_date in work.plan_dates]
-    plan_dates = PlanDate.query.filter(PlanDate.id.in_(plan_dates_ids)).order_by(
-        desc(PlanDate.version)
+    plan_dates = (
+        PlanDate.query.filter(PlanDate.work_id == work_id)
+        .order_by(desc(PlanDate.version))
+        .paginate(page=page, per_page=25)
     )
-    versions = plan_dates.paginate(page=page, per_page=25)
     return render_template(
-        "plan.html", context="version", plan_dates=versions, work=work
+        "plan.html", context="version", plan_dates=plan_dates, work=work
     )
