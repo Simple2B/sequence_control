@@ -10,5 +10,7 @@
 {% block content %}
   {% if context == "info" %}
     {% include 'info.html' %}
+  {% elif context == "version" %}
+    {% include 'work_version.html' %}  
   {% endif %}
 {% endblock %}
