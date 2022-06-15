@@ -120,7 +120,11 @@ class Work(db.Model, ModelMixin):
             if value is None or value == "NaN"
         ]
 
-        return "red" if duplicates > 1 or len(a) > 0 else ""
+        return (
+            "red"
+            if duplicates > 1 or len(a) > 0 or len(self.latest_date_version) == 0
+            else ""
+        )
 
     @property
     def milestones(self) -> Iterator[WPMilestone]:
