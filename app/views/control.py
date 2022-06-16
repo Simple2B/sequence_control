@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import current_user, login_required
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
-from app.models import User, Work
-from app.forms import WorkChangeReasonForm
+from app.models import User, Work, PlanDate
+from app.forms import WorkChangeReasonForm, WorkEditDateForm
 
 control_blueprint = Blueprint("control", __name__)
 
@@ -43,3 +43,29 @@ def work_select_reason():
             work.id,
         )
     return {}
+
+
+@control_blueprint.route("/edit_work_date/<work_id>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def edit_work_date(work_id: int):
+    log(log.INFO, "User [%d] edit_work_date", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
+    if not work or work.work_package.project.manager_id != user.id:
+        flash("You can't change date for others PPC", "danger")
+        return redirect(url_for("control.control"))
+    form = WorkEditDateForm()
+    form.reference.data = work.reference
+    form.old_plan_date.data = work.latest_date
+    if form.validate_on_submit():
+        PlanDate(
+            date=form.new_plan_date.data,
+            work_id=work.id,
+            version=(work.latest_date_version + 1),
+        ).save()
+        log(log.INFO, "User [%d] edited date at work [%d]", current_user.id, work.id)
+        return redirect(url_for("control.control"))
+    elif form.is_submitted():
+        flash("The given data was invalid.", "danger")
+    return render_template("edit_work_date.html", form=form, work_id=work_id)

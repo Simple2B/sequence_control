@@ -61,7 +61,11 @@
             </select>
           </td>
           <td>Notes</td>
-          <td>{{work.latest_date}}</td>
+          <td>
+            <a href="{{ url_for('control.edit_work_date', work_id=work.id) }}"
+              >{{work.latest_date}}</a
+            >
+          </td>
         </tr>
         {% endfor %}
       </tbody>
