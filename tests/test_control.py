@@ -88,3 +88,14 @@ def test_control(manager: FlaskClient):
     atp_work: Work = Work.query.filter(Work.ppc_type == Work.PpcType.atp).first()
     assert atp_work.latest_date.date() == new_date
     assert atp_work.latest_date_version == 2
+
+    # check edit notes
+    assert not atp_work.note
+    NEW_NOTE = "THIS IS AWESOME NOTE !!!"
+    response = manager.post(
+        f"/edit_work_note/{atp_work.id}",
+        data=dict(reference=atp_work.reference, note=NEW_NOTE),
+        follow_redirects=True,
+    )
+
+    assert atp_work.note == NEW_NOTE

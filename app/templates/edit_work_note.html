@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container py-4">
+  <div class="card w-50 mx-auto">
+    <div class="card-header">
+      <h4 class="card-title">Edit Note for {{form.reference.data}}</h4>
+    </div>
+    <div class="card-body">
+      <form
+        class="form"
+        role="form"
+        action="{{ url_for('control.edit_work_note', work_id=work_id) }}"
+        method="post"
+      >
+        {{form.hidden_tag()}}
+        <div class="form-group">
+          {{form.note(class='form-control')}} {% for error in form.errors.note
+          %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        {{form.submit(class='btn btn-secondary')}}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

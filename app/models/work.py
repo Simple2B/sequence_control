@@ -52,6 +52,7 @@ class Work(db.Model, ModelMixin):
     reference = db.Column(db.String(64), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+    note = db.Column(db.String(256), nullable=True)
 
     milestone_id = db.Column(db.Integer, nullable=True)
     location_id = db.Column(db.Integer, nullable=True)
@@ -167,3 +168,9 @@ class Work(db.Model, ModelMixin):
         for reason in Reason.query.filter_by(deleted=False):
             reason: Reason = reason
             yield reason
+
+    @property
+    def short_note(self) -> str:
+        return (
+            (self.note[:6] + " ...") if self.note and len(self.note) > 6 else self.note
+        )

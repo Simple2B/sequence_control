@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate
-from app.forms import WorkChangeReasonForm, WorkEditDateForm
+from app.forms import WorkChangeReasonForm, WorkEditDateForm, WorkEditNoteForm
 
 control_blueprint = Blueprint("control", __name__)
 
@@ -69,3 +69,26 @@ def edit_work_date(work_id: int):
     elif form.is_submitted():
         flash("The given data was invalid.", "danger")
     return render_template("edit_work_date.html", form=form, work_id=work_id)
+
+
+@control_blueprint.route("/edit_work_note/<work_id>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def edit_work_note(work_id: int):
+    log(log.INFO, "User [%d] edit_work_note", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
+    if not work or work.work_package.project.manager_id != user.id:
+        flash("You can't change note for others PPC", "danger")
+        return redirect(url_for("control.control"))
+    form = WorkEditNoteForm()
+    form.reference.data = work.reference
+    if form.validate_on_submit():
+        work.note = form.note.data if form.note.data else "None"
+        work.save()
+        log(log.INFO, "User [%d] edited note for work [%d]", current_user.id, work.id)
+        return redirect(url_for("control.control"))
+    elif form.is_submitted():
+        flash("The given data was invalid.", "danger")
+    form.note.data = work.note if work.note != "None" else ""
+    return render_template("edit_work_note.html", form=form, work_id=work_id)

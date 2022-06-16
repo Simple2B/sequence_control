@@ -19,3 +19,4 @@ from .work_change_ms import WorkChangeMilestoneForm
 from .work_change_loc import WorkChangeLocationForm
 from .work_change_reason import WorkChangeReasonForm
 from .work_edit_date import WorkEditDateForm
+from .work_edit_note import WorkEditNoteForm
