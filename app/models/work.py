@@ -1,9 +1,12 @@
 from datetime import datetime
 import enum
+from typing import Iterator
 from sqlalchemy import Enum
 from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
+from .wp_milestone import WPMilestone
+from .location import Location
 
 
 class Work(db.Model, ModelMixin):
@@ -48,6 +51,9 @@ class Work(db.Model, ModelMixin):
     reference = db.Column(db.String(64), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+
+    milestone_id = db.Column(db.Integer, nullable=True)
+    location_id = db.Column(db.Integer, nullable=True)
 
     wp_id = db.Column(db.Integer, db.ForeignKey("work_packages.id"))
     work_package = relationship("WorkPackage", viewonly=True)
@@ -104,3 +110,52 @@ class Work(db.Model, ModelMixin):
         except IndexError:
             return ""
         return plan_date.version
+
+    @property
+    def color(self) -> str:
+        duplicates = Work.query.filter_by(
+            reference=self.reference, wp_id=self.wp_id
+        ).count()
+        a = [
+            value
+            for _, value in self.__dict__.items()
+            if value is None or value == "NaN"
+        ]
+
+        return (
+            "red"
+            if duplicates > 1 or len(a) > 0 or not self.latest_date_version
+            else ""
+        )
+
+    @property
+    def milestones(self) -> Iterator[WPMilestone]:
+        from app.models import Project, ProjectMilestone
+
+        project: Project = self.work_package.project
+        for milestone in project.milestones:
+            milestone: ProjectMilestone = milestone
+            for wp_ms in milestone.wp_milestones:
+                yield wp_ms
+
+    @property
+    def locations(self) -> Iterator[Location]:
+
+        project_id = self.work_package.project_id
+        locations_ids = [
+            loc.id
+            for loc in Location.query.filter_by(deleted=False)
+            if loc.level.building.project_id == project_id
+        ]
+        for location in Location.query.filter(Location.level_id.in_(locations_ids)):
+            location: Location = location
+            yield location
+
+    @property
+    def level_name(self) -> str:
+
+        if self.location_id:
+            location: Location = Location.query.get(self.location_id)
+            return location.level.name
+        else:
+            return "----"

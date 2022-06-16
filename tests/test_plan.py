@@ -304,5 +304,4 @@ def test_work_version_check(wp_manager: FlaskClient):
     assert b"Planned Date" in response.data
     assert b"test_ref" in response.data
     assert b"2003-09-25" in response.data
-    assert b"2022-06-15" in response.data
     assert b"2003-10-05" in response.data

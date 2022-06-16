@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
 
@@ -15,6 +16,7 @@ class ProjectMilestone(db.Model, ModelMixin):
     deleted = db.Column(db.Boolean, default=False)
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    wp_milestones = relationship("WPMilestone", viewonly=True)
 
     def __repr__(self):
         return f"<{self.id}: {self.name} project_id{self.project_id}>"
