@@ -7,6 +7,7 @@ from app import db
 from app.models.utils import ModelMixin
 from .wp_milestone import WPMilestone
 from .location import Location
+from .reasons import Reason
 
 
 class Work(db.Model, ModelMixin):
@@ -51,9 +52,12 @@ class Work(db.Model, ModelMixin):
     reference = db.Column(db.String(64), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+    note = db.Column(db.String(256), nullable=True)
+    complete = db.Column(db.String(6), nullable=True)
 
     milestone_id = db.Column(db.Integer, nullable=True)
     location_id = db.Column(db.Integer, nullable=True)
+    reason_id = db.Column(db.Integer, nullable=True)
 
     wp_id = db.Column(db.Integer, db.ForeignKey("work_packages.id"))
     work_package = relationship("WorkPackage", viewonly=True)
@@ -159,3 +163,25 @@ class Work(db.Model, ModelMixin):
             return location.level.name
         else:
             return "----"
+
+    @property
+    def reasons(self) -> Iterator[Reason]:
+        for reason in Reason.query.filter_by(deleted=False):
+            reason: Reason = reason
+            yield reason
+
+    @property
+    def short_note(self) -> str:
+        return (
+            (self.note[:6] + " ...") if self.note and len(self.note) > 6 else self.note
+        )
+
+    @property
+    def complete_choice(self):
+        YES = {"name": "yes"}
+        NO = {"name": "no"}
+
+        CHOICES = [YES, NO]
+
+        for choice in CHOICES:
+            yield choice

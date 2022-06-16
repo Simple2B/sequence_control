@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+<!-- prettier-ignore -->
+{% block application %}
+  {% include 'flash.html' %} 
+{% endblock %}
+
+<!-- prettier-ignore -->
+{% block content %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead style="background-color: black">
+        <tr class="tableHeadTh">
+          <th>Type</th>
+          <th>Deliv</th>
+          <th>Ref No.</th>
+          <th>Completed</th>
+          <th>Responsible</th>
+          <th>Reason</th>
+          <th>Notes</th>
+          <th>Reforecast</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for work in works.items %}
+        <tr>
+          <td>{{work.type.name}}</td>
+          <td>{{work.deliverable}}</td>
+          <td>{{work.reference}}</td>
+          <td>
+            <select name="{{work.id}}" class="completeSelector">
+              <option value=""></option>
+              <!-- prettier-ignore -->
+              {% for choice in work.complete_choice %}
+            {% if choice["name"] == work.complete %}
+              <option value="{{choice['name']}}" selected>
+                {{choice["name"]}}
+              </option>
+              {% else %}
+              <option value="{{choice['name']}}">{{choice["name"]}}</option>
+              <!-- prettier-ignore -->
+              {% endif %} 
+          {% endfor %}
+            </select>
+          </td>
+          <td>{{work.work_package.contractor_name}}</td>
+          <td>
+            <select name="{{work.id}}" class="reasonSelector">
+              <option value=""></option>
+              <!-- prettier-ignore -->
+              {% for reason in work.reasons %}
+              {% if reason.id == work.reason_id %}
+              <option value="{{reason.id}}" selected>{{reason.name}}</option>
+              {% else %}
+              <option value="{{reason.id}}">{{reason.name}}</option>
+              <!-- prettier-ignore -->
+              {% endif %} 
+            {% endfor %}
+            </select>
+          </td>
+          <td>
+            <a href="{{ url_for('control.edit_work_note', work_id=work.id) }}"
+              >{{work.short_note}}</a
+            >
+          </td>
+          <td>
+            <a href="{{ url_for('control.edit_work_date', work_id=work.id) }}"
+              >{{work.latest_date}}</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+      {% if query %} {% for page_num in works.iter_pages(left_edge=1,
+      right_edge=1, left_current=2, right_current=3) %} {% if page_num %} {% if
+      works.page == page_num %}
+      <a
+        class="page_button btn btn-dark mb-4 mx-1"
+        href="{{ url_for('control.control', query=query, page=page_num) }}"
+        >{{ page_num }}</a
+      >
+      {% else %}
+      <a
+        class="page_button btn btn-outline-dark mb-4 mx-1"
+        href="{{ url_for('control.control', query=query, page=page_num) }}"
+        >{{ page_num }}</a
+      >
+      {% endif %} {% else %}
+      <a class="page_button btn btn-outline-dark mb-4 mx-1" href="#">...</a>
+      {% endif %} {% endfor %} {% else %} {% for page_num in
+      works.iter_pages(left_edge=1, right_edge=1, left_current=2,
+      right_current=3) %} {% if page_num %} {% if works.page == page_num %}
+      <a
+        class="page_button btn btn-dark mb-4 mx-1"
+        href="{{ url_for('control.control', page=page_num) }}"
+        >{{ page_num }}</a
+      >
+      {% else %}
+      <a
+        class="page_button btn btn-outline-dark mb-4 mx-1"
+        href="{{ url_for('control.control', page=page_num) }}"
+        >{{ page_num }}</a
+      >
+      {% endif %} {% else %}
+      <a class="page_button btn btn-outline-dark mb-4 mx-1" href="#">...</a>
+      {% endif %} {% endfor %} {% endif %}
+    </div>
+  </div>
+</main>
+
+{% endblock %}
