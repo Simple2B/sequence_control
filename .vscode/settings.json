@@ -14,7 +14,9 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "cSpell.words": [
+    "Deliv",
     "dotenv",
+    "Reforecast",
     "sqlalchemy",
     "TDRG",
     "TENQ",
