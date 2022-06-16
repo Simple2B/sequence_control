@@ -190,7 +190,9 @@ def work_add(ppc_type: str):
     wp_id = int(wp_id)
 
     ppc_type = ppc_type
-    type = request.args.get("type", "", type=str)
+    type_query = request.args.get("type", "", type=str)
+    type_query = type_query.split("?") if type_query else ["", ""]
+    type = type_query[0]
 
     form = WorkAddForm()
 
@@ -277,10 +279,9 @@ def work_select_milestone():
         work.save()
         log(
             log.INFO,
-            "[work_select_milestone] User[%d] changed work [%d] milestone to [%d]",
+            "[work_select_milestone] User[%d] changed work [%d] milestone ",
             current_user.id,
             work.id,
-            work.milestone_id,
         )
     return {}
 
@@ -298,9 +299,8 @@ def work_select_location():
         work.save()
         log(
             log.INFO,
-            "[work_select_location] User[%d] work [%d] location to [%d]",
+            "[work_select_location] User[%d] work [%d] location ",
             current_user.id,
             work.id,
-            work.location_id,
         )
     return {}
