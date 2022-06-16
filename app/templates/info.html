@@ -86,6 +86,7 @@
           <td>{{work.latest_date}}</td>
           <td>
             <select name="{{work.id}}" class="milestoneSelector">
+              <option value=""></option>
               <!-- prettier-ignore -->
               {% for ms in work.milestones %}
                 {% if ms.id == work.milestone_id %}
@@ -104,6 +105,7 @@
           <td>{{work.level_name}}</td>
           <td>
             <select name="{{work.id}}" class="locationSelector">
+            <option value=""></option>
             <!-- prettier-ignore -->
             {% for loc in work.locations %}
               {% if loc.id == work.location_id %}
