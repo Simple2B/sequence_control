@@ -60,3 +60,27 @@ if (loc_selectors) {
     });
   });
 }
+
+const reason_selectors = document.querySelectorAll(".reasonSelector");
+
+if (reason_selectors) {
+  reason_selectors.forEach(function (el) {
+    el.addEventListener("change", function (e) {
+      const formData = new FormData();
+      formData.set("reason_id", e.target.value);
+      formData.set("work_id", el.name);
+      fetch("/work_select_reason/", {
+        method: "POST",
+        body: formData,
+        redirect: "manual",
+        mode: "no-cors",
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error("ERROR", err.message);
+        });
+    });
+  });
+}

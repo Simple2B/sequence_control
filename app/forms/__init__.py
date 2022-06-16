@@ -17,3 +17,4 @@ from .import_file import ImportFileForm
 from .work import WorkEditForm, WorkAddForm, WorkDeleteForm
 from .work_change_ms import WorkChangeMilestoneForm
 from .work_change_loc import WorkChangeLocationForm
+from .work_change_reason import WorkChangeReasonForm
