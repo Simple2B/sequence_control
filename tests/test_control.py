@@ -99,3 +99,14 @@ def test_control(manager: FlaskClient):
     )
 
     assert atp_work.note == NEW_NOTE
+
+    # check edit notes
+    assert not atp_work.complete
+
+    response = manager.post(
+        "/work_select_complete",
+        data=dict(work_id=atp_work.id, complete="yes"),
+        follow_redirects=True,
+    )
+
+    assert atp_work.complete == "yes"

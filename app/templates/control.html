@@ -29,21 +29,20 @@
           <td>{{work.deliverable}}</td>
           <td>{{work.reference}}</td>
           <td>
-            <input
-              type="radio"
-              id="completeChoice1"
-              name="completed"
-              value="yes"
-            />
-            <label for="contactChoice1">Yes</label>
-
-            <input
-              type="radio"
-              id="contactChoice2"
-              name="completed"
-              value="no"
-            />
-            <label for="contactChoice2">No</label>
+            <select name="{{work.id}}" class="completeSelector">
+              <option value=""></option>
+              <!-- prettier-ignore -->
+              {% for choice in work.complete_choice %}
+            {% if choice["name"] == work.complete %}
+              <option value="{{choice['name']}}" selected>
+                {{choice["name"]}}
+              </option>
+              {% else %}
+              <option value="{{choice['name']}}">{{choice["name"]}}</option>
+              <!-- prettier-ignore -->
+              {% endif %} 
+          {% endfor %}
+            </select>
           </td>
           <td>{{work.work_package.contractor_name}}</td>
           <td>

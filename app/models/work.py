@@ -53,6 +53,7 @@ class Work(db.Model, ModelMixin):
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
     note = db.Column(db.String(256), nullable=True)
+    complete = db.Column(db.String(6), nullable=True)
 
     milestone_id = db.Column(db.Integer, nullable=True)
     location_id = db.Column(db.Integer, nullable=True)
@@ -174,3 +175,13 @@ class Work(db.Model, ModelMixin):
         return (
             (self.note[:6] + " ...") if self.note and len(self.note) > 6 else self.note
         )
+
+    @property
+    def complete_choice(self):
+        YES = {"name": "yes"}
+        NO = {"name": "no"}
+
+        CHOICES = [YES, NO]
+
+        for choice in CHOICES:
+            yield choice

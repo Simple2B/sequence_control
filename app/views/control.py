@@ -3,7 +3,12 @@ from flask_login import current_user, login_required
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate
-from app.forms import WorkChangeReasonForm, WorkEditDateForm, WorkEditNoteForm
+from app.forms import (
+    WorkChangeReasonForm,
+    WorkEditDateForm,
+    WorkEditNoteForm,
+    WorkSelectCompleteForm,
+)
 
 control_blueprint = Blueprint("control", __name__)
 
@@ -38,7 +43,7 @@ def work_select_reason():
         work.save()
         log(
             log.INFO,
-            "[work_select_reason] User[%d] changed work [%d] milestone ",
+            "[work_select_reason] User[%d] changed work [%d] reason ",
             current_user.id,
             work.id,
         )
@@ -92,3 +97,23 @@ def edit_work_note(work_id: int):
         flash("The given data was invalid.", "danger")
     form.note.data = work.note if work.note != "None" else ""
     return render_template("edit_work_note.html", form=form, work_id=work_id)
+
+
+@control_blueprint.route("/work_select_complete/", methods=["POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def work_select_complete():
+    form = WorkSelectCompleteForm()
+    log(log.INFO, "[work_select_complete] User[%d]", current_user.id)
+
+    if form.is_submitted():
+        work: Work = Work.query.get(form.work_id.data)
+        work.complete = form.complete.data
+        work.save()
+        log(
+            log.INFO,
+            "[work_select_complete] User[%d] changed work [%d] completed ",
+            current_user.id,
+            work.id,
+        )
+    return {}

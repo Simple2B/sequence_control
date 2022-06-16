@@ -84,3 +84,27 @@ if (reason_selectors) {
     });
   });
 }
+
+const complete_selectors = document.querySelectorAll(".completeSelector");
+
+if (complete_selectors) {
+  complete_selectors.forEach(function (el) {
+    el.addEventListener("change", function (e) {
+      const formData = new FormData();
+      formData.set("complete", e.target.value);
+      formData.set("work_id", el.name);
+      fetch("/work_select_complete/", {
+        method: "POST",
+        body: formData,
+        redirect: "manual",
+        mode: "no-cors",
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error("ERROR", err.message);
+        });
+    });
+  });
+}
