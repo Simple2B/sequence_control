@@ -154,6 +154,8 @@ class Work(db.Model, ModelMixin):
     @property
     def level_name(self) -> str:
 
-        location: Location = Location.query.get(self.location_id)
-
-        return location.level.name if location else "----"
+        if self.location_id:
+            location: Location = Location.query.get(self.location_id)
+            return location.level.name
+        else:
+            return "----"
