@@ -2,7 +2,6 @@
 
 <!-- prettier-ignore -->
 {% block application %}
-  {% include 'plan_nav.html'%}
   {% include 'flash.html' %} 
 {% endblock %}
 
@@ -29,7 +28,23 @@
           <td>{{work.type.name}}</td>
           <td>{{work.deliverable}}</td>
           <td>{{work.reference}}</td>
-          <td>Completed</td>
+          <td>
+            <input
+              type="radio"
+              id="completeChoice1"
+              name="completed"
+              value="yes"
+            />
+            <label for="contactChoice1">Yes</label>
+
+            <input
+              type="radio"
+              id="contactChoice2"
+              name="completed"
+              value="no"
+            />
+            <label for="contactChoice2">No</label>
+          </td>
           <td>{{work.work_package.contractor_name}}</td>
           <td>
             <select name="{{work.id}}" class="reasonSelector">
@@ -46,7 +61,7 @@
             </select>
           </td>
           <td>Notes</td>
-          <td>{{work.latest_date.strftime('%Y-%m-%d')}}</td>
+          <td>{{work.latest_date}}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -57,13 +72,13 @@
       works.page == page_num %}
       <a
         class="page_button btn btn-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', ppc_type=ppc_type, query=query, page=page_num) }}"
+        href="{{ url_for('control.control', query=query, page=page_num) }}"
         >{{ page_num }}</a
       >
       {% else %}
       <a
         class="page_button btn btn-outline-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', ppc_type=ppc_type, query=query, page=page_num) }}"
+        href="{{ url_for('control.control', query=query, page=page_num) }}"
         >{{ page_num }}</a
       >
       {% endif %} {% else %}
@@ -73,13 +88,13 @@
       right_current=3) %} {% if page_num %} {% if works.page == page_num %}
       <a
         class="page_button btn btn-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', ppc_type=ppc_type, page=page_num) }}"
+        href="{{ url_for('control.control', page=page_num) }}"
         >{{ page_num }}</a
       >
       {% else %}
       <a
         class="page_button btn btn-outline-dark mb-4 mx-1"
-        href="{{ url_for('plan.info', ppc_type=ppc_type, page=page_num) }}"
+        href="{{ url_for('control.control', page=page_num) }}"
         >{{ page_num }}</a
       >
       {% endif %} {% else %}
