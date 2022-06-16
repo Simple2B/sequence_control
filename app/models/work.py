@@ -7,6 +7,7 @@ from app import db
 from app.models.utils import ModelMixin
 from .wp_milestone import WPMilestone
 from .location import Location
+from .reasons import Reason
 
 
 class Work(db.Model, ModelMixin):
@@ -54,6 +55,7 @@ class Work(db.Model, ModelMixin):
 
     milestone_id = db.Column(db.Integer, nullable=True)
     location_id = db.Column(db.Integer, nullable=True)
+    reason_id = db.Column(db.Integer, nullable=True)
 
     wp_id = db.Column(db.Integer, db.ForeignKey("work_packages.id"))
     work_package = relationship("WorkPackage", viewonly=True)
@@ -159,3 +161,9 @@ class Work(db.Model, ModelMixin):
             return location.level.name
         else:
             return "----"
+
+    @property
+    def reasons(self) -> Iterator[Reason]:
+        for reason in Reason.query.filter_by(deleted=False):
+            reason: Reason = reason
+            yield reason
