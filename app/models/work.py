@@ -147,7 +147,7 @@ class Work(db.Model, ModelMixin):
             for loc in Location.query.filter_by(deleted=False)
             if loc.level.building.project_id == project_id
         ]
-        for location in Location.query.filter(Location.level_id.in_(locations_ids)):
+        for location in Location.query.filter(Location.id.in_(locations_ids)):
             location: Location = location
             yield location
 
