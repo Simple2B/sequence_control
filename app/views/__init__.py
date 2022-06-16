@@ -14,3 +14,4 @@ from .milestone import milestone_blueprint
 from .work_package import work_package_blueprint
 from .location import location_blueprint
 from .plan import plan_blueprint
+from .control import control_blueprint
