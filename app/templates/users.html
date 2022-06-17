@@ -1,40 +1,40 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
   {% if current_user.role.name == "admin" %}
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('admin.admin_add') }}"
     role="button"
     >Add Admin</a
   >
 
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('project_manager.project_manager_add') }}"
     role="button"
     >Add Project Manager</a
   >
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('viewer.viewer_add') }}"
     role="button"
     >Add Viewer</a
   >
   {% endif %}
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('wp_manager.wp_manager_add') }}"
     role="button"
     >Add WP Manager</a
   >
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('viewer.viewer_select') }}"
     role="button"
     >Select Viewer for project</a
   >
   {% if current_user.role.name == "project_manager" %}
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('viewer.viewer_add') }}"
     role="button"
     >Create Viewer for project</a
@@ -45,7 +45,6 @@
     <table class="table table-striped table-sm">
       <thead style="background-color: black">
         <tr class="tableHeadTh">
-          <th>id</th>
           <th>Name</th>
           <th>Role</th>
         </tr>
@@ -53,7 +52,6 @@
       <tbody>
         {% for user in users.items %}
         <tr>
-          <td>{{user.id}}</td>
           <td>{{user.username}}</td>
           <td>{{user.role.name}}</td>
         </tr>

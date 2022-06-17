@@ -2,7 +2,7 @@
   {% if current_user.role.name == "wp_manager" %}
 
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('wp_milestone.wp_milestone_add') }}"
     role="button"
     >Add WP Milestones</a
@@ -13,7 +13,6 @@
     <table class="table table-striped table-sm">
       <thead style="background-color: black">
         <tr class="tableHeadTh">
-          <th>id</th>
           <th>Name</th>
           <th>Description</th>
           <th>Baseline</th>
@@ -22,7 +21,6 @@
       <tbody>
         {% for milestone in wp_milestones.items %}
         <tr>
-          <td>{{milestone.id}}</td>
           <td>{{milestone.name}}</td>
           <td>{{milestone.description}}</td>
           <td>{{milestone.baseline_date.strftime('%Y-%m-%d')}}</td>

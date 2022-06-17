@@ -7,47 +7,48 @@
       {% if current_user.role.name in ["admin","project_manager"] %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_users')}}">
-          <span data-feather="users"></span>
-          Users
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/user.png') }} alt="info" border="0"/> Users
         </a>
       </li>
       {% endif %} {% if current_user.role.name == "admin" %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_projects')}}">
-          <span data-feather="layers"></span>
+          <span class="mainLogo" data-feather="layers"></span>
           Projects
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_reasons')}}">
-          <span data-feather="layers"></span>
+          <span class="mainLogo" data-feather="layers"></span>
           Reason of NON-COMPLETION
         </a>
       </li>
       {% endif %} {% if current_user.role.name == "project_manager" %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_work_packages')}}">
-          <span data-feather="layers"></span>
-          Work Package
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/wp.png') }} alt="info" border="0"/> Work Package
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_locations')}}">
-          <span data-feather="layers"></span>
-          Location
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/space.png') }} alt="info" border="0"/> Location
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_milestones')}}">
-          <span data-feather="layers"></span>
-          Milestone
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/milestone.png') }} alt="info" border="0"/> Milestone
         </a>
       </li>
       {% endif %} {% if current_user.role.name == "wp_manager" %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_wp_milestones')}}">
-          <span data-feather="layers"></span>
-          WP Milestone
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/milestone.png') }} alt="info" border="0"/> WP
+          Milestone
         </a>
       </li>
       {% endif %}

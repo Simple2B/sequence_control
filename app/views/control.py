@@ -2,32 +2,39 @@ from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import current_user, login_required
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
-from app.models import User, Work, PlanDate
+from app.models import User, Work, PlanDate, WorkPackage
 from app.forms import (
     WorkChangeReasonForm,
     WorkEditDateForm,
     WorkEditNoteForm,
     WorkSelectCompleteForm,
+    SearchForm,
 )
 
 control_blueprint = Blueprint("control", __name__)
 
 
-@control_blueprint.route("/control")
+@control_blueprint.route("/control", methods=["GET", "POST"])
 @login_required
 @role_required(
     roles=[User.Role.project_manager, User.Role.viewer, User.Role.wp_manager]
 )
 def control():
     log(log.INFO, "[control] User [%d]", current_user.id)
-    type_query = request.args.get("type", "", type=str)
+    search_form = SearchForm()
+    query = ""
+    if search_form.validate_on_submit():
+        query = search_form.search_field.data
     page = request.args.get("page", 1, type=int)
-    type_query = type_query.split("?") if type_query else ["", ""]
-
     search_result = get_works_for_project()
-
+    if query:
+        wp_ids = [
+            wp.id
+            for wp in WorkPackage.query.filter(WorkPackage.number.ilike(f"%{query}%"))
+        ]
+        search_result = search_result.filter(Work.wp_id.in_(wp_ids))
     works = search_result.paginate(page=page, per_page=15)
-    return render_template("control.html", works=works)
+    return render_template("control.html", works=works, search_form=search_form)
 
 
 @control_blueprint.route("/work_select_reason/", methods=["POST"])

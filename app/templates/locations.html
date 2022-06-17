@@ -2,19 +2,19 @@
   {% if current_user.role.name == "project_manager" %}
 
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     role="button"
     href="{{ url_for('location.building_add') }}"
     >Add Building</a
   >
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     role="button"
     href="{{ url_for('location.level_add') }}"
     >Add Level</a
   >
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     role="button"
     href="{{ url_for('location.location_add') }}"
     >Add Location</a
@@ -25,7 +25,6 @@
     <table class="table table-striped table-sm">
       <thead style="background-color: black">
         <tr class="tableHeadTh">
-          <th>id</th>
           <th>Building</th>
           <th>Level</th>
           <th>Space</th>
@@ -35,7 +34,6 @@
       <tbody>
         {% for location in locations.items %}
         <tr>
-          <td>{{location.id}}</td>
           <td>{{location.level.building.name}}</td>
           <td>{{location.level.name}}</td>
           <td>{{location.name}}</td>
