@@ -157,11 +157,13 @@ def edit_work(work_id: int):
         work.ppc_type = Work.ppc_type_by_type(work_type)
         work.type = work_type
         work.save()
-        if form.new_plan_date.data != work.latest_date.date():
+        if not work.latest_date or form.new_plan_date.data != work.latest_date.date():
             PlanDate(
                 date=form.new_plan_date.data,
                 work_id=work.id,
-                version=(work.latest_date_version + 1),
+                version=(work.latest_date_version + 1)
+                if work.latest_date_version
+                else 1,
             ).save()
         log(log.INFO, "User [%d] edited work [%d]", current_user.id, work.id)
         return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
