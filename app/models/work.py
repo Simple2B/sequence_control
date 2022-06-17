@@ -117,15 +117,16 @@ class Work(db.Model, ModelMixin):
 
     @property
     def color(self) -> str:
+        skip = ["complete", "note", "reason_id"]
         duplicates = Work.query.filter_by(
             reference=self.reference, wp_id=self.wp_id
         ).count()
         a = [
-            value
-            for _, value in self.__dict__.items()
+            name
+            for name, value in self.__dict__.items()
             if value is None or value == "NaN"
         ]
-
+        a = [el for el in a if el not in skip]
         return (
             "red"
             if duplicates > 1 or len(a) > 0 or not self.latest_date_version
@@ -143,17 +144,10 @@ class Work(db.Model, ModelMixin):
                 yield wp_ms
 
     @property
-    def locations(self) -> Iterator[Location]:
+    def locations(self) -> list[Location]:
+        from app.controllers.locations_for_project import locations_for_project
 
-        project_id = self.work_package.project_id
-        locations_ids = [
-            loc.id
-            for loc in Location.query.filter_by(deleted=False)
-            if loc.level.building.project_id == project_id
-        ]
-        for location in Location.query.filter(Location.id.in_(locations_ids)):
-            location: Location = location
-            yield location
+        return locations_for_project(self.work_package.project_id)
 
     @property
     def level_name(self) -> str:

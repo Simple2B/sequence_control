@@ -226,7 +226,7 @@ def work_add(ppc_type: str):
     return render_template("work_add.html", form=form, ppc_type=ppc_type)
 
 
-@plan_blueprint.route("/delete_work/<work_id>", methods=["POST"])
+@plan_blueprint.route("/delete_work/<work_id>", methods=["GET", "POST"])
 @login_required
 @role_required(roles=[User.Role.project_manager])
 def delete_work(work_id: int):
