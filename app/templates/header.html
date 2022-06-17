@@ -1,4 +1,7 @@
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+<header
+  class="navbar sticky-top flex-md-nowrap p-0 shadow"
+  style="background-color: rgba(70, 80, 105, 1)"
+>
   <a
     class="navbar-brand col-md-3 col-lg-2 me-0 px-3"
     href="{{ url_for('main.index') }}"
@@ -42,36 +45,47 @@
         class="mobile_balance_wrapper d-flex flex-row"
         style="margin-right: 50px"
       >
-        <a class="nav-link" href="/define">Define</a>
+        <a class="nav-link tab_text_col" href="/define">Define</a>
       </div>
       <div
         class="mobile_balance_wrapper d-flex flex-row"
         style="margin-right: 50px"
       >
-        <a class="nav-link" href="/plan">Plan</a>
+        <a class="nav-link tab_text_col" href="/plan">Plan</a>
       </div>
       <div
         class="mobile_balance_wrapper d-flex flex-row"
         style="margin-right: 50px"
       >
-        <a class="nav-link" href="/control">Control</a>
+        <a class="nav-link tab_text_col" href="/control">Control</a>
+      </div>
+      <div
+        class="mobile_balance_wrapper d-flex flex-row"
+        style="margin-right: 50px"
+      >
+        <a class="nav-link tab_text_col" href="/control">Rehearse</a>
       </div>
       <div
         class="mobile_balance_wrapper d-flex flex-row"
         style="padding-left: 25px; margin-right: 50px"
       >
-        <a class="nav-link" href="/user_edit">
-          {{current_user.username}} - {{session['project_name']}}
+        <a class="nav-link tab_text_col" href="/user_edit">
+          {{session['project_name']}} {{session['wp_name']}}
+          {{current_user.username}}
         </a>
       </div>
     </div>
     {% if current_user.is_authenticated %}
     <div id="sign_out" class="mobile_sign_out nav-item text-nowrap">
-      <a class="nav-link px-3" href="{{ url_for('auth.logout') }}">Sign out</a>
+      <a class="nav-link px-3 tab_text_col" href="{{ url_for('auth.logout') }}"
+        >Sign out</a
+      >
     </div>
     {% else %}
     <div id="sign_out" class="mobile_sign_out nav-item text-nowrap">
-      <a class="nav-link px-3" href="{{ url_for('auth.login') }}">Login</a>
+      <a class="nav-link px-3 tab_text_col" href="{{ url_for('auth.login') }}"
+        >Login</a
+      >
     </div>
     {% endif %}
   </div>
