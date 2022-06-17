@@ -13,6 +13,7 @@ from app.forms import (
     WorkDeleteForm,
     WorkChangeMilestoneForm,
     WorkChangeLocationForm,
+    SearchForm,
 )
 
 plan_blueprint = Blueprint("plan", __name__)
@@ -68,19 +69,22 @@ def import_file():
     return render_template("import_file.html", form=form)
 
 
-@plan_blueprint.route("/info/<ppc_type>")
+@plan_blueprint.route("/info/<ppc_type>", methods=["GET", "POST"])
 @login_required
 @role_required(
     roles=[User.Role.wp_manager, User.Role.project_manager, User.Role.viewer]
 )
 def info(ppc_type):
+    search_form = SearchForm()
+    query = ""
+    if search_form.validate_on_submit():
+        query = search_form.search_field.data
     ppc_type: Work.PpcType = Work.PpcType[ppc_type]
-    type_query = request.args.get("type", "", type=str)
+    type = request.args.get("type", "", type=str)
     page = request.args.get("page", 1, type=int)
-    type_query = type_query.split("?") if type_query else ["", ""]
+
     # query = request.args.get("query", "", type=str)
-    type = type_query[0]
-    query = type_query[1] if len(type_query) == 2 else ""
+
     links, color = {
         Work.PpcType.info: (
             ["DWG", "TS", "SCH", "MDL", "CPD", "EDA", "TDRG", "TENQ", "CFO", "DSC"],
@@ -105,7 +109,7 @@ def info(ppc_type):
 
     query = query.strip()
     if query:
-        search_result = search_result.filter(Work.reference.like(f"%{query}%"))
+        search_result = search_result.filter(Work.reference.ilike(f"%{query}%"))
 
     works = search_result.paginate(page=page, per_page=15)
     return render_template(
@@ -115,6 +119,7 @@ def info(ppc_type):
         links=links,
         color=color,
         ppc_type=ppc_type.name,
+        search_form=search_form,
     )
 
 
@@ -264,7 +269,11 @@ def work_version(work_id: int):
         .paginate(page=page, per_page=25)
     )
     return render_template(
-        "plan.html", context="version", plan_dates=plan_dates, work=work
+        "plan.html",
+        context="version",
+        plan_dates=plan_dates,
+        work=work,
+        search_form=SearchForm(),
     )
 
 

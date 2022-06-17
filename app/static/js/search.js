@@ -47,12 +47,14 @@ document.addEventListener("DOMContentLoaded", function () {
   search_field.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      searchIt(search_field.value);
+      // searchIt(search_field.value);
+      document.forms["search_form"].submit();
     }
   });
 
   search_button.addEventListener("click", function (event) {
     event.preventDefault();
-    searchIt(search_field.value);
+    // searchIt(search_field.value);
+    document.forms["search_form"].submit();
   });
 });

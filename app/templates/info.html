@@ -24,15 +24,16 @@
       >{{link}}
     </a>
     {% endfor %}
-    <form class="search_area w-100 d-flex">
-      <input
-        id="search_field"
-        class="form-control form-control-dark w-100"
-        type="text"
-        name="search"
-        placeholder="Search"
-        aria-label="Search"
-      />
+    <form
+      class="search_area w-100 d-flex"
+      action="{{ url_for('plan.info', ppc_type=ppc_type, type=link) }}"
+      method="post"
+      name="search_form"
+    >
+      <!-- prettier-ignore -->
+      {{search_form.hidden_tag()}}
+      {{search_form.search_field(class='form-control form-control-dark w-100', placeholder="Search")}}
+      {# {search_form.search_button(class="d-flex justify-content-center alignitems-center")} #}
       <div
         id="search_button"
         class="d-flex justify-content-center alignitems-center"

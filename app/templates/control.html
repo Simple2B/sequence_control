@@ -10,15 +10,16 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
   <a class="page_title mt-1" style="opacity: 0">control</a>
   <div class="d-flex flex-row-reverse bd-highlight">
-    <form class="search_area w-100 d-flex">
-      <input
-        id="search_field"
-        class="form-control form-control-dark w-100"
-        type="text"
-        name="search"
-        placeholder="Search"
-        aria-label="Search"
-      />
+    <form
+      class="search_area w-100 d-flex"
+      action="{{ url_for('control.control') }}"
+      method="post"
+      name="search_form"
+    >
+      <!-- prettier-ignore -->
+      {{search_form.hidden_tag()}}
+      {{search_form.search_field(class='form-control form-control-dark w-100', placeholder="Search")}}
+      {# {search_form.search_button(class="d-flex justify-content-center alignitems-center")} #}
       <div
         id="search_button"
         class="d-flex justify-content-center alignitems-center"
