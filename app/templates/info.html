@@ -75,7 +75,7 @@
       <tbody>
         {% for work in works.items %}
         <!-- prettier-ignore -->
-        <tr style="background-color: {{work.color}};">
+        <tr style="color: {{work.color}};">
           <td>{{work.type.name}}</td>
           <td>
             <a href="{{ url_for('plan.edit_work', work_id=work.id) }}"
