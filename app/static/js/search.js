@@ -7,7 +7,13 @@ document.addEventListener("DOMContentLoaded", function () {
   let arr = [];
 
   arr = page_title.innerHTML.split("/");
-  let baseSearchUrl = "/info/" + arr[0] + type + arr[1];
+
+  let baseSearchUrl;
+  if (page_title.innerHTML === "control") {
+    baseSearchUrl = "/control";
+  } else {
+    baseSearchUrl = "/info/" + arr[0] + type + arr[1];
+  }
 
   function isAlphaNumeric(str) {
     var code, i, len;

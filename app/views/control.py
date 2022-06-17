@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login import current_user, login_required
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
-from app.models import User, Work, PlanDate
+from app.models import User, Work, PlanDate, WorkPackage
 from app.forms import (
     WorkChangeReasonForm,
     WorkEditDateForm,
@@ -20,12 +20,16 @@ control_blueprint = Blueprint("control", __name__)
 )
 def control():
     log(log.INFO, "[control] User [%d]", current_user.id)
-    type_query = request.args.get("type", "", type=str)
     page = request.args.get("page", 1, type=int)
-    type_query = type_query.split("?") if type_query else ["", ""]
-
+    query = list(request.args.keys())
+    query = query[0] if len(query) == 1 else ""
     search_result = get_works_for_project()
-
+    if query:
+        wp_ids = [
+            wp.id
+            for wp in WorkPackage.query.filter(WorkPackage.number.ilike(f"%{query}%"))
+        ]
+        search_result = search_result.filter(Work.wp_id.in_(wp_ids))
     works = search_result.paginate(page=page, per_page=15)
     return render_template("control.html", works=works)
 
