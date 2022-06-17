@@ -13,7 +13,6 @@
     <table class="table table-striped table-sm">
       <thead style="background-color: black">
         <tr class="tableHeadTh">
-          <th>id</th>
           <th>Name</th>
           <th>Description</th>
           <th>Baseline</th>
@@ -22,7 +21,6 @@
       <tbody>
         {% for milestone in milestones.items %}
         <tr>
-          <td>{{milestone.id}}</td>
           <td>{{milestone.name}}</td>
           <td>{{milestone.description}}</td>
           <td>{{milestone.baseline_date.strftime('%Y-%m-%d')}}</td>

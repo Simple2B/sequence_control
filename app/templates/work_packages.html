@@ -13,7 +13,6 @@
     <table class="table table-striped table-sm">
       <thead style="background-color: black">
         <tr class="tableHeadTh">
-          <th>id</th>
           <th>Name</th>
           <th>Number</th>
           <th>Contractor</th>
@@ -22,7 +21,6 @@
       <tbody>
         {% for work_package in work_packages.items %}
         <tr>
-          <td>{{work_package.id}}</td>
           <td>{{work_package.name}}</td>
           <td>{{work_package.number}}</td>
           <td>{{work_package.contractor_name}}</td>

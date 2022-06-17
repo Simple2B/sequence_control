@@ -12,14 +12,12 @@
     <table class="table table-striped table-sm">
       <thead style="background-color: black">
         <tr class="tableHeadTh">
-          <th>id</th>
           <th>Name</th>
         </tr>
       </thead>
       <tbody>
         {% for reason in reasons.items %}
         <tr>
-          <td>{{reason.id}}</td>
           <td>{{reason.name}}</td>
         </tr>
         {% endfor %}

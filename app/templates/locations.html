@@ -25,7 +25,6 @@
     <table class="table table-striped table-sm">
       <thead style="background-color: black">
         <tr class="tableHeadTh">
-          <th>id</th>
           <th>Building</th>
           <th>Level</th>
           <th>Space</th>
@@ -35,7 +34,6 @@
       <tbody>
         {% for location in locations.items %}
         <tr>
-          <td>{{location.id}}</td>
           <td>{{location.level.building.name}}</td>
           <td>{{location.level.name}}</td>
           <td>{{location.name}}</td>
