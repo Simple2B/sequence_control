@@ -13,32 +13,34 @@
       {% if current_user.role.name in ["wp_manager","project_manager","viewer"] %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('plan.info', ppc_type='info')}}">
-          <span data-feather="users"></span>
-          Info
+          <!-- prettier-ignore-->
+          <img  class="mainLogo" src= {{ url_for('static', filename='images/info.png') }} alt="info"  border="0"/> Info
         </a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('plan.info', ppc_type='docs')}}">
-          <span data-feather="layers"></span>
+          <!-- prettier-ignore-->
+          <img  class="mainLogo" src= {{ url_for('static', filename='images/doc.png') }} alt="info"  border="0"/>
           Docs
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('plan.info', ppc_type='quality')}}">
-          <span data-feather="layers"></span>
+          <!-- prettier-ignore-->
+          <img  class="mainLogo" src= {{ url_for('static', filename='images/quality.png') }} alt="info"  border="0"/>
           Quality
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('plan.info', ppc_type='atp')}}">
-          <span data-feather="layers"></span>
-          ATP
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/atp.png') }} alt="info" border="0"/> ATP
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('plan.info', ppc_type='hod')}}">
-          <span data-feather="layers"></span>
+          <span class="mainLogo" data-feather="layers"></span>
           HOD
         </a>
       </li>
@@ -50,7 +52,7 @@
           class="nav-link"
           href="{{url_for('plan.import_file', ppc_type='hod')}}"
         >
-          <span data-feather="layers"></span>
+          <span class="mainLogo" data-feather="layers"></span>
           Import file
         </a>
       </li>

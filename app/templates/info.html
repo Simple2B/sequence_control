@@ -4,7 +4,7 @@
   >
   {% if current_user.role.name == "wp_manager" %}
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('plan.work_add', ppc_type=ppc_type , type=request.args['type']) }}"
     role="button"
     >Add

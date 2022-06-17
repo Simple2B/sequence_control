@@ -2,19 +2,19 @@
   {% if current_user.role.name == "project_manager" %}
 
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     role="button"
     href="{{ url_for('location.building_add') }}"
     >Add Building</a
   >
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     role="button"
     href="{{ url_for('location.level_add') }}"
     >Add Level</a
   >
   <a
-    class="btn btn-secondary mt-1 add_button"
+    class="btn btn-secondary mt-1 add_button buttonFont"
     role="button"
     href="{{ url_for('location.location_add') }}"
     >Add Location</a
