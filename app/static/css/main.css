@@ -192,7 +192,8 @@ body {
 }
 
 .tableHeadTh{
-  color: aliceblue;
+  /* color: aliceblue; */
+  background-color: rgba(113 , 113, 113, 0.25);
 } 
 
 .tab_text_col{
