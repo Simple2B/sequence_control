@@ -207,3 +207,7 @@ body {
   margin-top: 10px;
 
 }
+
+th {
+  font-weight: normal;
+}
