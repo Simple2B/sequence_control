@@ -36,6 +36,6 @@ class ProjectForm(FlaskForm):
 
 
 class ProjectChooseForm(FlaskForm):
-    number = SelectField("Number", coerce=int, choices=[])
+    name = SelectField("Name", coerce=int, choices=[])
 
     submit = SubmitField("Enter project")

@@ -13,8 +13,8 @@
       >
         {{form.hidden_tag()}}
         <div class="form-group">
-          {{form.number.label}} {{form.number(class='form-control')}} {% for
-          error in form.errors.number %}
+          {{form.name.label}} {{form.name(class='form-control')}} {% for error
+          in form.errors.name %}
           <small class="text-danger">{{error}}</small>
           {% endfor %}
         </div>
