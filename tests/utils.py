@@ -82,6 +82,9 @@ def create_work_package(manager_id):
         project_id=1,
         manager_id=manager_id,
     ).save()
+    wp_manager: User = User.query.get(manager_id)
+    wp_manager.wp_id = work_package.id
+    wp_manager.save()
     return work_package.id
 
 

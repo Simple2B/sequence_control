@@ -35,7 +35,8 @@ def plan():
     if user.role == User.Role.wp_manager:
         if not wp_id:
             return redirect(url_for("work_package.work_package_choose"))
-    return render_template("plan.html")
+    # return render_template("plan.html")
+    return redirect(url_for("plan.info", ppc_type="info"))
 
 
 @plan_blueprint.route("/import_file", methods=["GET", "POST"])

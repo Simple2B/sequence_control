@@ -14,14 +14,15 @@
       {% endif %} {% if current_user.role.name == "admin" %}
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_projects')}}">
-          <span class="mainLogo" data-feather="layers"></span>
-          Projects
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/project.png') }} alt="info" border="0"/> Projects
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('main.define_reasons')}}">
-          <span class="mainLogo" data-feather="layers"></span>
-          Reason of NON-COMPLETION
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/reasons.png') }} alt="info" border="0"/> Reason of
+          NON-COMPLETION
         </a>
       </li>
       {% endif %} {% if current_user.role.name == "project_manager" %}
@@ -41,6 +42,26 @@
         <a class="nav-link" href="{{url_for('main.define_milestones')}}">
           <img class="mainLogo" src= {{ url_for('static',
           filename='images/milestone.png') }} alt="info" border="0"/> Milestone
+        </a>
+      </li>
+      <!-- prettier-ignore-->
+      <li class="nav-item">
+          <a
+            class="nav-link"
+            href="{{url_for('main.import_milestones')}}"
+          >
+            <span class="mainLogo" data-feather="layers"></span>
+            Import Milestones
+          </a>
+        </li>
+      <!-- prettier-ignore-->
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          href="{{url_for('main.import_locations')}}"
+        >
+          <span class="mainLogo" data-feather="layers"></span>
+          Import Locations
         </a>
       </li>
       {% endif %} {% if current_user.role.name == "wp_manager" %}

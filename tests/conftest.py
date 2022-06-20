@@ -46,7 +46,7 @@ def manager(admin: FlaskClient) -> Iterator[FlaskClient]:
     )
     admin.post(
         "/project_choose",
-        data=dict(number=str(project_id)),
+        data=dict(name=str(project_id)),
         follow_redirects=True,
     )
     yield admin

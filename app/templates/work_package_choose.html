@@ -5,21 +5,7 @@
       <h4 class="card-title">Choose Work Package</h4>
     </div>
     <div class="card-body">
-      <form
-        class="form"
-        role="form"
-        action="{{ url_for('work_package.work_package_choose') }}"
-        method="post"
-      >
-        {{form.hidden_tag()}}
-        <div class="form-group">
-          {{form.number.label}} {{form.number(class='form-control')}} {% for
-          error in form.errors.number %}
-          <small class="text-danger">{{error}}</small>
-          {% endfor %}
-        </div>
-        {{form.submit(class='btn btn-secondary')}}
-      </form>
+      You are not assigned to any Work Packages. Please contact your manager
     </div>
   </div>
 </div>

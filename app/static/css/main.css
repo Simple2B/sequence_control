@@ -192,7 +192,8 @@ body {
 }
 
 .tableHeadTh{
-  color: aliceblue;
+  /* color: aliceblue; */
+  background-color: rgba(113 , 113, 113, 0.25);
 } 
 
 .tab_text_col{
@@ -202,4 +203,11 @@ body {
 
 .buttonFont{
   font-size: 13px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+}
+
+th {
+  font-weight: normal;
 }

@@ -32,6 +32,8 @@ class User(db.Model, UserMixin, ModelMixin):
     role = db.Column(Enum(Role), default=Role.admin)
     subordinate_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
 
+    wp_id = db.Column(db.Integer, nullable=True)
+
     @hybrid_property
     def password(self):
         return self.password_hash

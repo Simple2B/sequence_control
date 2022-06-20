@@ -10,7 +10,7 @@ class Location(db.Model, ModelMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    description = db.Column(db.String(256), nullable=False)
+    description = db.Column(db.String(256), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
 

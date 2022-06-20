@@ -19,7 +19,7 @@ class WorkPackageForm(FlaskForm):
         self.wp_manager.choices = [
             (user.id, user.username)
             for user in User.query.filter_by(
-                deleted=False, role=User.Role.wp_manager
+                deleted=False, role=User.Role.wp_manager, wp_id=None
             ).all()
         ]
 

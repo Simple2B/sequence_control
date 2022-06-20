@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, render_template, request, flash, url_for, redirect, session
 from flask_login import current_user, login_required
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
@@ -20,7 +20,16 @@ control_blueprint = Blueprint("control", __name__)
     roles=[User.Role.project_manager, User.Role.viewer, User.Role.wp_manager]
 )
 def control():
+    user: User = current_user
     log(log.INFO, "[control] User [%d]", current_user.id)
+    project_id = session.get("project_id")
+    wp_id = session.get("wp_id")
+    if user.role in [User.Role.project_manager, User.Role.viewer]:
+        if not project_id:
+            return redirect(url_for("project.project_choose"))
+    if user.role == User.Role.wp_manager:
+        if not wp_id:
+            return redirect(url_for("work_package.work_package_choose"))
     search_form = SearchForm()
     query = ""
     if search_form.validate_on_submit():

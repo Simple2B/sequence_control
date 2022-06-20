@@ -68,8 +68,8 @@ def project_choose():
     form = ProjectChooseForm()
     user: User = User.query.filter_by(id=current_user.id).first()
     if user.role == User.Role.project_manager:
-        form.number.choices = [
-            (project.id, project.number)
+        form.name.choices = [
+            (project.id, project.name)
             for project in Project.query.filter_by(
                 deleted=False, manager_id=user.id
             ).all()
@@ -77,8 +77,8 @@ def project_choose():
     else:
         viewers = ProjectViewer.query.filter(ProjectViewer.viewer_id == user.id).all()
         viewers_ids = [viewer.project_id for viewer in viewers]
-        form.number.choices = [
-            (project.id, project.number)
+        form.name.choices = [
+            (project.id, project.name)
             for project in Project.query.filter(Project.id.in_(viewers_ids)).all()
         ]
     if form.validate_on_submit():
@@ -86,10 +86,10 @@ def project_choose():
             log.INFO,
             "[project_choose.validate_on_submit] User [%s] choose project [%s]",
             user.id,
-            form.number.data,
+            form.name.data,
         )
-        session["project_id"] = form.number.data
-        project: Project = Project.query.get(form.number.data)
+        session["project_id"] = form.name.data
+        project: Project = Project.query.get(form.name.data)
         session["project_name"] = project.name
         log(
             log.INFO,
