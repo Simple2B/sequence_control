@@ -2,7 +2,7 @@ import tempfile
 from flask import Blueprint, redirect, render_template, session, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
-from app.controllers import role_required, import_milestone_file
+from app.controllers import role_required, import_milestone_file, import_location_file
 from app.logger import log
 from app.models import (
     User,
@@ -234,3 +234,26 @@ def import_milestones():
     elif form.is_submitted():
         log(log.ERROR, "form submit errors: [%s]", form.errors)
     return render_template("import_milestone.html", form=form)
+
+
+@main_blueprint.route("/import_locations", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def import_locations():
+    project_id = session.get("project_id")
+    if not project_id:
+        log(log.ERROR, "No project_id!")
+        return redirect(url_for("project.project_choose"))
+    project_id = int(project_id)
+    form = ImportFileForm()
+    if form.validate_on_submit():
+        in_file = form.file.data
+        with tempfile.NamedTemporaryFile(delete=True) as fp:
+            file_path: str = fp.name
+            with open(file_path, "wb") as wf:
+                wf.write(in_file.read())
+            import_location_file(file_path, project_id)
+        return redirect(url_for("define.define"))
+    elif form.is_submitted():
+        log(log.ERROR, "form submit errors: [%s]", form.errors)
+    return render_template("import_locations.html", form=form)
