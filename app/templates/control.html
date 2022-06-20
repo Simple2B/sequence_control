@@ -88,7 +88,8 @@
           </td>
           <td>
             <a href="{{ url_for('control.edit_work_date', work_id=work.id) }}"
-              >{{work.latest_date}}</a
+              >{{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else
+              ""}}</a
             >
           </td>
         </tr>
