@@ -1,7 +1,7 @@
 import os
 
-from app.controllers.read_file import import_data_file
-from app.models.work import Work
+from app.controllers.read_file import import_data_file, import_milestone_file
+from app.models import Work, ProjectMilestone
 
 
 # @pytest.mark.skip(reason="no way of currently testing this")
@@ -18,3 +18,14 @@ def test_read_file(client):
     assert Work.query.filter(Work.type == Work.Type.TS).count() == 4
     assert Work.query.filter(Work.type == Work.Type.TS).count() == 4
     assert Work.query.filter(Work.type == Work.Type.HOD).count() == 4
+
+
+def test_import_milestone_file(client):
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    # file_path = os.path.join(BASE_DIR, "CLIENT_DATA/test_data.xlsx")
+    file_path = os.path.join(BASE_DIR, "DATA/milestone.xlsx")
+
+    res = import_milestone_file(file_path, 1)
+    assert res
+    milestones: list[ProjectMilestone] = ProjectMilestone.query.all()
+    assert len(milestones) == 9

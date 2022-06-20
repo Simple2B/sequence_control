@@ -33,7 +33,7 @@ def test_control(manager: FlaskClient):
     assert response
     # assert to see table and work details in response
     assert b"Type" in response.data
-    assert b"Deliv" in response.data
+    assert b"Deliverable" in response.data
     assert b"Ref No." in response.data
     assert b"Responsible" in response.data
     assert b"ATP1" in response.data
