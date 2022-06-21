@@ -10,7 +10,7 @@ wp_manager_blueprint = Blueprint("wp_manager", __name__)
 
 @wp_manager_blueprint.route("/wp_manager_add", methods=["GET", "POST"])
 @login_required
-@role_required(roles=[User.Role.project_manager, User.Role.admin])
+@role_required(roles=[User.Role.project_manager])
 def wp_manager_add():
     log(log.INFO, "User [%d] on wp_manager_add", current_user.id)
     form = PmRegistrationForm()

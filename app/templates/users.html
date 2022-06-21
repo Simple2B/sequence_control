@@ -22,12 +22,6 @@
   {% endif %}
   <a
     class="btn btn-secondary mt-1 add_button buttonFont"
-    href="{{ url_for('wp_manager.wp_manager_add') }}"
-    role="button"
-    >Add WP Manager</a
-  >
-  <a
-    class="btn btn-secondary mt-1 add_button buttonFont"
     href="{{ url_for('viewer.viewer_select') }}"
     role="button"
     >Select Viewer for project</a
@@ -38,6 +32,12 @@
     href="{{ url_for('viewer.viewer_add') }}"
     role="button"
     >Create Viewer for project</a
+  >
+  <a
+    class="btn btn-secondary mt-1 add_button buttonFont"
+    href="{{ url_for('wp_manager.wp_manager_add') }}"
+    role="button"
+    >Add WP Manager</a
   >
   {% endif %}
 
