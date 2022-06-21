@@ -13,13 +13,13 @@
 
   <div class="d-flex flex-row-reverse bd-highlight">
     <a
-      class="text-bg-right nav-link fs-5"
+      class="text-bg-right nav-link fs-6 ppcLink"
       href="{{ url_for('plan.info', ppc_type=ppc_type) }}"
       >All</a
     >
     {% for link in links %}
     <a
-      class="text-bg-right nav-link fs-5"
+      class="text-bg-right nav-link fs-6 ppcLink"
       href="{{ url_for('plan.info', ppc_type=ppc_type, type=link) }}"
       >{{link}}
     </a>
