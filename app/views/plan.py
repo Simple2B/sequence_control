@@ -52,6 +52,7 @@ def import_file():
         log(log.ERROR, "No WP_ID!")
         return redirect(url_for("work_package.work_package_choose"))
     wp_id = int(wp_id)
+    user: User = current_user
     form = ImportFileForm()
     if form.validate_on_submit():
         # save data to DB
@@ -61,7 +62,7 @@ def import_file():
             file_path: str = fp.name
             with open(file_path, "wb") as wf:
                 wf.write(in_file.read())
-            import_data_file(file_path, wp_id)
+            import_data_file(file_path, wp_id, user.id)
         return redirect(url_for("plan.plan"))
     elif form.is_submitted():
         log(log.ERROR, "form submit errors: [%s]", form.errors)
@@ -135,7 +136,7 @@ def edit_work(work_id: int):
         flash("You can't change date for others PPC", "danger")
         return redirect(url_for("plan.plan"))
     if user.role == User.Role.wp_manager:
-        if work.work_package.manager_id != user.id:
+        if work.wp_manager_id != user.id:
             log(
                 log.WARNING,
                 "[edit_work] User [%d] try to edit work [%d]",
@@ -218,6 +219,7 @@ def work_add(ppc_type: str):
             ppc_type=Work.ppc_type_by_type(work_type),
             deliverable=form.deliverable.data,
             reference=form.reference.data,
+            wp_manager_id=user.id,
         ).save()
         PlanDate(
             date=form.plan_date.data,
