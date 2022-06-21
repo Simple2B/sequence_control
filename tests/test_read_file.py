@@ -13,7 +13,7 @@ def test_read_file(client):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(BASE_DIR, "DATA/PPC.xlsx")
 
-    res = import_data_file(file_path, 1)
+    res = import_data_file(file_path, 1, 3)
     assert res
     works: list[Work] = Work.query.all()
     assert works

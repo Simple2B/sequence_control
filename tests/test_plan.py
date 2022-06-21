@@ -265,6 +265,7 @@ def test_work_version_check(wp_manager: FlaskClient):
         ppc_type=Work.PpcType.atp,
         deliverable="test_deliverable",
         reference="test_ref",
+        wp_manager_id=3,
     ).save()
     assert work
     date = datetime(2003, 9, 25, 0, 0)
