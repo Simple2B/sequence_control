@@ -1,5 +1,5 @@
 from flask.testing import FlaskClient
-from app.models import WorkPackage, User
+from app.models import WorkPackage
 
 
 def test_add_work_package(manager: FlaskClient):
@@ -32,9 +32,6 @@ def test_add_work_package(manager: FlaskClient):
     assert work_package.contractor_name == CONTRACTOR_NAME
     assert work_package.project_id == PROJECT_ID
 
-    wp_manager: User = User.query.get(3)
-    assert wp_manager.wp_id == work_package.id
-    # test adding work package with existing number
     response = manager.post(
         "/work_package_add",
         data=dict(
