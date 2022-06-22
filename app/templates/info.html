@@ -1,7 +1,4 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-  <a class="page_title mt-1" style="opacity: 0"
-    >{{ppc_type}}/{{request.args['type']}}</a
-  >
   {% if current_user.role.name == "wp_manager" %}
   <a
     class="btn btn-secondary mt-1 add_button buttonFont"
@@ -10,7 +7,9 @@
     >Add
   </a>
   {% endif %}
-
+  <a class="page_title mt-1" style="opacity: 0"
+    >{{ppc_type}}/{{request.args['type']}}</a
+  >
   <div class="d-flex flex-row-reverse bd-highlight">
     <a
       class="text-bg-right nav-link fs-6 ppcLink"
