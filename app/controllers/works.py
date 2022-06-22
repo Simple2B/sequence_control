@@ -9,12 +9,19 @@ def get_works_for_project(ppc_type: Work.PpcType = None, type: Work.Type = None)
         if wp_id:
             wp_id = int(wp_id)
             if type:
-                return Work.query.filter_by(deleted=False, wp_id=wp_id, type=type)
+                return Work.query.filter_by(
+                    deleted=False, wp_id=wp_id, type=type, wp_manager_id=current_user.id
+                )
             if ppc_type:
                 return Work.query.filter_by(
-                    deleted=False, wp_id=wp_id, ppc_type=ppc_type
+                    deleted=False,
+                    wp_id=wp_id,
+                    ppc_type=ppc_type,
+                    wp_manager_id=current_user.id,
                 )
-            return Work.query.filter_by(deleted=False, wp_id=wp_id)
+            return Work.query.filter_by(
+                deleted=False, wp_id=wp_id, wp_manager_id=current_user.id
+            )
     else:
         project_id = session.get("project_id")
         if project_id:

@@ -26,12 +26,9 @@ def work_package_add():
             number=form.number.data,
             contractor_name=form.contractor_name.data,
             project_id=session["project_id"],
-            manager_id=form.wp_manager.data,
+            manager_id=current_user.id,
         )
         work_package.save()
-        wp_manager: User = User.query.get(form.wp_manager.data)
-        wp_manager.wp_id = work_package.id
-        wp_manager.save()
         flash("Work Package Registration  is successful.", "success")
         return redirect(url_for("main.define_work_packages"))
     elif form.is_submitted():

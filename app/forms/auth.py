@@ -1,3 +1,4 @@
+from flask import session
 from flask_wtf import FlaskForm
 from wtforms import (
     StringField,
@@ -8,7 +9,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 
-from app.models import User, Project
+from app.models import User, Project, WorkPackage
 
 
 class LoginForm(FlaskForm):
@@ -50,6 +51,15 @@ class WPMRegistrationForm(PmRegistrationForm):
     wp_responsible = SelectField("WP Responsible for", coerce=int, choices=[])
 
     submit = SubmitField("Submit")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.wp_responsible.choices = [
+            (wp.id, wp.name)
+            for wp in WorkPackage.query.filter_by(
+                deleted=False, project_id=session["project_id"]
+            ).all()
+        ]
 
 
 class SelectViewerForm(FlaskForm):

@@ -61,6 +61,8 @@ class Work(db.Model, ModelMixin):
 
     wp_id = db.Column(db.Integer, db.ForeignKey("work_packages.id"))
     work_package = relationship("WorkPackage", viewonly=True)
+    wp_manager_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    wp_manager = relationship("User", viewonly=True)
     plan_dates = relationship(
         "PlanDate", viewonly=True, order_by="asc(PlanDate.version)"
     )
@@ -135,13 +137,11 @@ class Work(db.Model, ModelMixin):
 
     @property
     def milestones(self) -> Iterator[WPMilestone]:
-        from app.models import Project, ProjectMilestone
 
-        project: Project = self.work_package.project
-        for milestone in project.milestones:
-            milestone: ProjectMilestone = milestone
-            for wp_ms in milestone.wp_milestones:
-                yield wp_ms
+        for wp_ms in WPMilestone.query.filter(
+            WPMilestone.wp_manager_id == self.wp_manager_id
+        ):
+            yield wp_ms
 
     @property
     def locations(self) -> list[Location]:

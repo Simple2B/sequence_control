@@ -6,7 +6,7 @@ from app.models import Work, PlanDate, ProjectMilestone, Location, Level, Buildi
 from app import db
 
 
-def import_data_file(file_path: str, wp_id: int) -> bool:
+def import_data_file(file_path: str, wp_id: int, wp_manager_id: int) -> bool:
     data = pd.read_excel(file_path, sheet_name=None)
     if not data:
         return False
@@ -31,6 +31,7 @@ def import_data_file(file_path: str, wp_id: int) -> bool:
                     ppc_type=Work.ppc_type_by_type(work_type),
                     deliverable=row[0],
                     reference=row[1],
+                    wp_manager_id=wp_manager_id,
                 ).save()
                 if isinstance(row[2], datetime):
                     PlanDate(date=row[2].date(), work_id=work.id).save()

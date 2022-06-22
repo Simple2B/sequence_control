@@ -15,6 +15,7 @@ from app.models import (
     Building,
     Level,
     ProjectViewer,
+    ProjectWPManager,
 )
 from app.forms import ImportFileForm
 
@@ -65,8 +66,8 @@ def define_users():
             for viewer in ProjectViewer.query.filter_by(project_id=project_id).all()
         ]
         wp_manager_ids = [
-            wp.manager_id
-            for wp in WorkPackage.query.filter_by(project_id=project_id).all()
+            wp.wp_manager_id
+            for wp in ProjectWPManager.query.filter_by(project_id=project_id).all()
         ]
         users_ids = viewers_ids + wp_manager_ids
         search_result = search_result.filter(User.id.in_(users_ids))
