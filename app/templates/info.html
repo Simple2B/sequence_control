@@ -83,9 +83,14 @@
             >
           </td>
           <td>{{work.reference}}</td>
-          <td><a href="{{ url_for('control.reforecast', work_id=work.id) }}"
+          <td>
+            {% if current_user.role.name == "wp_manager" %}
+            <a href="{{ url_for('control.reforecast', work_id=work.id) }}"
             >{{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}</a
-            ></td>
+            >{% else %}
+            {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}
+            {% endif %}
+          </td>
           <td>
             <select name="{{work.id}}" class="milestoneSelector">
               <option value=""></option>

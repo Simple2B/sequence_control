@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 <!-- prettier-ignore -->
 {% block application %}
+  {% if current_user.role.name == "wp_manager" %}
+    {% include 'define_nav.html'%}
+  {% endif %}  
   {% include 'flash.html' %} 
 {% endblock %}
 {% block content %}
