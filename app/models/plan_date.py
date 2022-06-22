@@ -13,9 +13,20 @@ class PlanDate(db.Model, ModelMixin):
     version = db.Column(db.Integer, default=1)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
+    note = db.Column(db.String(256), nullable=True)
+    reason = db.Column(db.String(256), nullable=True)
+    responsible = db.Column(db.String(128), nullable=True)
 
     work_id = db.Column(db.Integer, db.ForeignKey("works.id"))
     work = relationship("Work", viewonly=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = relationship("User", viewonly=True)
 
     def __repr__(self):
-        return f"<PlanDate: {self.date} {self.version} >"
+        return f"<{self.id} {self.date} {self.version} >"
+
+    @property
+    def short_note(self) -> str:
+        return (
+            (self.note[:6] + " ...") if self.note and len(self.note) > 6 else self.note
+        )
