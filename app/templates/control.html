@@ -50,7 +50,8 @@
           <td>
             <!-- prettier-ignore -->
             {% if current_user.role.name == "project_manager" %}
-            <a href="#">yes</a> ----
+            <a href="{{ url_for('control.complete', work_id=work.id) }}">yes</a>
+            ----
             <a href="{{ url_for('control.reforecast', work_id=work.id) }}"
               >no</a
             >

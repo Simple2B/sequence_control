@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect, session
 from flask_login import current_user, login_required
+from sqlalchemy import desc
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate, WorkPackage
@@ -36,14 +37,17 @@ def control():
     if search_form.validate_on_submit():
         query = search_form.search_field.data
     page = request.args.get("page", 1, type=int)
-    search_result = get_works_for_project()
+    search_result = get_works_for_project().filter(
+        Work.is_completed == False  # noqa E712
+    )
     if query:
         wp_ids = [
             wp.id
             for wp in WorkPackage.query.filter(WorkPackage.number.ilike(f"%{query}%"))
         ]
         search_result = search_result.filter(Work.wp_id.in_(wp_ids))
-    works = search_result.paginate(page=page, per_page=15)
+
+    works = search_result.order_by(desc(Work.id)).paginate(page=page, per_page=15)
     return render_template("control.html", works=works, search_form=search_form)
 
 
@@ -191,3 +195,24 @@ def reforecast(work_id: int):
     elif form.is_submitted():
         flash("The given data was invalid.", "danger")
     return render_template("reforecast.html", form=form, work_id=work_id)
+
+
+@control_blueprint.route("/complete/<work_id>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def complete(work_id: int):
+    log(log.INFO, "User [%d] complete", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
+    if not work or work.work_package.project.manager_id != user.id:
+        log(
+            log.WARNING,
+            "User [%d] try to change work id[%d] from other project",
+            user.id,
+            work_id,
+        )
+        flash("You can't change  PPC from other project", "danger")
+        return redirect(url_for("control.control"))
+    work.is_completed = True
+    work.save()
+    return redirect(url_for("control.control"))

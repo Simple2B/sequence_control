@@ -78,3 +78,10 @@ def test_control(manager: FlaskClient):
     assert plan_date.reason == reason
     assert plan_date.responsible == responsible
     assert plan_date.note == note
+
+    assert not atp_work.is_completed
+    manager.post(
+        f"/complete/{atp_work.id}",
+        follow_redirects=True,
+    )
+    assert atp_work.is_completed
