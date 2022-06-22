@@ -22,3 +22,4 @@ from .work_edit_date import WorkEditDateForm
 from .work_edit_note import WorkEditNoteForm
 from .work_select_complete import WorkSelectCompleteForm
 from .search import SearchForm
+from .work_reforecast import WorkReforecastForm

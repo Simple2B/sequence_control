@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+<!-- prettier-ignore -->
+{% block application %}
+  {% include 'flash.html' %} 
+{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="card w-50 mx-auto">
+    <div class="card-header">
+      <h4 class="card-title">{{form.deliverable.data}}</h4>
+    </div>
+    <div class="card-body">
+      <form
+        class="form"
+        role="form"
+        action="{{ url_for('control.reforecast', work_id=work_id) }}"
+        method="post"
+      >
+        {{form.hidden_tag()}}
+        <div class="form-group">
+          {{form.reference.label}} {{form.reference(class='form-control')}} {%
+          for error in form.errors.reference %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.responsible.label}} {{form.responsible(class='form-control')}}
+          {% for error in form.errors.responsible %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.reason.label}} {{form.reason(class='form-control')}} {% for
+          error in form.errors.reason %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.note.label}} {{form.note(class='form-control')}} {% for error
+          in form.errors.note %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.old_plan_date.label}}
+          {{form.old_plan_date(class='form-control')}} {% for error in
+          form.errors.old_plan_date %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{form.new_plan_date.label}}
+          {{form.new_plan_date(class='form-control')}} {% for error in
+          form.errors.new_plan_date %}
+          <small class="text-danger">{{error}}</small>
+          {% endfor %}
+        </div>
+        {{form.submit(class='btn btn-secondary buttonFont')}}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

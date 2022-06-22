@@ -9,6 +9,7 @@ from app.forms import (
     WorkEditNoteForm,
     WorkSelectCompleteForm,
     SearchForm,
+    WorkReforecastForm,
 )
 
 control_blueprint = Blueprint("control", __name__)
@@ -133,3 +134,45 @@ def work_select_complete():
             work.id,
         )
     return {}
+
+
+@control_blueprint.route("/reforecast/<work_id>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def reforecast(work_id: int):
+    log(log.INFO, "User [%d] reforecast", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
+    if not work or work.work_package.project.manager_id != user.id:
+        flash("You can't change  PPC from other project", "danger")
+        return redirect(url_for("control.control"))
+    form = WorkReforecastForm()
+    form.deliverable.data = work.deliverable
+    form.reference.data = work.reference
+    form.old_plan_date.data = work.latest_date
+    form.responsible.choices = [
+        (wp.contractor_name, wp.contractor_name)
+        for wp in WorkPackage.query.filter_by(
+            deleted=False, project_id=work.work_package.project_id
+        ).all()
+    ]
+    if form.validate_on_submit():
+        PlanDate(
+            date=form.new_plan_date.data,
+            work_id=work.id,
+            version=(work.latest_date_version + 1),
+            note=form.note.data,
+            responsible=form.responsible.data,
+            reason=form.reason.data,
+            user_id=user.id,
+        ).save()
+        log(
+            log.INFO,
+            "User [%d] edited reforecast for work [%d]",
+            current_user.id,
+            work.id,
+        )
+        return redirect(url_for("control.control"))
+    elif form.is_submitted():
+        flash("The given data was invalid.", "danger")
+    return render_template("reforecast.html", form=form, work_id=work_id)
