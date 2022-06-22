@@ -44,7 +44,6 @@ class WorkEditForm(WorkAddForm):
         validators=[Optional()],
         render_kw={"readonly": True},
     )
-    new_plan_date = DateField("New Date")
     submit = SubmitField("Submit")
 
     def validate_reference(form, field):

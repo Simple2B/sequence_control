@@ -94,29 +94,9 @@ def test_edit_work(wp_manager: FlaskClient):
 
     reference = atp_work.reference
     deliverable = atp_work.deliverable
-    plan_date = atp_work.latest_date.date()
     ppc_type = atp_work.ppc_type.name
     type = atp_work.type.name
     new_date = (old_date + timedelta(days=10)).date()
-
-    # changing only date
-    response = wp_manager.post(
-        f"/edit_work/{atp_work.id}",
-        data=dict(
-            reference=reference,
-            new_plan_date=new_date,
-            deliverable=deliverable,
-            plan_date=plan_date,
-            ppc_type=ppc_type,
-            type=type,
-        ),
-        follow_redirects=True,
-    )
-    assert response
-
-    atp_work: Work = Work.query.filter(Work.ppc_type == Work.PpcType.atp).first()
-    assert atp_work.latest_date
-    assert atp_work.latest_date_version == 2
 
     # changing only deliverable and type (and entered type with small letters)
     deliverable = "test deliverable"
@@ -138,7 +118,7 @@ def test_edit_work(wp_manager: FlaskClient):
 
     atp_work: Work = Work.query.filter(Work.ppc_type == Work.PpcType.atp).first()
     assert atp_work.latest_date
-    assert atp_work.latest_date_version == 2
+    assert atp_work.latest_date_version == 1
 
     assert atp_work.deliverable == deliverable
     assert atp_work.type.name == "ATP3"
@@ -259,7 +239,7 @@ def test_delete_work(manager: FlaskClient):
 
 
 def test_work_version_check(wp_manager: FlaskClient):
-    work = Work(
+    atp_work = Work(
         wp_id=1,
         type=Work.Type.ATP1,
         ppc_type=Work.PpcType.atp,
@@ -267,42 +247,28 @@ def test_work_version_check(wp_manager: FlaskClient):
         reference="test_ref",
         wp_manager_id=3,
     ).save()
-    assert work
+    assert atp_work
     date = datetime(2003, 9, 25, 0, 0)
     PlanDate(
         date=date,
-        work_id=work.id,
+        work_id=atp_work.id,
     ).save()
 
-    atp_work: Work = Work.query.first()
     assert atp_work
-
-    new_date = (atp_work.latest_date + timedelta(days=10)).date()
-
-    response = wp_manager.post(
-        f"/edit_work/{atp_work.id}",
-        data=dict(
-            reference=atp_work.reference,
-            new_plan_date=new_date,
-            deliverable=atp_work.deliverable,
-            plan_date=atp_work.latest_date.date(),
-            ppc_type=work.ppc_type.name,
-            type=work.type.name,
-        ),
-        follow_redirects=True,
-    )
-
-    atp_work: Work = Work.query.first()
     assert atp_work.latest_date
-    assert atp_work.latest_date_version == 2
+    assert atp_work.latest_date_version == 1
 
     response = wp_manager.get(
         f"/work_version/{1}",
         follow_redirects=True,
     )
     assert response
+    assert b"Version" in response.data
+    assert b"Edited by" in response.data
     assert b"Edit Date" in response.data
     assert b"Planned Date" in response.data
+    assert b"Responsible" in response.data
+    assert b"Note" in response.data
+    assert b"Reason" in response.data
     assert b"test_ref" in response.data
     assert b"2003-09-25" in response.data
-    assert b"2003-10-05" in response.data

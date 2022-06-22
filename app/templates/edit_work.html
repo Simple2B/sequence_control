@@ -48,16 +48,9 @@
           <small class="text-danger">{{error}}</small>
           {% endfor %}
         </div>
-        {% if current_user.role.name == "wp_manager" %}
-        <div class="form-group">
-          {{form.new_plan_date.label}}
-          {{form.new_plan_date(class='form-control')}} {% for error in
-          form.errors.new_plan_date %}
-          <small class="text-danger">{{error}}</small>
-          {% endfor %}
-        </div>
-        {{form.submit(class='btn btn-secondary buttonFont')}} {% elif
-        current_user.role.name == "project_manager" %}
+        {% if current_user.role.name == "wp_manager" %} {{form.submit(class='btn
+        btn-secondary buttonFont')}} {% elif current_user.role.name ==
+        "project_manager" %}
         <a
           class="btn btn-danger mt-1 add_button"
           href="{{ url_for('plan.delete_work', work_id=work_id) }}"
