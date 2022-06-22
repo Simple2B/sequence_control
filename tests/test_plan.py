@@ -219,6 +219,30 @@ def test_add_work(wp_manager: FlaskClient):
     # cant add Deliverable with wrong type and redirected to add new again
     assert b"Add new Deliverable" in response.data
 
+    # edit date and creates new version
+    # simulating new reforecast
+    new_date = (atp_work.latest_date + timedelta(days=10)).date()
+    reason = "Consultant"
+    note = "THIS IS AWESOME NOTE !!!"
+    responsible = "TEST_CONTRACTOR"
+
+    response = wp_manager.post(
+        f"/reforecast/{atp_work.id}",
+        data=dict(
+            new_plan_date=new_date, reason=reason, note=note, responsible=responsible
+        ),
+        follow_redirects=True,
+    )
+
+    plan_dates: PlanDate = PlanDate.query.filter_by(work_id=atp_work.id).all()
+    assert len(plan_dates) == 2
+    assert atp_work.latest_date.date() == new_date
+    assert atp_work.latest_date_version == 2
+    plan_date: PlanDate = plan_dates[1]
+    assert plan_date.reason == reason
+    assert plan_date.responsible == responsible
+    assert plan_date.note == note
+
 
 def test_delete_work(manager: FlaskClient):
     wp_id = create_work_package(3)

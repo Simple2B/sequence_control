@@ -7,16 +7,6 @@ from .utils import create_work_package
 
 
 def test_control(manager: FlaskClient):
-    # adding reasons
-    REASONS = [
-        "Outstanding Design",
-        "Consultant",
-        "Subcontractor & Supplier design Information",
-        "TQ's and RFI's",
-        "Design approvals",
-    ]
-    for reason in REASONS:
-        Reason(name=reason).save()
 
     reason: Reason = Reason.query.first()
     assert reason

@@ -138,14 +138,29 @@ def work_select_complete():
 
 @control_blueprint.route("/reforecast/<work_id>", methods=["GET", "POST"])
 @login_required
-@role_required(roles=[User.Role.project_manager])
+@role_required(roles=[User.Role.project_manager, User.Role.wp_manager])
 def reforecast(work_id: int):
     log(log.INFO, "User [%d] reforecast", current_user.id)
     user: User = current_user
     work: Work = Work.query.get(work_id)
-    if not work or work.work_package.project.manager_id != user.id:
-        flash("You can't change  PPC from other project", "danger")
+    if not work:
+        log(log.ERROR, "User [%d] can't find work id[%d]", user.id, work_id)
+        flash("Can't find PPC", "danger")
         return redirect(url_for("control.control"))
+    if (
+        user.role == User.Role.project_manager
+        and work.work_package.project.manager_id != user.id
+    ) or (user.role == User.Role.wp_manager and work.wp_manager_id != user.id):
+        if not work or work.work_package.project.manager_id != user.id:
+            log(
+                log.WARNING,
+                "User [%d] try to change work id[%d] from other project",
+                user.id,
+                work_id,
+            )
+            flash("You can't change  PPC from other project", "danger")
+            return redirect(url_for("control.control"))
+
     form = WorkReforecastForm()
     form.deliverable.data = work.deliverable
     form.reference.data = work.reference
