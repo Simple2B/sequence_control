@@ -52,7 +52,7 @@ class Work(db.Model, ModelMixin):
     reference = db.Column(db.String(64), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
-    complete = db.Column(db.String(6), nullable=True)
+    is_completed = db.Column(db.Boolean, default=False)
 
     milestone_id = db.Column(db.Integer, nullable=True)
     location_id = db.Column(db.Integer, nullable=True)
@@ -162,13 +162,3 @@ class Work(db.Model, ModelMixin):
         for reason in Reason.query.filter_by(deleted=False):
             reason: Reason = reason
             yield reason
-
-    @property
-    def complete_choice(self):
-        YES = {"name": "yes"}
-        NO = {"name": "no"}
-
-        CHOICES = [YES, NO]
-
-        for choice in CHOICES:
-            yield choice
