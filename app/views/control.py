@@ -1,4 +1,13 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect, session
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    flash,
+    url_for,
+    redirect,
+    session,
+    current_app,
+)
 from flask_login import current_user, login_required
 from sqlalchemy import desc
 from app.controllers import role_required, get_works_for_project
@@ -45,7 +54,9 @@ def control():
         ]
         search_result = search_result.filter(Work.wp_id.in_(wp_ids))
 
-    works = search_result.order_by(desc(Work.id)).paginate(page=page, per_page=15)
+    works = search_result.order_by(desc(Work.id)).paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template("control.html", works=works, search_form=search_form)
 
 

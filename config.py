@@ -17,6 +17,7 @@ class BaseConfig(object):
     WTF_CSRF_ENABLED = True
     LOGO_URL = os.environ.get("LOGO_URL", "app/static/images/logo.jpg")
     REASONS = os.environ.get("REASONS", "")
+    PAGE_SIZE = int(os.environ.get("PAGE_SIZE", 20))
 
     @staticmethod
     def configure(app):

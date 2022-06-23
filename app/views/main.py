@@ -1,5 +1,5 @@
 import tempfile
-from flask import Blueprint, redirect, render_template, session, request
+from flask import Blueprint, redirect, render_template, session, request, current_app
 from flask.helpers import url_for
 from flask_login import current_user, login_required
 from app.controllers import role_required, import_milestone_file, import_location_file
@@ -74,7 +74,7 @@ def define_users():
     query = query.strip()
     if query:
         search_result = search_result.filter(User.username.like(f"%{query}%"))
-    users = search_result.paginate(page=page, per_page=25)
+    users = search_result.paginate(page=page, per_page=current_app.config["PAGE_SIZE"])
     return render_template(
         "define.html",
         context="users",
@@ -94,7 +94,9 @@ def define_wp_milestones():
     query = query.strip()
     if query:
         search_result = search_result.filter(WPMilestone.name.like(f"%{query}%"))
-    wp_milestones = search_result.paginate(page=page, per_page=15)
+    wp_milestones = search_result.paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template(
         "define.html",
         context="wp_milestones",
@@ -124,7 +126,9 @@ def define_projects():
     query = query.strip()
     if query:
         search_result = search_result.filter(Project.name.like(f"%{query}%"))
-    projects = search_result.paginate(page=page, per_page=25)
+    projects = search_result.paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template(
         "define.html",
         context="projects",
@@ -142,7 +146,9 @@ def define_reasons():
     query = query.strip()
     if query:
         search_result = search_result.filter(Reason.name.like(f"%{query}%"))
-    reasons = search_result.paginate(page=page, per_page=25)
+    reasons = search_result.paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template(
         "define.html",
         context="reasons",
@@ -162,7 +168,9 @@ def define_milestones():
     query = query.strip()
     if query:
         search_result = search_result.filter(ProjectMilestone.name.like(f"%{query}%"))
-    milestones = search_result.paginate(page=page, per_page=15)
+    milestones = search_result.paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template(
         "define.html",
         context="milestones",
@@ -182,7 +190,9 @@ def define_work_packages():
     query = query.strip()
     if query:
         search_result = search_result.filter(WorkPackage.name.like(f"%{query}%"))
-    work_packages = search_result.paginate(page=page, per_page=15)
+    work_packages = search_result.paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template(
         "define.html",
         context="work_packages",
@@ -206,7 +216,9 @@ def define_locations():
     query = query.strip()
     if query:
         search_result = search_result.filter(Location.name.like(f"%{query}%"))
-    loc_query = search_result.paginate(page=page, per_page=15)
+    loc_query = search_result.paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template(
         "define.html",
         context="locations",

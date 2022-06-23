@@ -1,5 +1,13 @@
 import tempfile
-from flask import Blueprint, render_template, request, session, redirect, flash
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    session,
+    redirect,
+    flash,
+    current_app,
+)
 from flask.helpers import url_for
 from flask_login import current_user, login_required
 from sqlalchemy import desc
@@ -113,7 +121,7 @@ def info(ppc_type):
     if query:
         search_result = search_result.filter(Work.reference.ilike(f"%{query}%"))
 
-    works = search_result.paginate(page=page, per_page=15)
+    works = search_result.paginate(page=page, per_page=current_app.config["PAGE_SIZE"])
     return render_template(
         "plan.html",
         context="info",
@@ -262,7 +270,7 @@ def work_version(work_id: int):
     plan_dates = (
         PlanDate.query.filter(PlanDate.work_id == work_id)
         .order_by(desc(PlanDate.version))
-        .paginate(page=page, per_page=25)
+        .paginate(page=page, per_page=current_app.config["PAGE_SIZE"])
     )
     return render_template(
         "plan.html",
