@@ -105,7 +105,7 @@
             {% if current_user.role.name == "wp_manager" %}
             <!-- prettier-ignore -->
             <a href="{{ url_for('control.reforecast', work_id=work.id) }}">
-              {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}
+              {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else "None"}}
             </a>
             <!-- prettier-ignore -->
             {% else %} 

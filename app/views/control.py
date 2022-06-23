@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import (
     Blueprint,
     render_template,
@@ -176,7 +177,9 @@ def reforecast(work_id: int):
     form = WorkReforecastForm()
     form.deliverable.data = work.deliverable
     form.reference.data = work.reference
-    form.old_plan_date.data = work.latest_date
+    form.old_plan_date.data = (
+        work.latest_date if work.latest_date else datetime.now().date()
+    )
     form.responsible.choices = [
         (wp.contractor_name, wp.contractor_name)
         for wp in WorkPackage.query.filter_by(
@@ -187,7 +190,7 @@ def reforecast(work_id: int):
         PlanDate(
             date=form.new_plan_date.data,
             work_id=work.id,
-            version=(work.latest_date_version + 1),
+            version=(work.latest_date_version + 1) if work.latest_date_version else 1,
             note=form.note.data,
             responsible=form.responsible.data,
             reason=form.reason.data,
@@ -199,14 +202,16 @@ def reforecast(work_id: int):
             current_user.id,
             work.id,
         )
-        return redirect(url_for("control.control"))
+        if user.role == User.Role.project_manager:
+            return redirect(url_for("control.control"))
+        return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
     elif form.is_submitted():
         log(
             log.WARNING,
             "User [%d] cant reforecast work [%d] , error[%s]",
             current_user.id,
             work.id,
-            form.form_errors,
+            form.errors,
         )
         flash("The given data was invalid.", "danger")
     return render_template("reforecast.html", form=form, work_id=work_id)
