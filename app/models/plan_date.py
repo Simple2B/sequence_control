@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 from app import db
 from app.models.utils import ModelMixin
 
+NOTE_LEN = 6
+
 
 class PlanDate(db.Model, ModelMixin):
 
@@ -28,5 +30,7 @@ class PlanDate(db.Model, ModelMixin):
     @property
     def short_note(self) -> str:
         return (
-            (self.note[:6] + " ...") if self.note and len(self.note) > 6 else self.note
+            (self.note[:6] + " ...")
+            if self.note and len(self.note) > NOTE_LEN
+            else self.note
         )

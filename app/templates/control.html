@@ -61,8 +61,8 @@
             {% endif %}
           </td>
           <td>
-            {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else
-            ""}}
+            <!-- prettier-ignore -->
+            {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}
           </td>
         </tr>
         {% endfor %}
