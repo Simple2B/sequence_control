@@ -2,6 +2,7 @@
 
 <!-- prettier-ignore -->
 {% block application %}
+  {% include 'control_nav.html'%}
   {% include 'flash.html' %} 
 {% endblock %}
 
@@ -49,15 +50,17 @@
           <td>{{work.reference}}</td>
           <td>
             <!-- prettier-ignore -->
-            {% if current_user.role.name == "project_manager" %}
+            {% if current_user.role.name == "project_manager" and not work.is_completed %}
             <a href="{{ url_for('control.complete', work_id=work.id) }}">yes</a>
             ----
             <a href="{{ url_for('control.reforecast', work_id=work.id) }}"
               >no</a
             >
             <!-- prettier-ignore -->
-            {% else %} 
+            {% elif current_user.role.name != "project_manager" and not work.is_completed %} 
               yes ---- no 
+            {% else %}
+            yes  
             {% endif %}
           </td>
           <td>
@@ -74,13 +77,13 @@
       works.page == page_num %}
       <a
         class="page_button btn btn-dark mb-4 mx-1"
-        href="{{ url_for('control.control', query=query, page=page_num) }}"
+        href="{{ url_for('control.control', query=query, page=page_num , filter=filter) }}"
         >{{ page_num }}</a
       >
       {% else %}
       <a
         class="page_button btn btn-outline-dark mb-4 mx-1"
-        href="{{ url_for('control.control', query=query, page=page_num) }}"
+        href="{{ url_for('control.control', query=query, page=page_num, filter=filter) }}"
         >{{ page_num }}</a
       >
       {% endif %} {% else %}
@@ -90,13 +93,13 @@
       right_current=3) %} {% if page_num %} {% if works.page == page_num %}
       <a
         class="page_button btn btn-dark mb-4 mx-1"
-        href="{{ url_for('control.control', page=page_num) }}"
+        href="{{ url_for('control.control', page=page_num, filter=filter) }}"
         >{{ page_num }}</a
       >
       {% else %}
       <a
         class="page_button btn btn-outline-dark mb-4 mx-1"
-        href="{{ url_for('control.control', page=page_num) }}"
+        href="{{ url_for('control.control', page=page_num, filter=filter) }}"
         >{{ page_num }}</a
       >
       {% endif %} {% else %}
