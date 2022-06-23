@@ -311,3 +311,20 @@ def work_select_location():
             work.id,
         )
     return {}
+
+
+@plan_blueprint.route("/check/<ppc_type>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.wp_manager, User.Role.project_manager])
+def check(ppc_type):
+
+    type = request.args.get("type", "", type=str)
+
+    check = session.get("check")
+
+    if not check or check == "off":
+        session["check"] = "on"
+    else:
+        session["check"] = "off"
+
+    return redirect(url_for("plan.info", ppc_type=ppc_type, type=type))

@@ -7,6 +7,15 @@
     >Add
   </a>
   {% endif %}
+  <!-- prettier-ignore -->
+  {% if current_user.role.name in ["wp_manager","project_manager"] %}
+  <a
+    class="btn btn-secondary mt-1 add_button buttonFont"
+    href="{{ url_for('plan.check', ppc_type=ppc_type , type=request.args['type'], page=page_num) }}"
+    role="button"
+    >Check
+  </a>
+  {% endif %}
   <a class="page_title mt-1" style="opacity: 0"
     >{{ppc_type}}/{{request.args['type']}}</a
   >
@@ -75,7 +84,15 @@
       <tbody>
         {% for work in works.items %}
         <!-- prettier-ignore -->
+        {% if session["check"] == "on" %}
         <tr style="text-shadow: 0px 0 0.75px {{work.color}};">
+          <!-- prettier-ignore -->
+
+          {% else %}
+        </tr>
+
+        <tr>
+          {% endif %}
           <td>{{work.type.name}}</td>
           <td>
             <a href="{{ url_for('plan.edit_work', work_id=work.id) }}"
@@ -84,11 +101,15 @@
           </td>
           <td>{{work.reference}}</td>
           <td>
+            <!-- prettier-ignore -->
             {% if current_user.role.name == "wp_manager" %}
-            <a href="{{ url_for('control.reforecast', work_id=work.id) }}"
-            >{{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}</a
-            >{% else %}
-            {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}
+            <!-- prettier-ignore -->
+            <a href="{{ url_for('control.reforecast', work_id=work.id) }}">
+              {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}
+            </a>
+            <!-- prettier-ignore -->
+            {% else %} 
+              {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}} 
             {% endif %}
           </td>
           <td>
@@ -112,21 +133,21 @@
           <td>{{work.level_name}}</td>
           <td>
             <select name="{{work.id}}" class="locationSelector">
-            <option value=""></option>
-            <!-- prettier-ignore -->
-            {% for loc in work.locations %}
+              <option value=""></option>
+              <!-- prettier-ignore -->
+              {% for loc in work.locations %}
               {% if loc.id == work.location_id %}
-            <option value="{{loc.id}}" selected>
-              {{loc.name}} - {{loc.description}}
-            </option>
-            {% else %}
-            <option value="{{loc.id}}">
-              {{loc.level.building.name}} - {{loc.level.name}} - {{loc.name}}
-            </option>
-            <!-- prettier-ignore -->
-            {% endif %} 
+              <option value="{{loc.id}}" selected>
+                {{loc.name}} - {{loc.description}}
+              </option>
+              {% else %}
+              <option value="{{loc.id}}">
+                {{loc.level.building.name}} - {{loc.level.name}} - {{loc.name}}
+              </option>
+              <!-- prettier-ignore -->
+              {% endif %} 
             {% endfor %}
-          </select>
+            </select>
           </td>
           <td>
             <a href="{{ url_for('plan.work_version', work_id=work.id) }}"
