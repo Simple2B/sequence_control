@@ -37,9 +37,7 @@ def control():
     if search_form.validate_on_submit():
         query = search_form.search_field.data
     page = request.args.get("page", 1, type=int)
-    search_result = get_works_for_project().filter(
-        Work.is_completed == False  # noqa E712
-    )
+    search_result = get_works_for_project().filter_by(is_completed=False)
     if query:
         wp_ids = [
             wp.id
@@ -155,15 +153,14 @@ def reforecast(work_id: int):
         user.role == User.Role.project_manager
         and work.work_package.project.manager_id != user.id
     ) or (user.role == User.Role.wp_manager and work.wp_manager_id != user.id):
-        if not work or work.work_package.project.manager_id != user.id:
-            log(
-                log.WARNING,
-                "User [%d] try to change work id[%d] from other project",
-                user.id,
-                work_id,
-            )
-            flash("You can't change  PPC from other project", "danger")
-            return redirect(url_for("control.control"))
+        log(
+            log.WARNING,
+            "User [%d] try to change work id[%d] from other project",
+            user.id,
+            work_id,
+        )
+        flash("You can't change  PPC from other project", "danger")
+        return redirect(url_for("control.control"))
 
     form = WorkReforecastForm()
     form.deliverable.data = work.deliverable
@@ -193,6 +190,13 @@ def reforecast(work_id: int):
         )
         return redirect(url_for("control.control"))
     elif form.is_submitted():
+        log(
+            log.WARNING,
+            "User [%d] cant reforecast work [%d] , error[%s]",
+            current_user.id,
+            work.id,
+            form.form_errors,
+        )
         flash("The given data was invalid.", "danger")
     return render_template("reforecast.html", form=form, work_id=work_id)
 
