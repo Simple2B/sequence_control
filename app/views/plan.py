@@ -220,6 +220,7 @@ def work_add(ppc_type: str):
             deliverable=form.deliverable.data,
             reference=form.reference.data,
             wp_manager_id=user.id,
+            date_planed=form.plan_date.data,
         ).save()
         PlanDate(
             date=form.plan_date.data,

@@ -34,6 +34,8 @@ def import_data_file(file_path: str, wp_id: int, wp_manager_id: int) -> bool:
                     wp_manager_id=wp_manager_id,
                 ).save()
                 if isinstance(row[2], datetime):
+                    work.date_planed = row[2].date()
+                    work.save()
                     PlanDate(date=row[2].date(), work_id=work.id).save()
         except KeyError:
             continue
