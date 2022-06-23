@@ -9,7 +9,7 @@ from .utils import (
     create_work_package,
     create_milestone,
 )
-from app.models import User
+from app.models import User, Reason
 
 
 @pytest.fixture
@@ -31,6 +31,16 @@ def client() -> Iterator[FlaskClient]:
 @pytest.fixture
 def admin(client: FlaskClient) -> Iterator[FlaskClient]:
     create_admin_register("admin")
+    # adding reasons
+    REASONS = [
+        "Outstanding Design",
+        "Consultant",
+        "Subcontractor & Supplier design Information",
+        "TQ's and RFI's",
+        "Design approvals",
+    ]
+    for reason in REASONS:
+        Reason(name=reason).save()
     yield client
 
 

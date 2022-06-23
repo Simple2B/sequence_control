@@ -38,9 +38,6 @@
           <th>Deliverable</th>
           <th>Ref No.</th>
           <th>Completed</th>
-          <th>Responsible</th>
-          <th>Reason</th>
-          <th>Notes</th>
           <th>Reforecast</th>
         </tr>
       </thead>
@@ -51,46 +48,21 @@
           <td>{{work.deliverable}}</td>
           <td>{{work.reference}}</td>
           <td>
-            <select name="{{work.id}}" class="completeSelector">
-              <option value=""></option>
-              <!-- prettier-ignore -->
-              {% for choice in work.complete_choice %}
-            {% if choice["name"] == work.complete %}
-              <option value="{{choice['name']}}" selected>
-                {{choice["name"]}}
-              </option>
-              {% else %}
-              <option value="{{choice['name']}}">{{choice["name"]}}</option>
-              <!-- prettier-ignore -->
-              {% endif %} 
-          {% endfor %}
-            </select>
-          </td>
-          <td>{{work.work_package.contractor_name}}</td>
-          <td>
-            <select name="{{work.id}}" class="reasonSelector">
-              <option value=""></option>
-              <!-- prettier-ignore -->
-              {% for reason in work.reasons %}
-              {% if reason.id == work.reason_id %}
-              <option value="{{reason.id}}" selected>{{reason.name}}</option>
-              {% else %}
-              <option value="{{reason.id}}">{{reason.name}}</option>
-              <!-- prettier-ignore -->
-              {% endif %} 
-            {% endfor %}
-            </select>
-          </td>
-          <td>
-            <a href="{{ url_for('control.edit_work_note', work_id=work.id) }}"
-              >{{work.short_note}}</a
+            <!-- prettier-ignore -->
+            {% if current_user.role.name == "project_manager" %}
+            <a href="{{ url_for('control.complete', work_id=work.id) }}">yes</a>
+            ----
+            <a href="{{ url_for('control.reforecast', work_id=work.id) }}"
+              >no</a
             >
+            <!-- prettier-ignore -->
+            {% else %} 
+              yes ---- no 
+            {% endif %}
           </td>
           <td>
-            <a href="{{ url_for('control.edit_work_date', work_id=work.id) }}"
-              >{{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else
-              ""}}</a
-            >
+            <!-- prettier-ignore -->
+            {{work.latest_date.strftime('%Y-%m-%d') if work.latest_date else ""}}
           </td>
         </tr>
         {% endfor %}

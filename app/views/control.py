@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect, session
 from flask_login import current_user, login_required
+from sqlalchemy import desc
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate, WorkPackage
@@ -9,6 +10,7 @@ from app.forms import (
     WorkEditNoteForm,
     WorkSelectCompleteForm,
     SearchForm,
+    WorkReforecastForm,
 )
 
 control_blueprint = Blueprint("control", __name__)
@@ -35,14 +37,15 @@ def control():
     if search_form.validate_on_submit():
         query = search_form.search_field.data
     page = request.args.get("page", 1, type=int)
-    search_result = get_works_for_project()
+    search_result = get_works_for_project().filter_by(is_completed=False)
     if query:
         wp_ids = [
             wp.id
             for wp in WorkPackage.query.filter(WorkPackage.number.ilike(f"%{query}%"))
         ]
         search_result = search_result.filter(Work.wp_id.in_(wp_ids))
-    works = search_result.paginate(page=page, per_page=15)
+
+    works = search_result.order_by(desc(Work.id)).paginate(page=page, per_page=15)
     return render_template("control.html", works=works, search_form=search_form)
 
 
@@ -133,3 +136,87 @@ def work_select_complete():
             work.id,
         )
     return {}
+
+
+@control_blueprint.route("/reforecast/<work_id>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager, User.Role.wp_manager])
+def reforecast(work_id: int):
+    log(log.INFO, "User [%d] reforecast", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
+    if not work:
+        log(log.ERROR, "User [%d] can't find work id[%d]", user.id, work_id)
+        flash("Can't find PPC", "danger")
+        return redirect(url_for("control.control"))
+    if (
+        user.role == User.Role.project_manager
+        and work.work_package.project.manager_id != user.id
+    ) or (user.role == User.Role.wp_manager and work.wp_manager_id != user.id):
+        log(
+            log.WARNING,
+            "User [%d] try to change work id[%d] from other project",
+            user.id,
+            work_id,
+        )
+        flash("You can't change  PPC from other project", "danger")
+        return redirect(url_for("control.control"))
+
+    form = WorkReforecastForm()
+    form.deliverable.data = work.deliverable
+    form.reference.data = work.reference
+    form.old_plan_date.data = work.latest_date
+    form.responsible.choices = [
+        (wp.contractor_name, wp.contractor_name)
+        for wp in WorkPackage.query.filter_by(
+            deleted=False, project_id=work.work_package.project_id
+        ).all()
+    ]
+    if form.validate_on_submit():
+        PlanDate(
+            date=form.new_plan_date.data,
+            work_id=work.id,
+            version=(work.latest_date_version + 1),
+            note=form.note.data,
+            responsible=form.responsible.data,
+            reason=form.reason.data,
+            user_id=user.id,
+        ).save()
+        log(
+            log.INFO,
+            "User [%d] edited reforecast for work [%d]",
+            current_user.id,
+            work.id,
+        )
+        return redirect(url_for("control.control"))
+    elif form.is_submitted():
+        log(
+            log.WARNING,
+            "User [%d] cant reforecast work [%d] , error[%s]",
+            current_user.id,
+            work.id,
+            form.form_errors,
+        )
+        flash("The given data was invalid.", "danger")
+    return render_template("reforecast.html", form=form, work_id=work_id)
+
+
+@control_blueprint.route("/complete/<work_id>", methods=["GET", "POST"])
+@login_required
+@role_required(roles=[User.Role.project_manager])
+def complete(work_id: int):
+    log(log.INFO, "User [%d] complete", current_user.id)
+    user: User = current_user
+    work: Work = Work.query.get(work_id)
+    if not work or work.work_package.project.manager_id != user.id:
+        log(
+            log.WARNING,
+            "User [%d] try to change work id[%d] from other project",
+            user.id,
+            work_id,
+        )
+        flash("You can't change  PPC from other project", "danger")
+        return redirect(url_for("control.control"))
+    work.is_completed = True
+    work.save()
+    return redirect(url_for("control.control"))

@@ -5,16 +5,24 @@
         <h3>{{work.reference}}</h3>
         <tr class="tableHeadTh">
           <th>Version</th>
+          <th>Edited by</th>
           <th>Edit Date</th>
           <th>Planned Date</th>
+          <th>Reason</th>
+          <th>Responsible</th>
+          <th>Note</th>
         </tr>
       </thead>
       <tbody>
         {% for version in plan_dates.items %}
         <tr>
           <td>{{version.version}}</td>
+          <th>{{version.user.username}}</th>
           <td>{{version.created_at.strftime('%Y-%m-%d')}}</td>
           <td>{{version.date.strftime('%Y-%m-%d')}}</td>
+          <td>{{version.reason}}</td>
+          <td>{{version.responsible}}</td>
+          <td class="versionNotes">{{version.note}}</td>
         </tr>
         {% endfor %}
       </tbody>

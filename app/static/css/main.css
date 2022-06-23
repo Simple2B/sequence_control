@@ -215,3 +215,8 @@ th {
 .ppcLink{
   color:rgb(0, 0, 0);
 }
+
+.versionNotes {
+  width:150px!important;
+  max-height:150px!important;
+}

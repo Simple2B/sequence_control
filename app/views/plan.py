@@ -164,14 +164,7 @@ def edit_work(work_id: int):
         work.ppc_type = Work.ppc_type_by_type(work_type)
         work.type = work_type
         work.save()
-        if not work.latest_date or form.new_plan_date.data != work.latest_date.date():
-            PlanDate(
-                date=form.new_plan_date.data,
-                work_id=work.id,
-                version=(work.latest_date_version + 1)
-                if work.latest_date_version
-                else 1,
-            ).save()
+
         log(log.INFO, "User [%d] edited work [%d]", current_user.id, work.id)
         return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
     elif form.is_submitted():
@@ -181,8 +174,7 @@ def edit_work(work_id: int):
     form.plan_date.data = work.latest_date
     form.ppc_type.data = work.ppc_type.name
     form.type.data = work.type.name
-    if user.role == User.Role.wp_manager:
-        form.new_plan_date.data = work.latest_date
+
     return render_template("edit_work.html", form=form, work_id=work_id)
 
 
@@ -224,6 +216,7 @@ def work_add(ppc_type: str):
         PlanDate(
             date=form.plan_date.data,
             work_id=work.id,
+            user_id=user.id,
         ).save()
 
         log(log.INFO, "User [%d] added work [%d]", user.id, work.id)
