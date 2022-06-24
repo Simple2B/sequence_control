@@ -121,7 +121,9 @@ def info(ppc_type):
     if query:
         search_result = search_result.filter(Work.reference.ilike(f"%{query}%"))
 
-    works = search_result.paginate(page=page, per_page=current_app.config["PAGE_SIZE"])
+    works = search_result.order_by(desc(Work.id)).paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
     return render_template(
         "plan.html",
         context="info",
