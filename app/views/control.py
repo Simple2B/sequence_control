@@ -10,7 +10,7 @@ from flask import (
     current_app,
 )
 from flask_login import current_user, login_required
-from sqlalchemy import desc, and_
+from sqlalchemy import desc, and_, func
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate, WorkPackage
@@ -57,16 +57,16 @@ def control():
 
             search_result = search_result.filter(
                 and_(
-                    Work.date_planed <= filter_date,
-                    Work.date_planed >= today,
+                    func.date(Work.date_planed) <= filter_date,
+                    func.date(Work.date_planed) >= today,
                 )
             )
         else:
 
             search_result = search_result.filter(
                 and_(
-                    Work.date_planed >= filter_date,
-                    Work.date_planed <= today,
+                    func.date(Work.date_planed) >= filter_date,
+                    func.date(Work.date_planed) <= today,
                 )
             )
     if query:

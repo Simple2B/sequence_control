@@ -142,7 +142,7 @@ def test_control_date_filtering(manager: FlaskClient):
         user_id=2,
     ).save()
 
-    date_three_weeks_after = date_today + timedelta(weeks=2, days=6)
+    date_three_weeks_after = date_today + timedelta(weeks=3)
     work4 = Work(
         wp_id=wp_id,
         type=Work.Type.ATP1,
@@ -157,7 +157,7 @@ def test_control_date_filtering(manager: FlaskClient):
         user_id=2,
     ).save()
 
-    date_week_after = date_today + timedelta(days=6)
+    date_week_after = date_today + timedelta(weeks=1)
     work5 = Work(
         wp_id=wp_id,
         type=Work.Type.ATP1,
