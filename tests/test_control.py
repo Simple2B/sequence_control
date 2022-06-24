@@ -1,4 +1,3 @@
-# import os
 from datetime import datetime, timedelta
 from flask.testing import FlaskClient
 from sqlalchemy import desc
@@ -26,6 +25,8 @@ def test_control(manager: FlaskClient):
         work_id=work.id,
         user_id=2,
     ).save()
+    work.date_planed = date
+    work.save()
 
     atp_work: Work = Work.query.first()
     assert atp_work
@@ -85,3 +86,143 @@ def test_control(manager: FlaskClient):
         follow_redirects=True,
     )
     assert atp_work.is_completed
+
+
+def test_control_date_filtering(manager: FlaskClient):
+
+    date_today = datetime.now()
+    date_today = date_today.date()
+    reason: Reason = Reason.query.first()
+    assert reason
+    # creating wp and work
+    wp_id = create_work_package(3)
+    work = Work(
+        wp_id=wp_id,
+        type=Work.Type.ATP1,
+        ppc_type=Work.PpcType.atp,
+        deliverable="work",
+        reference="work",
+        date_planed=date_today,
+    ).save()
+    assert work
+    PlanDate(
+        date=date_today,
+        work_id=work.id,
+        user_id=2,
+    ).save()
+
+    date_week_before = date_today - timedelta(weeks=1)
+    work2 = Work(
+        wp_id=wp_id,
+        type=Work.Type.ATP1,
+        ppc_type=Work.PpcType.atp,
+        deliverable="work2",
+        reference="work2",
+        date_planed=date_week_before,
+    ).save()
+    PlanDate(
+        date=date_week_before,
+        work_id=work2.id,
+        user_id=2,
+    ).save()
+
+    date_three_weeks_before = date_today - timedelta(weeks=3)
+    work3 = Work(
+        wp_id=wp_id,
+        type=Work.Type.ATP1,
+        ppc_type=Work.PpcType.atp,
+        deliverable="work3",
+        reference="work3",
+        date_planed=date_three_weeks_before,
+    ).save()
+
+    PlanDate(
+        date=date_three_weeks_before,
+        work_id=work3.id,
+        user_id=2,
+    ).save()
+
+    date_three_weeks_after = date_today + timedelta(weeks=3)
+    work4 = Work(
+        wp_id=wp_id,
+        type=Work.Type.ATP1,
+        ppc_type=Work.PpcType.atp,
+        deliverable="work4",
+        reference="work4",
+        date_planed=date_three_weeks_after,
+    ).save()
+    PlanDate(
+        date=date_three_weeks_after,
+        work_id=work4.id,
+        user_id=2,
+    ).save()
+
+    date_week_after = date_today + timedelta(weeks=1)
+    work5 = Work(
+        wp_id=wp_id,
+        type=Work.Type.ATP1,
+        ppc_type=Work.PpcType.atp,
+        deliverable="work5",
+        reference="work5",
+        date_planed=date_week_after,
+    ).save()
+    PlanDate(
+        date=date_week_after,
+        work_id=work5.id,
+        user_id=2,
+    ).save()
+
+    atp_work: Work = Work.query.all()
+    assert len(atp_work) == 5
+
+    FILTER = -3
+    response = manager.get(
+        f"/control?filter={FILTER}",
+        follow_redirects=True,
+    )
+    assert response
+
+    assert b"work" in response.data
+    assert b"work2" in response.data
+    assert b"work3" in response.data
+    assert b"work4" not in response.data
+    assert b"work5" not in response.data
+
+    FILTER = -1
+    response = manager.get(
+        f"/control?filter={FILTER}",
+        follow_redirects=True,
+    )
+    assert response
+
+    assert b"work" in response.data
+    assert b"work2" in response.data
+    assert b"work3" not in response.data
+    assert b"work4" not in response.data
+    assert b"work5" not in response.data
+
+    FILTER = 1
+    response = manager.get(
+        f"/control?filter={FILTER}",
+        follow_redirects=True,
+    )
+    assert response
+
+    assert b"work" in response.data
+    assert b"work2" not in response.data
+    assert b"work3" not in response.data
+    assert b"work4" not in response.data
+    assert b"work5" in response.data
+
+    FILTER = 3
+    response = manager.get(
+        f"/control?filter={FILTER}",
+        follow_redirects=True,
+    )
+    assert response
+
+    assert b"work" in response.data
+    assert b"work2" not in response.data
+    assert b"work3" not in response.data
+    assert b"work4" in response.data
+    assert b"work5" in response.data

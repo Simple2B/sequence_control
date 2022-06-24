@@ -27,9 +27,7 @@ class WorkReforecastForm(FlaskForm):
     )
     reason = SelectField("Reason", validators=[DataRequired()], coerce=str, choices=[])
     note = TextAreaField("Note", validators=[Length(0, 256)])
-    old_plan_date = DateField(
-        "Planned Date", validators=[DataRequired()], render_kw={"readonly": True}
-    )
+    old_plan_date = DateField("Planned Date", render_kw={"readonly": True})
     new_plan_date = DateField("New Date", validators=[DataRequired()])
 
     submit = SubmitField("Submit")

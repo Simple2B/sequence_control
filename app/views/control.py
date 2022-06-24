@@ -1,6 +1,16 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect, session
+from datetime import datetime, timedelta
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    flash,
+    url_for,
+    redirect,
+    session,
+    current_app,
+)
 from flask_login import current_user, login_required
-from sqlalchemy import desc
+from sqlalchemy import desc, and_, func
 from app.controllers import role_required, get_works_for_project
 from app.logger import log
 from app.models import User, Work, PlanDate, WorkPackage
@@ -26,6 +36,8 @@ def control():
     log(log.INFO, "[control] User [%d]", current_user.id)
     project_id = session.get("project_id")
     wp_id = session.get("wp_id")
+    page = request.args.get("page", 1, type=int)
+    filter = request.args.get("filter", type=int)
     if user.role in [User.Role.project_manager, User.Role.viewer]:
         if not project_id:
             return redirect(url_for("project.project_choose"))
@@ -36,8 +48,27 @@ def control():
     query = ""
     if search_form.validate_on_submit():
         query = search_form.search_field.data
-    page = request.args.get("page", 1, type=int)
-    search_result = get_works_for_project().filter_by(is_completed=False)
+    search_result = get_works_for_project()
+    if filter:
+        today = datetime.now()
+        today = today.date()
+        filter_date = today + timedelta(weeks=filter)
+        if filter > 0:
+
+            search_result = search_result.filter(
+                and_(
+                    func.date(Work.date_planed) <= filter_date,
+                    func.date(Work.date_planed) >= today,
+                )
+            )
+        else:
+
+            search_result = search_result.filter(
+                and_(
+                    func.date(Work.date_planed) >= filter_date,
+                    func.date(Work.date_planed) <= today,
+                )
+            )
     if query:
         wp_ids = [
             wp.id
@@ -45,8 +76,12 @@ def control():
         ]
         search_result = search_result.filter(Work.wp_id.in_(wp_ids))
 
-    works = search_result.order_by(desc(Work.id)).paginate(page=page, per_page=15)
-    return render_template("control.html", works=works, search_form=search_form)
+    works = search_result.order_by(desc(Work.id)).paginate(
+        page=page, per_page=current_app.config["PAGE_SIZE"]
+    )
+    return render_template(
+        "control.html", works=works, search_form=search_form, filter=filter
+    )
 
 
 @control_blueprint.route("/work_select_reason/", methods=["POST"])
@@ -88,6 +123,8 @@ def edit_work_date(work_id: int):
             work_id=work.id,
             version=(work.latest_date_version + 1),
         ).save()
+        work.date_planed = form.new_plan_date.data
+        work.save()
         log(log.INFO, "User [%d] edited date at work [%d]", current_user.id, work.id)
         return redirect(url_for("control.control"))
     elif form.is_submitted():
@@ -165,7 +202,9 @@ def reforecast(work_id: int):
     form = WorkReforecastForm()
     form.deliverable.data = work.deliverable
     form.reference.data = work.reference
-    form.old_plan_date.data = work.latest_date
+    form.old_plan_date.data = (
+        work.latest_date if work.latest_date else datetime.now().date()
+    )
     form.responsible.choices = [
         (wp.contractor_name, wp.contractor_name)
         for wp in WorkPackage.query.filter_by(
@@ -176,26 +215,30 @@ def reforecast(work_id: int):
         PlanDate(
             date=form.new_plan_date.data,
             work_id=work.id,
-            version=(work.latest_date_version + 1),
+            version=(work.latest_date_version + 1) if work.latest_date_version else 1,
             note=form.note.data,
             responsible=form.responsible.data,
             reason=form.reason.data,
             user_id=user.id,
         ).save()
+        work.date_planed = form.new_plan_date.data
+        work.save()
         log(
             log.INFO,
             "User [%d] edited reforecast for work [%d]",
             current_user.id,
             work.id,
         )
-        return redirect(url_for("control.control"))
+        if user.role == User.Role.project_manager:
+            return redirect(url_for("control.control"))
+        return redirect(url_for("plan.info", ppc_type=work.ppc_type.name))
     elif form.is_submitted():
         log(
             log.WARNING,
             "User [%d] cant reforecast work [%d] , error[%s]",
             current_user.id,
             work.id,
-            form.form_errors,
+            form.errors,
         )
         flash("The given data was invalid.", "danger")
     return render_template("reforecast.html", form=form, work_id=work_id)

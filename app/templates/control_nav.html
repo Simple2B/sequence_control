@@ -1,0 +1,39 @@
+<nav
+  id="sidebarMenu"
+  class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+>
+  <div class="position-sticky pt-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('control.control')}}">
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/week.png') }} alt="info" border="0"/>All
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('control.control')}}?filter=-3">
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/week.png') }} alt="info" border="0"/> Last 3 Weeks
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('control.control')}}?filter=-1">
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/week.png') }} alt="info" border="0"/> Last 1 Week
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('control.control')}}?filter=1">
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/week.png') }} alt="info" border="0"/> Next Week
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('control.control')}}?filter=3">
+          <img class="mainLogo" src= {{ url_for('static',
+          filename='images/week.png') }} alt="info" border="0"/> Next 3 Weeks
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

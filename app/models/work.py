@@ -53,6 +53,7 @@ class Work(db.Model, ModelMixin):
     created_at = db.Column(db.DateTime, default=datetime.now)
     deleted = db.Column(db.Boolean, default=False)
     is_completed = db.Column(db.Boolean, default=False)
+    date_planed = db.Column(db.DateTime, nullable=True)
 
     milestone_id = db.Column(db.Integer, nullable=True)
     location_id = db.Column(db.Integer, nullable=True)

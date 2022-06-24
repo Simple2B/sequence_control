@@ -3,14 +3,14 @@ from app.models import Location
 
 __cached_locations = {}
 __cached_timestamp = 0
-CACHE_TIMEOUT = 5  # in seconds
+CACHE_TIMEOUT = 10  # in seconds
 
 
 def locations_for_project(project_id: int) -> list[Location]:
     global __cached_locations, __cached_timestamp
     if (
         project_id in __cached_locations
-        and (__cached_timestamp - CACHE_TIMEOUT) < time()
+        and (__cached_timestamp + CACHE_TIMEOUT) > time()
     ):
         return __cached_locations[project_id]
 
